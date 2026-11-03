@@ -38,3 +38,4 @@ abstract interface class AuthRepository {
   Future<Result<void, AppFailure>> deleteAccount();
 }
 ```
+

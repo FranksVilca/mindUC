@@ -30,3 +30,4 @@ final GlobalKey<NavigatorState> shellWellnessNavigatorKey = GlobalKey<NavigatorS
 final GlobalKey<NavigatorState> shellAgendaNavigatorKey = GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> shellProfileNavigatorKey = GlobalKey<NavigatorState>();
 ```
+

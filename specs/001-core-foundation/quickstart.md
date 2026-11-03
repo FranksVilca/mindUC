@@ -34,3 +34,4 @@ Verifica:
 flutter run
 ```
 *La aplicación arranca en el shell con las 4 pestañas funcionales (Inicio, Bienestar, Agenda, Perfil), renderizando la paleta visual serena y componentes de Figma sin requerir credenciales externas obligatorias para la navegación inicial.*
+

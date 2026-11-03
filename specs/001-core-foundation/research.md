@@ -79,3 +79,4 @@ Para cumplir con la Constitución v1.1.0:
 - `features/auth/domain/` define la entidad `UserEntity` y la interfaz abstracta `AuthRepository`.
 - `features/auth/data/` implementa `FirebaseAuthDataSource` y `AuthRepositoryImpl`.
 - Para pruebas de widgets y unitarias, se provee `FakeAuthRepository` y `FakeFirestoreDataSource`, permitiendo probar toda la interfaz y flujos sin conexión a internet y sin requerir un proyecto real de Firebase activo en el entorno de desarrollo local.
+
