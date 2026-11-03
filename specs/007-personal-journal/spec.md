@@ -136,3 +136,4 @@ Como estudiante universitario que comparte pensamientos vulnerables e íntimos, 
 - **Alineación con el Sistema de Diseño Centralizado**: Colores (`MindColors.primary`, `MindColors.surfaceSubtle`, `MindColors.estudioTrabajo`), tipografía Outfit y esquinas redondeadas (16 a 24 dp) coinciden con el estándar global.
 - **Persistencia Local Offline-First**: Para la persistencia de datos local, se utilizará una fuente de datos desacoplada en memoria / local (`LocalJournalDataSource`), respetando el repositorio abstracto y posibilitando pruebas deterministas.
 - **Principio V (Soberanía y Privacidad)**: La bandera "Solo visible en este teléfono" es un compromiso real y no meramente cosmético; no existe sincronización remota con Cloud Firestore para el diario íntimo.
+
