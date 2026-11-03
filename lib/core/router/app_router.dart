@@ -6,6 +6,7 @@ import '../../features/agenda/presentation/screens/agenda_screen.dart';
 import '../../features/auth/presentation/controllers/auth_controller.dart';
 import '../../features/auth/presentation/screens/welcome_auth_screen.dart';
 import '../../features/breathing/presentation/screens/breathing_screen.dart';
+import '../../features/community_forum/presentation/screens/community_screen.dart';
 import '../../features/focus_pomodoro/presentation/screens/pomodoro_screen.dart';
 import '../../features/personal_journal/presentation/screens/journal_screen.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
@@ -68,17 +69,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       // Rutas de accesos rápidos
       GoRoute(
         path: AppRoutes.community,
-        builder: (context, state) => Scaffold(
-          backgroundColor: MindColors.background,
-          appBar: AppBar(
-            title: const Text('Comunidad UC'),
-            backgroundColor: MindColors.background,
-            elevation: 0,
-          ),
-          body: const Center(
-            child: Text('Espacio de Comunidad en preparación 🌿'),
-          ),
-        ),
+        builder: (context, state) => const CommunityScreen(),
       ),
       GoRoute(
         path: AppRoutes.progress,
