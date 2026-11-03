@@ -33,3 +33,4 @@
 
 - All 16 quality validation criteria passed on the initial review.
 - Spec ready for `/speckit-plan`.
+

@@ -126,3 +126,4 @@ para proteger mi privacidad y regresar a la pantalla de bienvenida/login.
 - Las preferencias de bienestar se gestionan inicialmente mediante persistencia local reactiva (Clean Architecture con `LocalProfileDataSource` y `ProfileRepository`), lista para enlazar con Firestore en etapas posteriores.
 - La acción de llamada a la línea psicológica despliega un modal amigable con la información oficial confidencial de la UC, protegiendo al estudiante y garantizando compatibilidad multiplataforma sin depender de hardware de telefonía en entornos de prueba.
 - El cierre de sesión limpia el estado de autenticación y devuelve al flujo público de la aplicación.
+
