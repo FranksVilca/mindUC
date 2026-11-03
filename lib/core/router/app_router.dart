@@ -1,4 +1,4 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -11,9 +11,9 @@ import '../../features/focus_pomodoro/presentation/screens/pomodoro_screen.dart'
 import '../../features/personal_journal/presentation/screens/journal_screen.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
+import '../../features/progress_gamification/presentation/screens/progress_screen.dart';
 import '../../features/wellness/presentation/screens/wellness_screen.dart';
 import '../design_system/navigation/main_shell_screen.dart';
-import '../theme/mind_colors.dart';
 import 'route_names.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
@@ -37,7 +37,7 @@ class GoRouterRefreshStream extends ChangeNotifier {
   }
 }
 
-/// Proveedor de GoRouter reactivo al estado de autenticación.
+/// Proveedor de GoRouter reactivo al estado de autenticaciÃ³n.
 final routerProvider = Provider<GoRouter>((ref) {
   final authRepository = ref.watch(authRepositoryProvider);
 
@@ -60,54 +60,44 @@ final routerProvider = Provider<GoRouter>((ref) {
       return null;
     },
     routes: [
-      // Ruta de Bienvenida y Autenticación
+      // Ruta de Bienvenida y AutenticaciÃ³n
       GoRoute(
         path: AppRoutes.auth,
         builder: (context, state) => const WelcomeAuthScreen(),
       ),
 
-      // Rutas de accesos rápidos
+      // Rutas de accesos rÃ¡pidos
       GoRoute(
         path: AppRoutes.community,
         builder: (context, state) => const CommunityScreen(),
       ),
       GoRoute(
         path: AppRoutes.progress,
-        builder: (context, state) => Scaffold(
-          backgroundColor: MindColors.background,
-          appBar: AppBar(
-            title: const Text('Mi Progreso'),
-            backgroundColor: MindColors.background,
-            elevation: 0,
-          ),
-          body: const Center(
-            child: Text('Panel de Progreso y Florecimiento en preparación 🌿'),
-          ),
-        ),
+        builder: (context, state) => const ProgressScreen(),
       ),
-      // Sesión guiada de respiración y relajación
+      // SesiÃ³n guiada de respiraciÃ³n y relajaciÃ³n
       GoRoute(
         path: AppRoutes.breathingSession,
         builder: (context, state) => const BreathingScreen(),
       ),
-      // Sesión de Concentración Pomodoro
+      // SesiÃ³n de ConcentraciÃ³n Pomodoro
       GoRoute(
         path: AppRoutes.pomodoroSession,
         builder: (context, state) => const PomodoroScreen(),
       ),
-      // Diario personal íntimo (Espacio Sagrado)
+      // Diario personal Ã­ntimo (Espacio Sagrado)
       GoRoute(
         path: AppRoutes.journalNew,
         builder: (context, state) => const JournalScreen(),
       ),
 
-      // Shell persistente de 4 pestañas
+      // Shell persistente de 4 pestaÃ±as
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
           return MainShellScreen(navigationShell: navigationShell);
         },
         branches: [
-          // Pestaña 0: Inicio
+          // PestaÃ±a 0: Inicio
           StatefulShellBranch(
             navigatorKey: _homeNavigatorKey,
             routes: [
@@ -118,7 +108,7 @@ final routerProvider = Provider<GoRouter>((ref) {
             ],
           ),
 
-          // Pestaña 1: Bienestar
+          // PestaÃ±a 1: Bienestar
           StatefulShellBranch(
             navigatorKey: _wellnessNavigatorKey,
             routes: [
@@ -129,7 +119,7 @@ final routerProvider = Provider<GoRouter>((ref) {
             ],
           ),
 
-          // Pestaña 2: Agenda
+          // PestaÃ±a 2: Agenda
           StatefulShellBranch(
             navigatorKey: _agendaNavigatorKey,
             routes: [
@@ -140,7 +130,7 @@ final routerProvider = Provider<GoRouter>((ref) {
             ],
           ),
 
-          // Pestaña 3: Perfil
+          // PestaÃ±a 3: Perfil
           StatefulShellBranch(
             navigatorKey: _profileNavigatorKey,
             routes: [
