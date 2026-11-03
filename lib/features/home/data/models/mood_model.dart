@@ -49,3 +49,4 @@ class MoodModel {
         timestampMillis: timestampMillis,
       );
 }
+

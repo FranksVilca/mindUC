@@ -32,3 +32,4 @@ class FakeMoodDataSource {
     _storage.clear();
   }
 }
+

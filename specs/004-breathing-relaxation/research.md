@@ -69,3 +69,4 @@ Implementar `BreathingRepository` con `BreathingRepositoryImpl`:
 | **Animación** | `AnimationController` + `CustomPainter` | Rendimiento continuo garantizado a 60 fps (SC-001). |
 | **Fidelidad Visual** | Mockup `mindUC - Respiracion y Relajacion.png` (paleta menta, botones de cápsula) | Conforme a Principio III. |
 | **Persistencia** | Cloud Firestore + Offline Cache | Respeto a Principio IV y V. |
+

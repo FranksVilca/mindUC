@@ -18,3 +18,4 @@ class QuickAccessItem {
     required this.targetRoute,
   });
 }
+

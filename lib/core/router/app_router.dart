@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../features/agenda/presentation/screens/agenda_screen.dart';
 import '../../features/auth/presentation/controllers/auth_controller.dart';
 import '../../features/auth/presentation/screens/welcome_auth_screen.dart';
+import '../../features/breathing/presentation/screens/breathing_screen.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/wellness/presentation/screens/wellness_screen.dart';
@@ -90,6 +91,11 @@ final routerProvider = Provider<GoRouter>((ref) {
             child: Text('Panel de Progreso y Florecimiento en preparación 🌿'),
           ),
         ),
+      ),
+      // Sesión guiada de respiración y relajación
+      GoRoute(
+        path: AppRoutes.breathingSession,
+        builder: (context, state) => const BreathingScreen(),
       ),
 
       // Shell persistente de 4 pestañas

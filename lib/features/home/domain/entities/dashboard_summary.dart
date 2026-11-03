@@ -51,3 +51,4 @@ class DashboardSummary {
       pendingActivitiesCount.hashCode ^
       streakDays.hashCode;
 }
+

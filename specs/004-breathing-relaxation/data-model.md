@@ -167,3 +167,4 @@ users/{userId}/
   │     ├── dateString: string ("2026-10-24")
   │     └── timestampMillis: number (1792873200000)
 ```
+

@@ -86,7 +86,7 @@ class HomeDashboardNotifier extends StateNotifier<HomeDashboardState> {
       subtitle: 'Respira y libera tensión (10 min)',
       icon: Icons.self_improvement_rounded,
       backgroundColor: MindColors.autocuidado,
-      targetRoute: AppRoutes.wellness,
+      targetRoute: AppRoutes.breathingSession,
     ),
     QuickAccessItem(
       id: 'agenda',

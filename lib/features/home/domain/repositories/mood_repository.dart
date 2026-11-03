@@ -23,3 +23,4 @@ abstract class MoodRepository {
     required String userId,
   });
 }
+

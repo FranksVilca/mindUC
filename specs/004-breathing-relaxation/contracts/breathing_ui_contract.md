@@ -67,3 +67,4 @@ abstract class BreathingSessionControllerContract {
 - **Inputs**:
   - `int currentTargetSeconds`: Duración actual.
   - `ValueChanged<int> onPresetSelected`: Callback con la nueva duración en segundos.
+
