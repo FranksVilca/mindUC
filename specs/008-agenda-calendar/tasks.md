@@ -18,7 +18,7 @@
 
 **Purpose**: Estructura de carpetas y base modular para la característica `agenda`.
 
-- [ ] T001 Crear la estructura de carpetas en `lib/features/agenda/` (`domain/entities`, `domain/repositories`, `data/datasources`, `data/repositories`, `presentation/controllers`, `presentation/widgets`) y en `test/{unit,widget}/features/agenda/`
+- [x] T001 Crear la estructura de carpetas en `lib/features/agenda/` (`domain/entities`, `domain/repositories`, `data/datasources`, `data/repositories`, `presentation/controllers`, `presentation/widgets`) y en `test/{unit,widget}/features/agenda/`
 
 ---
 
@@ -28,15 +28,15 @@
 
 **CRITICAL**: Ningún trabajo de historias de usuario puede comenzar hasta completar esta fase.
 
-- [ ] T002 [P] Crear el enum `AgendaCategory` en `lib/features/agenda/domain/entities/agenda_category.dart` con categorías `autocuidado`, `estudioTrabajo`, `saludMental`, etiquetas y estilos asociados
-- [ ] T003 [P] Crear la entidad inmutable `AgendaActivity` en `lib/features/agenda/domain/entities/agenda_activity.dart` con `id`, `title`, `subtitle`, `scheduledDateTime`, `category`, `isCompleted`, `createdAt`, getter `formattedTime` y método `copyWith`
-- [ ] T004 [P] Crear el Value Object `DaySchedule` en `lib/features/agenda/domain/entities/day_schedule.dart` con getters `totalActivities`, `completedActivities`, `balanceProgress` y `hasActivities`
-- [ ] T005 [P] Crear el modelo inmutable `AgendaState` en `lib/features/agenda/domain/entities/agenda_state.dart` con fecha seleccionada, filtro activo, lista de actividades y getters reactivos (`activitiesForSelectedDay`, `filteredActivities`, `totalForDay`, `completedForDay`, `rhythmText`)
-- [ ] T006 [P] Crear la interfaz abstracta `AgendaRepository` en `lib/features/agenda/domain/repositories/agenda_repository.dart` con operaciones de obtención, guardado, conmutación y eliminación
-- [ ] T007 [P] Implementar la fuente de datos local `LocalAgendaDataSource` en `lib/features/agenda/data/datasources/local_agenda_datasource.dart` con las 4 actividades iniciales de Figma y operaciones CRUD en memoria
-- [ ] T008 Implementar `LocalAgendaRepositoryImpl` en `lib/features/agenda/data/repositories/local_agenda_repository_impl.dart` cumpliendo con la arquitectura Offline-First
-- [ ] T009 Escribir pruebas unitarias para `AgendaNotifier` en `test/unit/features/agenda/agenda_controller_test.dart` cubriendo filtrado por fecha, filtros por categoría, conmutación de estado y creación de tareas
-- [ ] T010 Implementar `AgendaNotifier` y el proveedor `agendaControllerProvider` en `lib/features/agenda/presentation/controllers/agenda_controller.dart` implementando `IAgendaController`
+- [x] T002 [P] Crear el enum `AgendaCategory` en `lib/features/agenda/domain/entities/agenda_category.dart` con categorías `autocuidado`, `estudioTrabajo`, `saludMental`, etiquetas y estilos asociados
+- [x] T003 [P] Crear la entidad inmutable `AgendaActivity` en `lib/features/agenda/domain/entities/agenda_activity.dart` con `id`, `title`, `subtitle`, `scheduledDateTime`, `category`, `isCompleted`, `createdAt`, getter `formattedTime` y método `copyWith`
+- [x] T004 [P] Crear el Value Object `DaySchedule` en `lib/features/agenda/domain/entities/day_schedule.dart` con getters `totalActivities`, `completedActivities`, `balanceProgress` y `hasActivities`
+- [x] T005 [P] Crear el modelo inmutable `AgendaState` en `lib/features/agenda/domain/entities/agenda_state.dart` con fecha seleccionada, filtro activo, lista de actividades y getters reactivos (`activitiesForSelectedDay`, `filteredActivities`, `totalForDay`, `completedForDay`, `rhythmText`)
+- [x] T006 [P] Crear la interfaz abstracta `AgendaRepository` en `lib/features/agenda/domain/repositories/agenda_repository.dart` con operaciones de obtención, guardado, conmutación y eliminación
+- [x] T007 [P] Implementar la fuente de datos local `LocalAgendaDataSource` en `lib/features/agenda/data/datasources/local_agenda_datasource.dart` con las 4 actividades iniciales de Figma y operaciones CRUD en memoria
+- [x] T008 Implementar `LocalAgendaRepositoryImpl` en `lib/features/agenda/data/repositories/local_agenda_repository_impl.dart` cumpliendo con la arquitectura Offline-First
+- [x] T009 Escribir pruebas unitarias para `AgendaNotifier` en `test/unit/features/agenda/agenda_controller_test.dart` cubriendo filtrado por fecha, filtros por categoría, conmutación de estado y creación de tareas
+- [x] T010 Implementar `AgendaNotifier` y el proveedor `agendaControllerProvider` en `lib/features/agenda/presentation/controllers/agenda_controller.dart` implementando `IAgendaController`
 
 **Checkpoint**: Capas de dominio, datos locales y controlador reactivo verificados con pruebas unitarias.
 
@@ -50,16 +50,16 @@
 
 ### Tests for User Story 1
 
-- [ ] T011 [P] [US1] Escribir pruebas de widget para la tira semanal y la tarjeta de actividad en `test/widget/features/agenda/weekly_day_strip_test.dart` y `test/widget/features/agenda/activity_card_test.dart`
+- [x] T011 [P] [US1] Escribir pruebas de widget para la tira semanal y la tarjeta de actividad en `test/widget/features/agenda/weekly_day_strip_test.dart` y `test/widget/features/agenda/activity_card_test.dart`
 
 ### Implementation for User Story 1
 
-- [ ] T012 [P] [US1] Implementar el widget `AgendaHeader` en `lib/features/agenda/presentation/widgets/agenda_header.dart` con logo "mindUC", subtítulo "Agenda", campana de notificaciones y avatar de estudiante
-- [ ] T013 [P] [US1] Implementar el widget `WeeklyDayStrip` en `lib/features/agenda/presentation/widgets/weekly_day_strip.dart` con los 7 días de la semana (Lun a Dom), números de día, puntos de densidad y resaltado activo
-- [ ] T014 [P] [US1] Implementar el widget `RhythmBalanceCard` en `lib/features/agenda/presentation/widgets/rhythm_balance_card.dart` con icono de hoja circular, balance ("4 actividades · 2 completadas") y enlace "Historial >"
-- [ ] T015 [P] [US1] Implementar el widget `CategoryFilterChips` en `lib/features/agenda/presentation/widgets/category_filter_chips.dart` con chips "Todas", "Autocuidado", "Estudio / Trabajo" y resaltado dinámico
-- [ ] T016 [US1] Implementar el widget `ActivityCard` en `lib/features/agenda/presentation/widgets/activity_card.dart` con selector circular, horario AM/PM, píldora de categoría semántica, título con tachado condicional y descripción
-- [ ] T017 [US1] Integrar la pantalla principal `AgendaScreen` en `lib/features/agenda/presentation/screens/agenda_screen.dart` consumiendo `agendaControllerProvider` para componer cabecera, tira semanal, balance, filtros y lista reactiva de actividades
+- [x] T012 [P] [US1] Implementar el widget `AgendaHeader` en `lib/features/agenda/presentation/widgets/agenda_header.dart` con logo "mindUC", subtítulo "Agenda", campana de notificaciones y avatar de estudiante
+- [x] T013 [P] [US1] Implementar el widget `WeeklyDayStrip` en `lib/features/agenda/presentation/widgets/weekly_day_strip.dart` con los 7 días de la semana (Lun a Dom), números de día, puntos de densidad y resaltado activo
+- [x] T014 [P] [US1] Implementar el widget `RhythmBalanceCard` en `lib/features/agenda/presentation/widgets/rhythm_balance_card.dart` con icono de hoja circular, balance ("4 actividades · 2 completadas") y enlace "Historial >"
+- [x] T015 [P] [US1] Implementar el widget `CategoryFilterChips` en `lib/features/agenda/presentation/widgets/category_filter_chips.dart` con chips "Todas", "Autocuidado", "Estudio / Trabajo" y resaltado dinámico
+- [x] T016 [US1] Implementar el widget `ActivityCard` en `lib/features/agenda/presentation/widgets/activity_card.dart` con selector circular, horario AM/PM, píldora de categoría semántica, título con tachado condicional y descripción
+- [x] T017 [US1] Integrar la pantalla principal `AgendaScreen` en `lib/features/agenda/presentation/screens/agenda_screen.dart` consumiendo `agendaControllerProvider` para componer cabecera, tira semanal, balance, filtros y lista reactiva de actividades
 
 **Checkpoint**: User Story 1 funcional y verificable de forma autónoma (MVP alcanzado).
 
@@ -73,7 +73,7 @@
 
 ### Implementation for User Story 2
 
-- [ ] T018 [US2] Conectar el selector circular interactivo de `ActivityCard` con `notifier.toggleActivityCompletion(id)` en `lib/features/agenda/presentation/screens/agenda_screen.dart` asegurando la reactividad inmediata del balance de ritmo
+- [x] T018 [US2] Conectar el selector circular interactivo de `ActivityCard` con `notifier.toggleActivityCompletion(id)` en `lib/features/agenda/presentation/screens/agenda_screen.dart` asegurando la reactividad inmediata del balance de ritmo
 
 **Checkpoint**: User Stories 1 y 2 integradas y operativas.
 
@@ -87,12 +87,12 @@
 
 ### Tests for User Story 3
 
-- [ ] T019 [P] [US3] Escribir pruebas de widget para el modal de agendamiento en `test/widget/features/agenda/activity_create_modal_test.dart`
+- [x] T019 [P] [US3] Escribir pruebas de widget para el modal de agendamiento en `test/widget/features/agenda/activity_create_modal_test.dart`
 
 ### Implementation for User Story 3
 
-- [ ] T020 [US3] Implementar el widget modal `ActivityCreateModal` en `lib/features/agenda/presentation/widgets/activity_create_modal.dart` con campos de título, descripción opcional, selector de hora y selector de categoría consciente
-- [ ] T021 [US3] Conectar el botón flotante alargado `+ Nueva` en `AgendaScreen` (`lib/features/agenda/presentation/screens/agenda_screen.dart`) para invocar `ActivityCreateModal.show` y guardar la nueva actividad en la jornada activa
+- [x] T020 [US3] Implementar el widget modal `ActivityCreateModal` en `lib/features/agenda/presentation/widgets/activity_create_modal.dart` con campos de título, descripción opcional, selector de hora y selector de categoría consciente
+- [x] T021 [US3] Conectar el botón flotante alargado `+ Nueva` en `AgendaScreen` (`lib/features/agenda/presentation/screens/agenda_screen.dart`) para invocar `ActivityCreateModal.show` y guardar la nueva actividad en la jornada activa
 
 **Checkpoint**: User Stories 1, 2 y 3 funcionales en su totalidad.
 
@@ -106,7 +106,7 @@
 
 ### Implementation for User Story 4
 
-- [ ] T022 [US4] Conectar la selección de día en `WeeklyDayStrip` a `notifier.selectDate(date)` y enlazar el botón flotante de micrófono con diálogo informativo del agendador consciente en `lib/features/agenda/presentation/screens/agenda_screen.dart`
+- [x] T022 [US4] Conectar la selección de día en `WeeklyDayStrip` a `notifier.selectDate(date)` y enlazar el botón flotante de micrófono con diálogo informativo del agendador consciente en `lib/features/agenda/presentation/screens/agenda_screen.dart`
 
 **Checkpoint**: Las 4 historias de usuario operativas y conformes con la Constitución.
 
@@ -116,8 +116,8 @@
 
 **Purpose**: Pruebas de integración de pantalla completa, verificación con `GoRouter` en `AppRoutes.agenda` y verificación estática sin advertencias.
 
-- [ ] T023 Escribir pruebas de widget de integración de pantalla completa en `test/widget/features/agenda/agenda_screen_test.dart`
-- [ ] T024 Ejecutar la suite completa de pruebas (`flutter test`) y verificación de análisis estático (`dart analyze`) asegurando 0 issues y 100% de éxito
+- [x] T023 Escribir pruebas de widget de integración de pantalla completa en `test/widget/features/agenda/agenda_screen_test.dart`
+- [x] T024 Ejecutar la suite completa de pruebas (`flutter test`) y verificación de análisis estático (`dart analyze`) asegurando 0 issues y 100% de éxito
 
 ---
 
@@ -144,3 +144,4 @@
 - T002, T003, T004, T005, T006, T007 pueden ejecutarse en paralelo dentro de Foundational.
 - T012, T013, T014, T015 pueden ejecutarse en paralelo como componentes independientes de UI.
 - Las pruebas de widget T011 y T019 pueden crearse en paralelo.
+
