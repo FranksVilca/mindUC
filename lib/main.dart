@@ -1,0 +1,17 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'app.dart';
+import 'core/firebase/firebase_initializer.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Inicialización segura de Firebase e infraestructura offline
+  await FirebaseInitializer.initialize();
+
+  runApp(
+    const ProviderScope(
+      child: MindApp(),
+    ),
+  );
+}
