@@ -34,3 +34,4 @@
 - All checklist criteria verified and passed.
 - Mockup reference `mindUC - Bienestar.png` mapped with 100% visual fidelity.
 - Ready for `/speckit-plan`.
+

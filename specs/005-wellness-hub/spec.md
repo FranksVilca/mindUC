@@ -124,3 +124,4 @@ para tener una experiencia de uso fluida sin recargas innecesarias ni pérdida d
 - Se reutiliza la sesión de respiración implementada en `004-breathing-relaxation` (`AppRoutes.breathingSession`), permitiendo inicializarla con parámetros de técnica (`relaxing_478`) y duración (`300s`).
 - El Asistente IA permanece diferido según el Principio VI de la Constitución de mindUC; la tarjeta correspondiente proporciona feedback compasivo informativo sin simular llamadas de red ni dependencias externas.
 - El módulo Pomodoro y Diario personal contarán con rutas registradas o modales de destino que no rompan la navegación si aún están en fase de construcción.
+
