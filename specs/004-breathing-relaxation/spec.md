@@ -142,3 +142,4 @@ para alimentar mi racha de autocuidado y ver florecer mi constancia en el dashbo
 - **A-001**: El temporizador visual no depende de la reproducción obligatoria de archivos de audio para operar; las señales sonoras o hápticas serán sutiles y respetarán el modo silencioso del dispositivo.
 - **A-002**: Si el usuario está autenticado, la sesión se sincroniza con su historial de bienestar en `users/{userId}/breathing_sessions`; si está en modo invitado o anónimo, se almacena en memoria/almacenamiento local seguro.
 - **A-003**: La técnica predeterminada al ingresar es "Respiración 4-4-4 (Caja)" con una duración sugerida de "10 min", exactamente como se ilustra en el mockup oficial de Figma.
+
