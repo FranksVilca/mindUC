@@ -32,3 +32,4 @@
 ## Notes
 
 - 16/16 validation items passing. The specification is complete, unambiguous, and ready for `/speckit-plan`.
+

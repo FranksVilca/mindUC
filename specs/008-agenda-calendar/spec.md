@@ -150,3 +150,4 @@ para planificar con fluidez diferentes días de la semana y acceder a herramient
 - Se precargan inicialmente las 4 actividades de ejemplo reflejadas en el mockup de Figma para garantizar una experiencia visual inmediata y coherente con el diseño.
 - El botón de micrófono proporciona una respuesta visual armoniosa (diálogo o notificación serena) anticipando el módulo de agendamiento semántico por voz de etapas posteriores sin bloquear la experiencia de usuario.
 - La persistencia de datos opera de manera autónoma en el dispositivo mediante Clean Architecture, compatible con sincronización de Cloud Firestore.
+
