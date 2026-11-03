@@ -148,3 +148,4 @@ para pasar de la lectura a una práctica de calma inmediata o resguardar el espa
 - Se precargan inicialmente las 3 publicaciones representadas en el mockup de Figma (`@BúhoCurioso`, `@BroteCalmo`, `@LluviaSuave`) para brindar una experiencia comunitaria inmediata y visualmente auténtica.
 - El botón "Probar" en la tarjeta de `@BroteCalmo` navega limpiamente a `AppRoutes.breathingSession`.
 - Las reacciones del usuario se gestionan en memoria local durante la sesión actual con soporte para persistencia offline.
+

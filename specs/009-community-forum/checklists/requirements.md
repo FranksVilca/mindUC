@@ -32,3 +32,4 @@
 ## Notes
 
 - 16/16 validation items passing. The specification is complete, unambiguous, adheres strictly to Principle V (Anonymous Ephemeral Aliases) and is ready for `/speckit-plan`.
+
