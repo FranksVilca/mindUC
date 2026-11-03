@@ -1,0 +1,62 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:minduc/features/wellness/presentation/screens/wellness_screen.dart';
+
+void main() {
+  group('WellnessScreen Integration Widget Tests', () {
+    Widget createTestApp() {
+      return const ProviderScope(
+        child: MaterialApp(
+          home: WellnessScreen(),
+        ),
+      );
+    }
+
+    testWidgets('renders all screen components according to Figma design', (tester) async {
+      await tester.pumpWidget(createTestApp());
+
+      // 1. Header
+      expect(find.text('mindUC'), findsOneWidget);
+      expect(find.text('Bienestar'), findsOneWidget);
+      expect(find.byIcon(Icons.notifications_none_outlined), findsOneWidget);
+
+      // 2. Sanctuary Badge
+      expect(find.text('SANCTUARY MODE'), findsOneWidget);
+
+      // 3. Hero section
+      expect(find.text('Tu espacio de bienestar ✨'), findsOneWidget);
+      expect(find.text('Tómate una pausa consciente. Cada pequeño respiro renueva tu energía interior.'), findsOneWidget);
+
+      // 4. Suggested exercise card
+      expect(find.text('EJERCICIO SUGERIDO PARA TI HOY'), findsOneWidget);
+      expect(find.text('Respiración 4–7–8'), findsOneWidget);
+      expect(find.text('Comenzar (5 min)'), findsOneWidget);
+
+      // 5. 2x2 grid of tools
+      expect(find.text('Respiración'), findsOneWidget);
+      expect(find.text('Diario personal'), findsOneWidget);
+    });
+
+    testWidgets('tapping Asistente IA displays ethical coming soon dialog', (tester) async {
+      await tester.pumpWidget(createTestApp());
+
+      // Scroll to Asistente IA if needed and tap
+      await tester.ensureVisible(find.text('Asistente IA ✨'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Asistente IA ✨'));
+      await tester.pumpAndSettle();
+
+      // Verify ethical preparation dialog is shown
+      expect(find.text('Acompañamiento en Preparación ✨'), findsOneWidget);
+      expect(find.text('Comprendido'), findsOneWidget);
+
+      // Dismiss dialog
+      await tester.tap(find.text('Comprendido'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Acompañamiento en Preparación ✨'), findsNothing);
+    });
+  });
+}

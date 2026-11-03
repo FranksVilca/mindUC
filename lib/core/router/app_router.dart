@@ -97,6 +97,36 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.breathingSession,
         builder: (context, state) => const BreathingScreen(),
       ),
+      // Sesión de Concentración Pomodoro (en preparación)
+      GoRoute(
+        path: AppRoutes.pomodoroSession,
+        builder: (context, state) => Scaffold(
+          backgroundColor: MindColors.background,
+          appBar: AppBar(
+            title: const Text('Concentración Pomodoro'),
+            backgroundColor: MindColors.background,
+            elevation: 0,
+          ),
+          body: const Center(
+            child: Text('Espacio de Concentración Pomodoro en preparación 🌿'),
+          ),
+        ),
+      ),
+      // Diario personal íntimo (en preparación)
+      GoRoute(
+        path: AppRoutes.journalNew,
+        builder: (context, state) => Scaffold(
+          backgroundColor: MindColors.background,
+          appBar: AppBar(
+            title: const Text('Diario Personal'),
+            backgroundColor: MindColors.background,
+            elevation: 0,
+          ),
+          body: const Center(
+            child: Text('Diario Íntimo y Seguro en preparación 🌿'),
+          ),
+        ),
+      ),
 
       // Shell persistente de 4 pestañas
       StatefulShellRoute.indexedStack(
