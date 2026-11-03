@@ -48,3 +48,4 @@ Reutilizado de `lib/features/auth/domain/entities/user_entity.dart`.
 - `isInstitutional`: getter boolean si termina en `@uc.cl`.
 - `isEmailVerified`: boolean.
 - `createdAt`: DateTime.
+

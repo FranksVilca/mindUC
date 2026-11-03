@@ -13,3 +13,4 @@ Verifica:
 3. Toggle de visibilidad de contraseña con icono de ojo.
 4. Flujo de envío con loading indicator y navegación a `/home`.
 5. Diálogo sereno de recuperación de contraseña.
+

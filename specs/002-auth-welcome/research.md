@@ -46,3 +46,4 @@ En `lib/core/router/app_router.dart`:
 - El enrutador GoRouter escucha los cambios de estado del usuario (`authStateChangesProvider` o un `Listenable` derivado).
 - Si el usuario **no está autenticado** y la ruta actual es una ruta protegida del shell (`/home`, `/wellness`, `/agenda`, `/profile`), se redirige a `/auth`.
 - Si el usuario **está autenticado** e intenta navegar a `/auth`, se le redirige automáticamente a `/home`.
+

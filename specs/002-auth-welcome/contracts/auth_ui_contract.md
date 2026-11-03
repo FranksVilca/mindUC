@@ -16,3 +16,4 @@ abstract interface class AuthUiControllerContract {
   void clearError();
 }
 ```
+
