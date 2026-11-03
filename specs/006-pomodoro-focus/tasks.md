@@ -17,7 +17,7 @@
 
 **Purpose**: Estructura de directorios y módulos para la característica `focus_pomodoro`.
 
-- [ ] T001 Crear la estructura de directorios de la característica en `lib/features/focus_pomodoro/` (`domain/entities`, `presentation/controllers`, `presentation/screens`, `presentation/widgets`) y en `test/{unit,widget}/features/focus_pomodoro/`
+- [x] T001 Crear la estructura de directorios de la característica en `lib/features/focus_pomodoro/` (`domain/entities`, `presentation/controllers`, `presentation/screens`, `presentation/widgets`) y en `test/{unit,widget}/features/focus_pomodoro/`
 
 ---
 
@@ -25,11 +25,11 @@
 
 **Purpose**: Entidades de dominio fundamentales y controlador reactivo con temporizador de precisión diferencial que bloquean la implementación de las historias de usuario.
 
-- [ ] T002 [P] Crear la entidad `PomodoroIntervalType` en `lib/features/focus_pomodoro/domain/entities/pomodoro_interval_type.dart` con valores `focus` (1500s), `shortBreak` (300s), `longBreak` (900s), etiquetas y getters de duración
-- [ ] T003 [P] Crear la entidad `SoundscapeTrack` en `lib/features/focus_pomodoro/domain/entities/soundscape_track.dart` con campos `id`, `title`, `subtitle`, `iconName` y catálogo predefinido (`rain`, `cafe`, `forest`)
-- [ ] T004 [P] Crear la entidad inmutable `PomodoroState` en `lib/features/focus_pomodoro/domain/entities/pomodoro_state.dart` con campos `sessionTitle`, `currentCycle`, `totalCycles`, `intervalType`, `remainingSeconds`, `totalSeconds`, `isRunning`, `currentObjective`, `selectedSoundscapeId`, `isSoundscapePlaying`, `soundscapeVolume`, `isDeepFocusEnabled`, getters de formateo de tiempo y `copyWith`
-- [ ] T005 Escribir pruebas unitarias para `PomodoroNotifier` en `test/unit/features/focus_pomodoro/pomodoro_controller_test.dart` cubriendo inicio, pausa, reinicio, salto de intervalos, transiciones de ciclos y cálculo de tiempo sin desfase
-- [ ] T006 Implementar `PomodoroNotifier` y el proveedor `pomodoroControllerProvider` en `lib/features/focus_pomodoro/presentation/controllers/pomodoro_controller.dart` implementando `IPomodoroController` mediante marcas temporales de sistema (`DateTime.now()`)
+- [x] T002 [P] Crear la entidad `PomodoroIntervalType` en `lib/features/focus_pomodoro/domain/entities/pomodoro_interval_type.dart` con valores `focus` (1500s), `shortBreak` (300s), `longBreak` (900s), etiquetas y getters de duración
+- [x] T003 [P] Crear la entidad `SoundscapeTrack` en `lib/features/focus_pomodoro/domain/entities/soundscape_track.dart` con campos `id`, `title`, `subtitle`, `iconName` y catálogo predefinido (`rain`, `cafe`, `forest`)
+- [x] T004 [P] Crear la entidad inmutable `PomodoroState` en `lib/features/focus_pomodoro/domain/entities/pomodoro_state.dart` con campos `sessionTitle`, `currentCycle`, `totalCycles`, `intervalType`, `remainingSeconds`, `totalSeconds`, `isRunning`, `currentObjective`, `selectedSoundscapeId`, `isSoundscapePlaying`, `soundscapeVolume`, `isDeepFocusEnabled`, getters de formateo de tiempo y `copyWith`
+- [x] T005 Escribir pruebas unitarias para `PomodoroNotifier` en `test/unit/features/focus_pomodoro/pomodoro_controller_test.dart` cubriendo inicio, pausa, reinicio, salto de intervalos, transiciones de ciclos y cálculo de tiempo sin desfase
+- [x] T006 Implementar `PomodoroNotifier` y el proveedor `pomodoroControllerProvider` en `lib/features/focus_pomodoro/presentation/controllers/pomodoro_controller.dart` implementando `IPomodoroController` mediante marcas temporales de sistema (`DateTime.now()`)
 
 **Checkpoint**: Base de dominio y controlador reactivo completados y verificados con pruebas unitarias.
 
@@ -43,12 +43,12 @@
 
 ### Tests for User Story 1
 
-- [ ] T007 [P] [US1] Escribir pruebas de widget para selector de intervalos y tarjeta de cronómetro en `test/widget/features/focus_pomodoro/pomodoro_timer_card_test.dart`
+- [x] T007 [P] [US1] Escribir pruebas de widget para selector de intervalos y tarjeta de cronómetro en `test/widget/features/focus_pomodoro/pomodoro_timer_card_test.dart`
 
 ### Implementation for User Story 1
 
-- [ ] T008 [P] [US1] Implementar el widget `IntervalSelectorRow` en `lib/features/focus_pomodoro/presentation/widgets/interval_selector_row.dart` con opciones "Enfoque", "Corto (5m)" y "Largo (15m)" destacando la opción activa con fondo blanco y sombra suave
-- [ ] T009 [US1] Implementar el widget `PomodoroTimerCard` en `lib/features/focus_pomodoro/presentation/widgets/pomodoro_timer_card.dart` con arco circular verde (`MindColors.primary`), indicador "Bloque activo", tiempo digital (ej. `18:41`), duración total ("de 25:00 min") y fila de controles de reproducción (botón `↺`, botón píldora "Iniciar/Pausar enfoque" y botón `>|`)
+- [x] T008 [P] [US1] Implementar el widget `IntervalSelectorRow` en `lib/features/focus_pomodoro/presentation/widgets/interval_selector_row.dart` con opciones "Enfoque", "Corto (5m)" y "Largo (15m)" destacando la opción activa con fondo blanco y sombra suave
+- [x] T009 [US1] Implementar el widget `PomodoroTimerCard` en `lib/features/focus_pomodoro/presentation/widgets/pomodoro_timer_card.dart` con arco circular verde (`MindColors.primary`), indicador "Bloque activo", tiempo digital (ej. `18:41`), duración total ("de 25:00 min") y fila de controles de reproducción (botón `↺`, botón píldora "Iniciar/Pausar enfoque" y botón `>|`)
 
 **Checkpoint**: User Story 1 funcional y comprobable de forma autónoma (MVP alcanzado).
 
@@ -62,12 +62,12 @@
 
 ### Tests for User Story 2
 
-- [ ] T010 [P] [US2] Escribir pruebas de widget para la barra de 4 ciclos y diálogo de objetivo académico en `test/widget/features/focus_pomodoro/pomodoro_cycle_progress_test.dart`
+- [x] T010 [P] [US2] Escribir pruebas de widget para la barra de 4 ciclos y diálogo de objetivo académico en `test/widget/features/focus_pomodoro/pomodoro_cycle_progress_test.dart`
 
 ### Implementation for User Story 2
 
-- [ ] T011 [P] [US2] Implementar el widget `PomodoroCycleProgress` en `lib/features/focus_pomodoro/presentation/widgets/pomodoro_cycle_progress.dart` con insignia de planta "Sesión de la tarde", badge "Ciclo 2 de 4" y barra horizontal de 4 cápsulas segmentadas
-- [ ] T012 [US2] Implementar el diálogo modal interactivo `ObjectiveEditDialog` en `lib/features/focus_pomodoro/presentation/widgets/objective_edit_dialog.dart` e integrarlo en la cabecera de la tarjeta `PomodoroTimerCard` con botón de edición rápida (lápiz)
+- [x] T011 [P] [US2] Implementar el widget `PomodoroCycleProgress` en `lib/features/focus_pomodoro/presentation/widgets/pomodoro_cycle_progress.dart` con insignia de planta "Sesión de la tarde", badge "Ciclo 2 de 4" y barra horizontal de 4 cápsulas segmentadas
+- [x] T012 [US2] Implementar el diálogo modal interactivo `ObjectiveEditDialog` en `lib/features/focus_pomodoro/presentation/widgets/objective_edit_dialog.dart` e integrarlo en la cabecera de la tarjeta `PomodoroTimerCard` con botón de edición rápida (lápiz)
 
 **Checkpoint**: User Stories 1 y 2 completamente operativas e integradas.
 
@@ -81,11 +81,11 @@
 
 ### Tests for User Story 3
 
-- [ ] T013 [P] [US3] Escribir pruebas de widget para la sección de paisajes sonoros y barra de volumen en `test/widget/features/focus_pomodoro/soundscape_section_test.dart`
+- [x] T013 [P] [US3] Escribir pruebas de widget para la sección de paisajes sonoros y barra de volumen en `test/widget/features/focus_pomodoro/soundscape_section_test.dart`
 
 ### Implementation for User Story 3
 
-- [ ] T014 [US3] Implementar el widget `SoundscapeSection` en `lib/features/focus_pomodoro/presentation/widgets/soundscape_section.dart` con icono de ondas (`||||`), badge "Audio relajante", lista de tarjetas con estados interactivos y control deslizante de volumen (slider)
+- [x] T014 [US3] Implementar el widget `SoundscapeSection` en `lib/features/focus_pomodoro/presentation/widgets/soundscape_section.dart` con icono de ondas (`||||`), badge "Audio relajante", lista de tarjetas con estados interactivos y control deslizante de volumen (slider)
 
 **Checkpoint**: User Stories 1, 2 y 3 operativas de forma autónoma.
 
@@ -99,11 +99,11 @@
 
 ### Tests for User Story 4
 
-- [ ] T015 [P] [US4] Escribir pruebas de widget para el modo enfoque consciente en `test/widget/features/focus_pomodoro/deep_focus_card_test.dart`
+- [x] T015 [P] [US4] Escribir pruebas de widget para el modo enfoque consciente en `test/widget/features/focus_pomodoro/deep_focus_card_test.dart`
 
 ### Implementation for User Story 4
 
-- [ ] T016 [US4] Implementar el widget `DeepFocusCard` en `lib/features/focus_pomodoro/presentation/widgets/deep_focus_card.dart` con icono de escudo, switch interactivo, chips visuales de apps silenciadas y diálogo formativo de alineación ética bajo el Principio VII diferido
+- [x] T016 [US4] Implementar el widget `DeepFocusCard` en `lib/features/focus_pomodoro/presentation/widgets/deep_focus_card.dart` con icono de escudo, switch interactivo, chips visuales de apps silenciadas y diálogo formativo de alineación ética bajo el Principio VII diferido
 
 **Checkpoint**: Las 4 historias de usuario se encuentran implementadas y validadas con pruebas.
 
@@ -113,11 +113,11 @@
 
 **Purpose**: Integración de la pantalla completa `PomodoroScreen`, cabecera de navegación, vinculación con `AppRoutes.pomodoroSession`, pruebas de pantalla completa y verificación estática.
 
-- [ ] T017 [P] Implementar el widget `PomodoroHeader` en `lib/features/focus_pomodoro/presentation/widgets/pomodoro_header.dart` con botón de retroceso (`<`), título "Minduc — Concentración (Pomodoro)", subtítulo "mindUC" y botón de opciones (`⋮`)
-- [ ] T018 Implementar la pantalla principal `PomodoroScreen` en `lib/features/focus_pomodoro/presentation/screens/pomodoro_screen.dart` articulando `PomodoroHeader`, `PomodoroCycleProgress`, `IntervalSelectorRow`, `PomodoroTimerCard`, `SoundscapeSection` y `DeepFocusCard` en un scroll vertical armonioso
-- [ ] T019 Conectar `PomodoroScreen` en la ruta declarativa `AppRoutes.pomodoroSession` en `lib/core/router/app_router.dart` reemplazando el Scaffold placeholder provisional
-- [ ] T020 Escribir pruebas de widget de integración de pantalla completa en `test/widget/features/focus_pomodoro/pomodoro_screen_test.dart`
-- [ ] T021 Ejecutar la suite completa de pruebas (`flutter test`) y verificación de análisis estático (`dart analyze`) asegurando 0 issues y 100% de éxito
+- [x] T017 [P] Implementar el widget `PomodoroHeader` en `lib/features/focus_pomodoro/presentation/widgets/pomodoro_header.dart` con botón de retroceso (`<`), título "Minduc — Concentración (Pomodoro)", subtítulo "mindUC" y botón de opciones (`⋮`)
+- [x] T018 Implementar la pantalla principal `PomodoroScreen` en `lib/features/focus_pomodoro/presentation/screens/pomodoro_screen.dart` articulando `PomodoroHeader`, `PomodoroCycleProgress`, `IntervalSelectorRow`, `PomodoroTimerCard`, `SoundscapeSection` y `DeepFocusCard` en un scroll vertical armonioso
+- [x] T019 Conectar `PomodoroScreen` en la ruta declarativa `AppRoutes.pomodoroSession` en `lib/core/router/app_router.dart` reemplazando el Scaffold placeholder provisional
+- [x] T020 Escribir pruebas de widget de integración de pantalla completa en `test/widget/features/focus_pomodoro/pomodoro_screen_test.dart`
+- [x] T021 Ejecutar la suite completa de pruebas (`flutter test`) y verificación de análisis estático (`dart analyze`) asegurando 0 issues y 100% de éxito
 
 ---
 
@@ -162,3 +162,4 @@
 2. Añadir Phase 5 (US3: Paisajes sonoros).
 3. Añadir Phase 6 (US4: Modo enfoque consciente).
 4. Completar Phase 7 (Integración en pantalla, GoRouter y suite completa de pruebas).
+

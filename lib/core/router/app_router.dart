@@ -6,6 +6,7 @@ import '../../features/agenda/presentation/screens/agenda_screen.dart';
 import '../../features/auth/presentation/controllers/auth_controller.dart';
 import '../../features/auth/presentation/screens/welcome_auth_screen.dart';
 import '../../features/breathing/presentation/screens/breathing_screen.dart';
+import '../../features/focus_pomodoro/presentation/screens/pomodoro_screen.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/wellness/presentation/screens/wellness_screen.dart';
@@ -97,20 +98,10 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.breathingSession,
         builder: (context, state) => const BreathingScreen(),
       ),
-      // Sesión de Concentración Pomodoro (en preparación)
+      // Sesión de Concentración Pomodoro
       GoRoute(
         path: AppRoutes.pomodoroSession,
-        builder: (context, state) => Scaffold(
-          backgroundColor: MindColors.background,
-          appBar: AppBar(
-            title: const Text('Concentración Pomodoro'),
-            backgroundColor: MindColors.background,
-            elevation: 0,
-          ),
-          body: const Center(
-            child: Text('Espacio de Concentración Pomodoro en preparación 🌿'),
-          ),
-        ),
+        builder: (context, state) => const PomodoroScreen(),
       ),
       // Diario personal íntimo (en preparación)
       GoRoute(
