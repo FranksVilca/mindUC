@@ -65,3 +65,4 @@ Reutilizar `SpanishDateFormatter` (validado y testeado en `001-core-foundation`)
 
 ### Justificación
 - Elimina duplicación de código y asegura consistencia lingüística en toda la app mindUC.
+

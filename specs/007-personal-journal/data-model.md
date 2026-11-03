@@ -93,3 +93,4 @@ Administrado por `JournalNotifier` en Riverpod.
 **Getters**:
 - `entryCount`: `entries.length`.
 - `hasEntries`: `entries.isNotEmpty`.
+

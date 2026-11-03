@@ -96,3 +96,4 @@ abstract class IJournalController {
   - Campo de texto para título.
   - Área de texto para contenido reflexivo.
   - Botones "Cancelar" y "Guardar reflexión".
+

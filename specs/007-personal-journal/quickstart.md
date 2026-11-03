@@ -77,3 +77,4 @@ flutter test
 6. **Edición y Eliminación**:
    - Tocar el lápiz de edición en una tarjeta: permite modificar el texto y persistir los cambios.
    - Tocar el menú `⋮` y seleccionar eliminar: borra la tarjeta tras confirmación compasiva.
+
