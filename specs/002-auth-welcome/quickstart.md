@@ -4,7 +4,14 @@ Guía para probar el módulo de Bienvenida y Autenticación con Firebase.
 
 ## Ejecución de Pruebas Automatizadas
 ```bash
+# Probar la pantalla de bienvenida y autenticación
 flutter test test/widget/features/auth/welcome_auth_screen_test.dart
+
+# Probar la redirección de GoRouter según sesión
+flutter test test/widget/core/router/auth_redirect_test.dart
+
+# Ejecutar la suite completa de pruebas
+flutter test
 ```
 
 Verifica:

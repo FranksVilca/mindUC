@@ -5,8 +5,9 @@ import '../../domain/entities/user_entity.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../../domain/usecases/sign_in_usecase.dart';
 import '../../domain/usecases/sign_up_usecase.dart';
+import 'auth_ui_state.dart';
 
-/// Proveedor del repositorio de autenticación (por defecto con FakeDataSource para desarrollo).
+/// Proveedor del repositorio de autenticación.
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   return AuthRepositoryImpl(fakeDataSource: FakeAuthDataSource());
 });
@@ -23,9 +24,121 @@ final signUpUseCaseProvider = Provider<SignUpUseCase>((ref) {
   return SignUpUseCase(repo);
 });
 
-/// Proveedor del Stream de estado del usuario autenticado.
+/// Proveedor del Stream de sesión del usuario.
 final authStateChangesProvider = StreamProvider<UserEntity?>((ref) {
   final repo = ref.watch(authRepositoryProvider);
   return repo.authStateChanges();
 });
 
+/// Notifier que gestiona el estado interactivo del formulario de autenticación.
+class AuthUiNotifier extends StateNotifier<AuthUiState> {
+  final SignInUseCase _signInUseCase;
+  final SignUpUseCase _signUpUseCase;
+  final AuthRepository _authRepository;
+
+  AuthUiNotifier({
+    required SignInUseCase signInUseCase,
+    required SignUpUseCase signUpUseCase,
+    required AuthRepository authRepository,
+  })  : _signInUseCase = signInUseCase,
+        _signUpUseCase = signUpUseCase,
+        _authRepository = authRepository,
+        super(const AuthUiState());
+
+  void toggleMode() {
+    state = state.copyWith(
+      isLoginMode: !state.isLoginMode,
+      clearError: true,
+    );
+  }
+
+  void setLoginMode(bool isLogin) {
+    state = state.copyWith(
+      isLoginMode: isLogin,
+      clearError: true,
+    );
+  }
+
+  void togglePasswordVisibility() {
+    state = state.copyWith(isPasswordVisible: !state.isPasswordVisible);
+  }
+
+  void clearError() {
+    state = state.copyWith(clearError: true);
+  }
+
+  Future<bool> submit({
+    required String email,
+    required String password,
+    String? displayName,
+    String? department,
+  }) async {
+    state = state.copyWith(isLoading: true, clearError: true);
+
+    if (state.isLoginMode) {
+      final result = await _signInUseCase(email: email, password: password);
+      return result.when(
+        onSuccess: (_) {
+          state = state.copyWith(isLoading: false);
+          return true;
+        },
+        onFailure: (failure) {
+          state = state.copyWith(
+            isLoading: false,
+            errorMessage: failure.message,
+          );
+          return false;
+        },
+      );
+    } else {
+      final result = await _signUpUseCase(
+        email: email,
+        password: password,
+        displayName: displayName,
+        department: department,
+      );
+      return result.when(
+        onSuccess: (_) {
+          state = state.copyWith(isLoading: false);
+          return true;
+        },
+        onFailure: (failure) {
+          state = state.copyWith(
+            isLoading: false,
+            errorMessage: failure.message,
+          );
+          return false;
+        },
+      );
+    }
+  }
+
+  Future<bool> sendPasswordReset(String email) async {
+    state = state.copyWith(isLoading: true, clearError: true, isResetEmailSent: false);
+    final result = await _authRepository.sendPasswordResetEmail(email);
+    return result.when(
+      onSuccess: (_) {
+        state = state.copyWith(isLoading: false, isResetEmailSent: true);
+        return true;
+      },
+      onFailure: (failure) {
+        state = state.copyWith(
+          isLoading: false,
+          errorMessage: failure.message,
+          isResetEmailSent: false,
+        );
+        return false;
+      },
+    );
+  }
+}
+
+/// Proveedor del controlador de estado de UI de autenticación.
+final authUiControllerProvider =
+    StateNotifierProvider<AuthUiNotifier, AuthUiState>((ref) {
+  return AuthUiNotifier(
+    signInUseCase: ref.watch(signInUseCaseProvider),
+    signUpUseCase: ref.watch(signUpUseCaseProvider),
+    authRepository: ref.watch(authRepositoryProvider),
+  );
+});

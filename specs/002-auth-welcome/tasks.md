@@ -15,8 +15,8 @@
 
 **Purpose**: Estructura de directorios y rutas para la interfaz de bienvenida y autenticación.
 
-- [ ] T001 [P] Crear el directorio de widgets de autenticación en `lib/features/auth/presentation/widgets/` y directorio de tests en `test/widget/features/auth/`
-- [ ] T002 [P] Confirmar la constante `AppRoutes.auth = '/auth'` en `lib/core/router/route_names.dart`
+- [X] T001 [P] Crear el directorio de widgets de autenticación en `lib/features/auth/presentation/widgets/` y directorio de tests en `test/widget/features/auth/`
+- [X] T002 [P] Confirmar la constante `AppRoutes.auth = '/auth'` en `lib/core/router/route_names.dart`
 
 ---
 
@@ -24,9 +24,9 @@
 
 **Purpose**: Controlador reactivo de presentación y modelo de estado de autenticación.
 
-- [ ] T003 [P] Implementar la clase inmutable `AuthUiState` (modo login/registro, visibilidad de clave, loading y mensajes de error) en `lib/features/auth/presentation/controllers/auth_ui_state.dart`
-- [ ] T004 [P] Implementar el `StateNotifier<AuthUiState>` (`AuthUiNotifier`) y provider en `lib/features/auth/presentation/controllers/auth_controller.dart` conectando con `SignInUseCase`, `SignUpUseCase` y `AuthRepository`
-- [ ] T005 [P] Implementar pruebas unitarias de `AuthUiNotifier` en `test/unit/features/auth/auth_controller_test.dart`
+- [X] T003 [P] Implementar la clase inmutable `AuthUiState` (modo login/registro, visibilidad de clave, loading y mensajes de error) en `lib/features/auth/presentation/controllers/auth_ui_state.dart`
+- [X] T004 [P] Implementar el `StateNotifier<AuthUiState>` (`AuthUiNotifier`) y provider en `lib/features/auth/presentation/controllers/auth_controller.dart` conectando con `SignInUseCase`, `SignUpUseCase` y `AuthRepository`
+- [X] T005 [P] Implementar pruebas unitarias de `AuthUiNotifier` en `test/unit/features/auth/auth_controller_test.dart`
 
 **Checkpoint**: Estado reactivo de UI testeado y desacoplado del árbol de widgets.
 
@@ -39,12 +39,12 @@
 **Independent Test**: La suite de pruebas de widgets valida que `WelcomeAuthScreen` renderiza el emblema botánico, píldoras, campos de texto, botón con feedback de carga y navega a `/home` al autenticar.
 
 ### Tests para User Story 1
-- [ ] T006 [P] [US1] Escribir prueba de widget para el selector segmentado `AuthSegmentedSwitch` en `test/widget/features/auth/auth_segmented_switch_test.dart`
-- [ ] T007 [P] [US1] Escribir pruebas de widget para `WelcomeAuthScreen` (renderizado de Figma, validación de inputs y feedback de carga) en `test/widget/features/auth/welcome_auth_screen_test.dart`
+- [X] T006 [P] [US1] Escribir prueba de widget para el selector segmentado `AuthSegmentedSwitch` en `test/widget/features/auth/auth_segmented_switch_test.dart`
+- [X] T007 [P] [US1] Escribir pruebas de widget para `WelcomeAuthScreen` (renderizado de Figma, validación de inputs y feedback de carga) en `test/widget/features/auth/welcome_auth_screen_test.dart`
 
 ### Implementación de User Story 1
-- [ ] T008 [US1] Implementar componente `AuthSegmentedSwitch` (contenedor con dos pestañas y slider animado blanco) en `lib/features/auth/presentation/widgets/auth_segmented_switch.dart`
-- [ ] T009 [US1] Implementar la pantalla completa `WelcomeAuthScreen` (cabecera, emblema botánico circular, píldora de Bienestar Estudiantil, titular, campos de correo y contraseña con toggle de ojo, botón primario y tagline inferior) en `lib/features/auth/presentation/screens/welcome_auth_screen.dart`
+- [X] T008 [US1] Implementar componente `AuthSegmentedSwitch` (contenedor con dos pestañas y slider animado blanco) en `lib/features/auth/presentation/widgets/auth_segmented_switch.dart`
+- [X] T009 [US1] Implementar la pantalla completa `WelcomeAuthScreen` (cabecera, emblema botánico circular, píldora de Bienestar Estudiantil, titular, campos de correo y contraseña con toggle de ojo, botón primario y tagline inferior) en `lib/features/auth/presentation/screens/welcome_auth_screen.dart`
 
 **Checkpoint**: User Story 1 completa y verificable con login funcional.
 
@@ -57,10 +57,10 @@
 **Independent Test**: Al pulsar "Registrarse", la tarjeta expande suavemente los campos de nombre/carrera, valida contraseña >= 6 caracteres y crea el usuario.
 
 ### Tests para User Story 2
-- [ ] T010 [P] [US2] Agregar casos de prueba de widget para el modo registro y validaciones de contraseña corta en `test/widget/features/auth/welcome_auth_screen_test.dart`
+- [X] T010 [P] [US2] Agregar casos de prueba de widget para el modo registro y validaciones de contraseña corta en `test/widget/features/auth/welcome_auth_screen_test.dart`
 
 ### Implementación de User Story 2
-- [ ] T011 [US2] Habilitar la transición reactiva a modo registro en `WelcomeAuthScreen` (inclusión de campos de nombre completo y departamento, botón con texto "Crear mi cuenta" y llamada a `signUp`) en `lib/features/auth/presentation/screens/welcome_auth_screen.dart`
+- [X] T011 [US2] Habilitar la transición reactiva a modo registro en `WelcomeAuthScreen` (inclusión de campos de nombre completo y departamento, botón con texto "Crear mi cuenta" y llamada a `signUp`) en `lib/features/auth/presentation/screens/welcome_auth_screen.dart`
 
 **Checkpoint**: Registro e inicio de sesión integrados en el mismo contenedor visual.
 
@@ -73,11 +73,11 @@
 **Independent Test**: Al pulsar "¿Olvidaste tu contraseña?", se abre `PasswordResetDialog`, se ingresa el correo y se muestra la confirmación tranquilizadora.
 
 ### Tests para User Story 3
-- [ ] T012 [P] [US3] Escribir prueba de widget para `PasswordResetDialog` en `test/widget/features/auth/password_reset_dialog_test.dart`
+- [X] T012 [P] [US3] Escribir prueba de widget para `PasswordResetDialog` en `test/widget/features/auth/password_reset_dialog_test.dart`
 
 ### Implementación de User Story 3
-- [ ] T013 [US3] Implementar componente `PasswordResetDialog` en `lib/features/auth/presentation/widgets/password_reset_dialog.dart`
-- [ ] T014 [US3] Conectar el enlace "¿Olvidaste tu contraseña?" en `WelcomeAuthScreen` para invocar el diálogo y llamar a `sendPasswordResetEmail`
+- [X] T013 [US3] Implementar componente `PasswordResetDialog` en `lib/features/auth/presentation/widgets/password_reset_dialog.dart`
+- [X] T014 [US3] Conectar el enlace "¿Olvidaste tu contraseña?" en `WelcomeAuthScreen` para invocar el diálogo y llamar a `sendPasswordResetEmail`
 
 **Checkpoint**: Recuperación de contraseña completada y testeada.
 
@@ -90,10 +90,10 @@
 **Independent Test**: Prueba de integración de GoRouter verifica que una sesión activa entra a `/home`, y un logout redirige a `/auth`.
 
 ### Tests para User Story 4
-- [ ] T015 [P] [US4] Escribir prueba de widget de redirección en `test/widget/core/router/auth_redirect_test.dart`
+- [X] T015 [P] [US4] Escribir prueba de widget de redirección en `test/widget/core/router/auth_redirect_test.dart`
 
 ### Implementación de User Story 4
-- [ ] T016 [US4] Actualizar `lib/core/router/app_router.dart` registrando la ruta `AppRoutes.auth` con `WelcomeAuthScreen` y la lógica reactiva de `redirect` según el estado de `AuthRepository`
+- [X] T016 [US4] Actualizar `lib/core/router/app_router.dart` registrando la ruta `AppRoutes.auth` con `WelcomeAuthScreen` y la lógica reactiva de `redirect` según el estado de `AuthRepository`
 
 **Checkpoint**: Flujo de navegación protegido y reactivo entre login y el shell de la aplicación.
 
@@ -103,9 +103,9 @@
 
 **Purpose**: Verificación integral de calidad, análisis estático y suite de pruebas.
 
-- [ ] T017 [P] Ejecutar `dart analyze` y resolver cualquier advertencia o violación de estilo
-- [ ] T018 Ejecutar suite completa `flutter test` asegurando 100% de éxito en tests unitarios y de widgets
-- [ ] T019 Actualizar `specs/002-auth-welcome/quickstart.md` con los comandos de prueba verificados
+- [X] T017 [P] Ejecutar `dart analyze` y resolver cualquier advertencia o violación de estilo
+- [X] T018 Ejecutar suite completa `flutter test` asegurando 100% de éxito en tests unitarios y de widgets
+- [X] T019 Actualizar `specs/002-auth-welcome/quickstart.md` con los comandos de prueba verificados
 
 ---
 
@@ -153,3 +153,4 @@ flowchart TD
         T018 --> T019[T019: Quickstart update]
     end
 ```
+
