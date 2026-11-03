@@ -210,3 +210,4 @@ abstract class ProgressRepository {
   Future<ProgressSummaryState> toggleIntentionProgress(String intentionId);
 }
 ```
+

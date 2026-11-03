@@ -60,3 +60,4 @@
 ### 4. Persistencia y Arquitectura (Offline-First)
 - `ProgressRepository` (Dominio) abstracto desacoplado de Firebase o frameworks.
 - `LocalProgressDataSource` (Datos) con almacenamiento en memoria local que provee los valores del mockup de Figma y permite la actualización reactiva de intenciones.
+

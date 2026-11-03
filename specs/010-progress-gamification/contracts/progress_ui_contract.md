@@ -58,3 +58,4 @@ abstract class IProgressController {
 - **Parámetros**:
   - `required String quote`
   - `required String subtitle`
+

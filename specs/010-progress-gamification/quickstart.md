@@ -56,3 +56,4 @@ Verifica:
 5. **Cierre Compasivo**:
    - Leer la cita al pie: *“El progreso no es lineal; cada pausa que te das cuenta como una victoria auténtica.”*.
    - Presionar `<` para volver a la pantalla de Inicio.
+
