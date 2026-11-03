@@ -37,3 +37,4 @@ class UserEntity {
   @override
   String toString() => 'UserEntity(id: $id, email: $email, name: $displayName)';
 }
+

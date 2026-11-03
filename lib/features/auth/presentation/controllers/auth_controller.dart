@@ -28,3 +28,4 @@ final authStateChangesProvider = StreamProvider<UserEntity?>((ref) {
   final repo = ref.watch(authRepositoryProvider);
   return repo.authStateChanges();
 });
+

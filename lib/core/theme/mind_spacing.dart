@@ -13,3 +13,4 @@ abstract final class MindSpacing {
   static const EdgeInsets cardPadding = EdgeInsets.all(md);
   static const EdgeInsets buttonPadding = EdgeInsets.symmetric(horizontal: xl, vertical: md);
 }
+

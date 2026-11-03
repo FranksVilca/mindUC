@@ -16,3 +16,4 @@ abstract final class AppRoutes {
   static const String journalNew = '/journal/new';
   static const String forum = '/forum';
 }
+

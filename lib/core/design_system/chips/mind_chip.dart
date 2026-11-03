@@ -78,3 +78,4 @@ class MindChip extends StatelessWidget {
     );
   }
 }
+

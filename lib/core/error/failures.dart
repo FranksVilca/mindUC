@@ -81,3 +81,4 @@ final class ValidationFailure extends AppFailure {
   @override
   int get hashCode => Object.hash(message, field);
 }
+

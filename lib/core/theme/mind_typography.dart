@@ -50,3 +50,4 @@ abstract final class MindTypography {
         color: MindColors.textTertiary,
       );
 }
+

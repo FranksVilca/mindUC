@@ -34,3 +34,4 @@ abstract interface class AuthRepository {
   /// Elimina la cuenta y todos los datos personales del estudiante de Firebase.
   Future<Result<void, AppFailure>> deleteAccount();
 }
+

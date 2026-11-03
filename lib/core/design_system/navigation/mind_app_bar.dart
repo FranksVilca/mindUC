@@ -96,3 +96,4 @@ class MindAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 }
+

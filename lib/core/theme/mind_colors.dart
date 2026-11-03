@@ -37,3 +37,4 @@ abstract final class MindColors {
   static const Color warning = Color(0xFFE5A93C);
   static const Color error = Color(0xFFD66853);
 }
+

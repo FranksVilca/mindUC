@@ -18,3 +18,4 @@ abstract final class MindRadii {
     topRight: Radius.circular(modal),
   );
 }
+

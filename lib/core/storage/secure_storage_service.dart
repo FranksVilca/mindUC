@@ -57,3 +57,4 @@ class SecureStorageService {
 extension AppFailureResultExtension<F extends AppFailure> on F {
   Result<T, F> asFailure<T>() => FailureResult<T, F>(this);
 }
+

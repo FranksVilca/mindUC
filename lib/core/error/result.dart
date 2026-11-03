@@ -80,3 +80,4 @@ final class FailureResult<T, E> extends Result<T, E> {
   @override
   String toString() => 'FailureResult($error)';
 }
+
