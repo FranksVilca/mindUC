@@ -161,3 +161,4 @@ para moverme de forma intuitiva y coherente por la aplicación.
 - Los datos iniciales provienen de `LocalProgressDataSource` con los valores oficiales reflejados en el mockup de Figma (`7 días`, `145 min`, `12 sesiones`, `9 reflexiones`, `85%`, etc.).
 - Las sesiones de respiración, pomodoro y entradas de diario del estudiante alimentan de forma acumulativa el resumen semanal.
 - El diseño respeta los tokens de color del sistema de diseño de mindUC (`MindColors`) con fondos suaves en crema y verde salvia.
+
