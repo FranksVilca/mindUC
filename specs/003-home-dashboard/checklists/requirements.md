@@ -33,3 +33,4 @@
 
 - All validation items passed on first iteration.
 - Aligned 100% with Figma visual design truth (`docs/mockups/mindUC - Inicio.png`) and Project Constitution v1.1.0.
+

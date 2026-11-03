@@ -136,3 +136,4 @@ para tener un panorama instantáneo de mis compromisos y mi constancia de autocu
 - **A-002**: Si los módulos de destino (Comunidad, Progreso, Respiración) están en desarrollo o fase preliminar, la navegación redirigirá a las rutas correspondientes o mostrará sus pantallas base respetando la arquitectura de rutas sin generar errores de pantalla negra.
 - **A-003**: La persistencia del check-in diario se almacena en Firestore en la subcolección `users/{userId}/mood_entries/{dateString}` y localmente en caché offline de Firestore para garantizar disponibilidad sin red.
 - **A-004**: La racha de días se calcula evaluando los días continuos con al menos una sesión de bienestar o check-in de ánimo registrado.
+
