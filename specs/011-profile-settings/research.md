@@ -90,3 +90,4 @@
 
 - En `lib/core/router/app_router.dart`, la rama 3 de `StatefulShellRoute` (`_profileNavigatorKey`) ya apunta a `AppRoutes.profile` (`/profile`).
 - Se sustituirá el scaffold estático previo por el nuevo `ProfileScreen` desacoplado, conectado a `profileControllerProvider`.
+

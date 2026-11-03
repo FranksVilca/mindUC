@@ -169,3 +169,4 @@ abstract class ProfileRepository {
 ### `LocalProfileRepositoryImpl`
 - Implementa `ProfileRepository` delegando en `LocalProfileDataSource`.
 - Envuelve las operaciones en el mónada `Result<T, Failure>`.
+

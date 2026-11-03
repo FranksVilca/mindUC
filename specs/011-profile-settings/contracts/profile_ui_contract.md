@@ -55,3 +55,4 @@ abstract class IProfileController {
 ### 6. Modales Auxiliares
 - **`SupportContactModal`**: Diálogo modal respetuoso con el anexo `*4000`, número `+56 9 1234 5678`, botón "Llamar ahora" y botón "Copiar anexo".
 - **`PreferenceSelectionModal`**: Hoja inferior (`showModalBottomSheet`) serena para seleccionar paisaje sonoro o técnica de respiración entre las opciones disponibles de mindUC.
+

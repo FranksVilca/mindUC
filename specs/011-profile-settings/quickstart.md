@@ -53,3 +53,4 @@ dart analyze
    - Tocar "Llamar ↗" y verificar el diálogo con la línea confidencial UC (`*4000` / `+56 9 1234 5678`).
 5. Comprobar "Cerrar sesión en este dispositivo":
    - Presionar el botón, confirmar el diálogo y verificar que redirige a `/login`.
+
