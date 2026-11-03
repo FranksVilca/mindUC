@@ -121,3 +121,4 @@ stateDiagram-v2
     IntervaloCompletado --> Pausado: Auto-transición al siguiente bloque (Enfoque <-> Descanso)
     SiguienteIntervalo --> Pausado: Siguiente bloque listo
 ```
+

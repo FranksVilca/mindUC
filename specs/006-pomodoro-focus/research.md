@@ -70,3 +70,4 @@ Implementar la entidad de dominio `SoundscapeTrack` y el modelo de presentación
 ### Justificación
 - Respeta la máxima jerarquía técnica del proyecto (`constitution.md`), garantizando cero dependencias de APIs invasivas (`Screen Time API` o `AccessibilityService`) que comprometan la privacidad del estudiante o causen rechazos en tiendas de aplicaciones.
 - Mantiene la verdad visual del diseño de Figma sin introducir deuda técnica o violaciones de permisos.
+

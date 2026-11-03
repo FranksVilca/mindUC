@@ -118,3 +118,4 @@ abstract class IPomodoroController {
   - Icono de escudo, título "Modo enfoque profundo", subtítulo "3 apps silenciadas temporalmente".
   - Switch verde activo/gris inactivo.
   - Chips de badges (`Instagram 🔒`, `TikTok 🔒`, `WhatsApp 🔒`).
+

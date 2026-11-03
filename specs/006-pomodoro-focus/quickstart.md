@@ -78,3 +78,4 @@ flutter test
 6. **Modo Enfoque Profundo (Compromiso Consciente)**:
    - Alternar el interruptor en la tarjeta "Modo enfoque profundo": se actualiza visualmente a verde/gris.
    - Tocar la tarjeta para consultar detalles: se despliega la explicación ética conforme al Principio VII de la Constitución.
+
