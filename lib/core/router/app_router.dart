@@ -7,6 +7,7 @@ import '../../features/auth/presentation/controllers/auth_controller.dart';
 import '../../features/auth/presentation/screens/welcome_auth_screen.dart';
 import '../../features/breathing/presentation/screens/breathing_screen.dart';
 import '../../features/focus_pomodoro/presentation/screens/pomodoro_screen.dart';
+import '../../features/personal_journal/presentation/screens/journal_screen.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/wellness/presentation/screens/wellness_screen.dart';
@@ -103,20 +104,10 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.pomodoroSession,
         builder: (context, state) => const PomodoroScreen(),
       ),
-      // Diario personal íntimo (en preparación)
+      // Diario personal íntimo (Espacio Sagrado)
       GoRoute(
         path: AppRoutes.journalNew,
-        builder: (context, state) => Scaffold(
-          backgroundColor: MindColors.background,
-          appBar: AppBar(
-            title: const Text('Diario Personal'),
-            backgroundColor: MindColors.background,
-            elevation: 0,
-          ),
-          body: const Center(
-            child: Text('Diario Íntimo y Seguro en preparación 🌿'),
-          ),
-        ),
+        builder: (context, state) => const JournalScreen(),
       ),
 
       // Shell persistente de 4 pestañas

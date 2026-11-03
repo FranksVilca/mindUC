@@ -17,7 +17,7 @@
 
 **Purpose**: Estructura de directorios y módulos para la característica `personal_journal`.
 
-- [ ] T001 Crear la estructura de directorios de la característica en `lib/features/personal_journal/` (`domain/entities`, `domain/repositories`, `data/datasources`, `data/repositories`, `presentation/controllers`, `presentation/screens`, `presentation/widgets`) y en `test/{unit,widget}/features/personal_journal/`
+- [x] T001 Crear la estructura de directorios de la característica en `lib/features/personal_journal/` (`domain/entities`, `domain/repositories`, `data/datasources`, `data/repositories`, `presentation/controllers`, `presentation/screens`, `presentation/widgets`) y en `test/{unit,widget}/features/personal_journal/`
 
 ---
 
@@ -25,14 +25,14 @@
 
 **Purpose**: Entidades de dominio, fuentes de datos locales y controlador reactivo con almacenamiento seguro en el dispositivo (Principio V).
 
-- [ ] T002 [P] Crear la entidad `JournalMoodPulse` en `lib/features/personal_journal/domain/entities/journal_mood_pulse.dart` con los 5 estados emocionales (`agradecida`, `enCalma`, `reflexiva`, `cansada`, `abrumada`), etiquetas, iconos y textos de chip
-- [ ] T003 [P] Crear la entidad inmutable `JournalEntry` en `lib/features/personal_journal/domain/entities/journal_entry.dart` con campos `id`, `title`, `content`, `moodPulse`, `createdAt`, `updatedAt`, getters `readingTimeMinutes`, `readingTimeString`, `previewSnippet`, `formattedDate` y `copyWith`
-- [ ] T004 [P] Crear el Value Object inmutable `JournalState` en `lib/features/personal_journal/domain/entities/journal_state.dart` con lista de entradas, pulso emocional activo, indicador de carga y getters `entryCount`, `hasEntries`
-- [ ] T005 [P] Crear la interfaz abstracta `JournalRepository` en `lib/features/personal_journal/domain/repositories/journal_repository.dart` con métodos para obtener, guardar y eliminar entradas
-- [ ] T006 [P] Implementar la fuente de datos local `LocalJournalDataSource` en `lib/features/personal_journal/data/datasources/local_journal_datasource.dart` con almacenamiento seguro en memoria del dispositivo y las 3 entradas iniciales de Figma
-- [ ] T007 Implementar el repositorio local `LocalJournalRepositoryImpl` en `lib/features/personal_journal/data/repositories/local_journal_repository_impl.dart` garantizando 0 llamadas de red conforme al Principio V
-- [ ] T008 Escribir pruebas unitarias para `JournalNotifier` en `test/unit/features/personal_journal/journal_controller_test.dart` cubriendo obtención, creación, edición, borrado de reflexiones y sintonía de pulso emocional
-- [ ] T009 Implementar `JournalNotifier` y el proveedor `journalControllerProvider` en `lib/features/personal_journal/presentation/controllers/journal_controller.dart` implementando `IJournalController`
+- [x] T002 [P] Crear la entidad `JournalMoodPulse` en `lib/features/personal_journal/domain/entities/journal_mood_pulse.dart` con los 5 estados emocionales (`agradecida`, `enCalma`, `reflexiva`, `cansada`, `abrumada`), etiquetas, iconos y textos de chip
+- [x] T003 [P] Crear la entidad inmutable `JournalEntry` en `lib/features/personal_journal/domain/entities/journal_entry.dart` con campos `id`, `title`, `content`, `moodPulse`, `createdAt`, `updatedAt`, getters `readingTimeMinutes`, `readingTimeString`, `previewSnippet`, `formattedDate` y `copyWith`
+- [x] T004 [P] Crear el Value Object inmutable `JournalState` en `lib/features/personal_journal/domain/entities/journal_state.dart` con lista de entradas, pulso emocional activo, indicador de carga y getters `entryCount`, `hasEntries`
+- [x] T005 [P] Crear la interfaz abstracta `JournalRepository` en `lib/features/personal_journal/domain/repositories/journal_repository.dart` con métodos para obtener, guardar y eliminar entradas
+- [x] T006 [P] Implementar la fuente de datos local `LocalJournalDataSource` en `lib/features/personal_journal/data/datasources/local_journal_datasource.dart` con almacenamiento seguro en memoria del dispositivo y las 3 entradas iniciales de Figma
+- [x] T007 Implementar el repositorio local `LocalJournalRepositoryImpl` en `lib/features/personal_journal/data/repositories/local_journal_repository_impl.dart` garantizando 0 llamadas de red conforme al Principio V
+- [x] T008 Escribir pruebas unitarias para `JournalNotifier` en `test/unit/features/personal_journal/journal_controller_test.dart` cubriendo obtención, creación, edición, borrado de reflexiones y sintonía de pulso emocional
+- [x] T009 Implementar `JournalNotifier` y el proveedor `journalControllerProvider` en `lib/features/personal_journal/presentation/controllers/journal_controller.dart` implementando `IJournalController`
 
 **Checkpoint**: Capas de dominio, datos locales y controlador reactivo verificados con pruebas unitarias.
 
@@ -46,12 +46,12 @@
 
 ### Tests for User Story 1
 
-- [ ] T010 [P] [US1] Escribir pruebas de widget para el banner de privacidad y la tarjeta reflexiva en `test/widget/features/personal_journal/journal_entry_card_test.dart`
+- [x] T010 [P] [US1] Escribir pruebas de widget para el banner de privacidad y la tarjeta reflexiva en `test/widget/features/personal_journal/journal_entry_card_test.dart`
 
 ### Implementation for User Story 1
 
-- [ ] T011 [P] [US1] Implementar el widget `JournalPrivacyBanner` en `lib/features/personal_journal/presentation/widgets/journal_privacy_banner.dart` con icono de libro "ESPACIO SAGRADO", título "Mi Diario Personal" y banner de cifrado con candado
-- [ ] T012 [US1] Implementar el widget `JournalEntryCard` en `lib/features/personal_journal/presentation/widgets/journal_entry_card.dart` con chip emocional (ej. `🌸 En calma`), fecha formateada en español, título, extracto a 2 líneas, pie "🔒 Solo visible en este teléfono", tiempo de lectura, botón lápiz y botón menú `⋮`
+- [x] T011 [P] [US1] Implementar el widget `JournalPrivacyBanner` en `lib/features/personal_journal/presentation/widgets/journal_privacy_banner.dart` con icono de libro "ESPACIO SAGRADO", título "Mi Diario Personal" y banner de cifrado con candado
+- [x] T012 [US1] Implementar el widget `JournalEntryCard` en `lib/features/personal_journal/presentation/widgets/journal_entry_card.dart` con chip emocional (ej. `🌸 En calma`), fecha formateada en español, título, extracto a 2 líneas, pie "🔒 Solo visible en este teléfono", tiempo de lectura, botón lápiz y botón menú `⋮`
 
 **Checkpoint**: User Story 1 funcional y verificable de forma autónoma (MVP alcanzado).
 
@@ -65,11 +65,11 @@
 
 ### Tests for User Story 2
 
-- [ ] T013 [P] [US2] Escribir pruebas de widget para el selector de pulso emocional en `test/widget/features/personal_journal/emotional_pulse_selector_test.dart`
+- [x] T013 [P] [US2] Escribir pruebas de widget para el selector de pulso emocional en `test/widget/features/personal_journal/emotional_pulse_selector_test.dart`
 
 ### Implementation for User Story 2
 
-- [ ] T014 [US2] Implementar el widget `EmotionalPulseSelector` en `lib/features/personal_journal/presentation/widgets/emotional_pulse_selector.dart` con título "¿Cómo late tu corazón hoy?", subtítulo "Sintoniza tu sentir" y los 5 botones de pulso emocional
+- [x] T014 [US2] Implementar el widget `EmotionalPulseSelector` en `lib/features/personal_journal/presentation/widgets/emotional_pulse_selector.dart` con título "¿Cómo late tu corazón hoy?", subtítulo "Sintoniza tu sentir" y los 5 botones de pulso emocional
 
 **Checkpoint**: User Stories 1 y 2 integradas y operativas.
 
@@ -83,11 +83,11 @@
 
 ### Tests for User Story 3
 
-- [ ] T015 [P] [US3] Escribir pruebas de widget para el modal de redacción y edición en `test/widget/features/personal_journal/journal_entry_edit_modal_test.dart`
+- [x] T015 [P] [US3] Escribir pruebas de widget para el modal de redacción y edición en `test/widget/features/personal_journal/journal_entry_edit_modal_test.dart`
 
 ### Implementation for User Story 3
 
-- [ ] T016 [US3] Implementar el diálogo modal `JournalEntryEditModal` en `lib/features/personal_journal/presentation/widgets/journal_entry_edit_modal.dart` con campos de título, contenido, selector de emoción y validación suave
+- [x] T016 [US3] Implementar el diálogo modal `JournalEntryEditModal` en `lib/features/personal_journal/presentation/widgets/journal_entry_edit_modal.dart` con campos de título, contenido, selector de emoción y validación suave
 
 **Checkpoint**: User Stories 1, 2 y 3 funcionales en su totalidad.
 
@@ -101,7 +101,7 @@
 
 ### Implementation for User Story 4
 
-- [ ] T017 [US4] Implementar el diálogo de confirmación compasiva de eliminación en `lib/features/personal_journal/presentation/widgets/journal_entry_card.dart` vinculado al menú `⋮`
+- [x] T017 [US4] Implementar el diálogo de confirmación compasiva de eliminación en `lib/features/personal_journal/presentation/widgets/journal_entry_card.dart` vinculado al menú `⋮`
 
 **Checkpoint**: Las 4 historias de usuario operativas y conformes con el Principio V.
 
@@ -111,11 +111,11 @@
 
 **Purpose**: Integración de la pantalla completa `JournalScreen`, cabecera de navegación, vinculación con `AppRoutes.journalNew`, pruebas de integración y verificación estática.
 
-- [ ] T018 [P] Implementar el widget `JournalHeader` en `lib/features/personal_journal/presentation/widgets/journal_header.dart` con logo "mindUC", subtítulo "Minduc — Diario Personal", campana y avatar
-- [ ] T019 Implementar la pantalla principal `JournalScreen` en `lib/features/personal_journal/presentation/screens/journal_screen.dart` con botón lavanda "+ Nueva entrada reflexiva", sección "Tus huellas interiores" y lista reactiva
-- [ ] T020 Conectar `JournalScreen` en la ruta declarativa `AppRoutes.journalNew` (y `/journal`) en `lib/core/router/app_router.dart` sustituyendo el Scaffold placeholder provisional
-- [ ] T021 Escribir pruebas de widget de integración de pantalla completa en `test/widget/features/personal_journal/journal_screen_test.dart`
-- [ ] T022 Ejecutar la suite completa de pruebas (`flutter test`) y verificación de análisis estático (`dart analyze`) asegurando 0 issues y 100% de éxito
+- [x] T018 [P] Implementar el widget `JournalHeader` en `lib/features/personal_journal/presentation/widgets/journal_header.dart` con logo "mindUC", subtítulo "Minduc — Diario Personal", campana y avatar
+- [x] T019 Implementar la pantalla principal `JournalScreen` en `lib/features/personal_journal/presentation/screens/journal_screen.dart` con botón lavanda "+ Nueva entrada reflexiva", sección "Tus huellas interiores" y lista reactiva
+- [x] T020 Conectar `JournalScreen` en la ruta declarativa `AppRoutes.journalNew` (y `/journal`) en `lib/core/router/app_router.dart` sustituyendo el Scaffold placeholder provisional
+- [x] T021 Escribir pruebas de widget de integración de pantalla completa en `test/widget/features/personal_journal/journal_screen_test.dart`
+- [x] T022 Ejecutar la suite completa de pruebas (`flutter test`) y verificación de análisis estático (`dart analyze`) asegurando 0 issues y 100% de éxito
 
 ---
 
@@ -158,3 +158,4 @@
 2. Añadir Phase 5 (US3: Redacción y edición modal).
 3. Añadir Phase 6 (US4: Eliminación compasiva).
 4. Completar Phase 7 (Integración en pantalla, GoRouter y suite completa de pruebas).
+

@@ -25,6 +25,12 @@ class SpanishDateFormatter {
     'Diciembre',
   ];
 
+  /// Nombres de los días de la semana en español.
+  static const List<String> weekdays = _weekdays;
+
+  /// Nombres de los meses del año en español.
+  static const List<String> months = _months;
+
   /// Formatea la fecha en el formato sereno de Figma: "Jueves, 24 de Octubre".
   static String format(DateTime date) {
     final weekday = _weekdays[date.weekday - 1];
