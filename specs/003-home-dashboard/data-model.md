@@ -152,3 +152,4 @@ users/{userId}/
   │     ├── mood: string ("calma")
   │     └── timestampMillis: number (1792873200000)
 ```
+

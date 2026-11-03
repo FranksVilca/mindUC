@@ -78,3 +78,4 @@ Utilizar un diseño basado en `GridView.count` con `shrinkWrap: true`, `physics:
 | **Estado** | Riverpod (`homeDashboardControllerProvider`) | Conforme a Constitución (Principio IV). |
 | **Persistencia** | Firestore Offline + Fake Local para testing | Alta velocidad en tests y robustez sin conexión. |
 | **Fidelidad Visual** | Mockup `mindUC - Inicio.png` (Colores pastel de Figma, 22dp radios) | Conforme a Principio III. |
+

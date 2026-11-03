@@ -16,9 +16,9 @@
 
 **Purpose**: Estructura de directorios de la feature y utilidades compartidas de fecha.
 
-- [ ] T001 Crear estructura de directorios en `lib/features/home/` (`domain/entities/`, `domain/repositories/`, `domain/usecases/`, `data/datasources/`, `data/models/`, `data/repositories/`, `presentation/controllers/`, `presentation/widgets/`, `presentation/screens/`) y directorios de test en `test/unit/features/home/` y `test/widget/features/home/`
-- [ ] T002 Implementar utilidad pura `SpanishDateFormatter` en `lib/core/utils/date_formatter.dart` para formatear fechas en español con formato "EEEE, d 'de' MMMM" (ej. "Jueves, 24 de Octubre")
-- [ ] T003 [P] Escribir pruebas unitarias para `SpanishDateFormatter` en `test/unit/core/date_formatter_test.dart`
+- [X] T001 Crear estructura de directorios en `lib/features/home/` (`domain/entities/`, `domain/repositories/`, `domain/usecases/`, `data/datasources/`, `data/models/`, `data/repositories/`, `presentation/controllers/`, `presentation/widgets/`, `presentation/screens/`) y directorios de test en `test/unit/features/home/` y `test/widget/features/home/`
+- [X] T002 Implementar utilidad pura `SpanishDateFormatter` en `lib/core/utils/date_formatter.dart` para formatear fechas en español con formato "EEEE, d 'de' MMMM" (ej. "Jueves, 24 de Octubre")
+- [X] T003 [P] Escribir pruebas unitarias para `SpanishDateFormatter` en `test/unit/core/date_formatter_test.dart`
 
 ---
 
@@ -26,13 +26,13 @@
 
 **Purpose**: Entidades del modelo de datos, DTOs y repositorio de persistencia de estado de ánimo.
 
-- [ ] T004 [P] Implementar enum `MoodType` con 5 emociones (`calma`, `feliz`, `ansiosa`, `cansada`, `energica`), metadatos (`label`, `emoji`, `backgroundColor`, `iconData`) y helper `fromString` en `lib/features/home/domain/entities/mood_type.dart`
-- [ ] T005 [P] Implementar entidad inmutable `MoodEntry` (`id`, `userId`, `dateString` con validación regex `^\d{4}-\d{2}-\d{2}$`, `mood`, `timestampMillis`) en `lib/features/home/domain/entities/mood_entry.dart`
-- [ ] T006 [P] Implementar entidad `DashboardSummary` (`greetingName`, `formattedDate`, `todayMood`, `pendingActivitiesCount`, `streakDays`) en `lib/features/home/domain/entities/dashboard_summary.dart`
-- [ ] T007 [P] Implementar DTO `MoodModel` con serialización `toMap`, `fromMap` y conversión `toDomain` en `lib/features/home/data/models/mood_model.dart`
-- [ ] T008 [P] Implementar interfaz abstracta `MoodRepository` (`getTodayMood`, `saveMood`, `getWeeklyMoods`) en `lib/features/home/domain/repositories/mood_repository.dart`
-- [ ] T009 Implementar `FakeMoodDataSource` en `lib/features/home/data/datasources/fake_mood_datasource.dart` y `MoodRepositoryImpl` en `lib/features/home/data/repositories/mood_repository_impl.dart`
-- [ ] T010 [P] Implementar pruebas unitarias para `MoodRepositoryImpl` en `test/unit/features/home/mood_repository_test.dart`
+- [X] T004 [P] Implementar enum `MoodType` con 5 emociones (`calma`, `feliz`, `ansiosa`, `cansada`, `energica`), metadatos (`label`, `emoji`, `backgroundColor`, `iconData`) y helper `fromString` en `lib/features/home/domain/entities/mood_type.dart`
+- [X] T005 [P] Implementar entidad inmutable `MoodEntry` (`id`, `userId`, `dateString` con validación regex `^\d{4}-\d{2}-\d{2}$`, `mood`, `timestampMillis`) en `lib/features/home/domain/entities/mood_entry.dart`
+- [X] T006 [P] Implementar entidad `DashboardSummary` (`greetingName`, `formattedDate`, `todayMood`, `pendingActivitiesCount`, `streakDays`) en `lib/features/home/domain/entities/dashboard_summary.dart`
+- [X] T007 [P] Implementar DTO `MoodModel` con serialización `toMap`, `fromMap` y conversión `toDomain` en `lib/features/home/data/models/mood_model.dart`
+- [X] T008 [P] Implementar interfaz abstracta `MoodRepository` (`getTodayMood`, `saveMood`, `getWeeklyMoods`) en `lib/features/home/domain/repositories/mood_repository.dart`
+- [X] T009 Implementar `FakeMoodDataSource` en `lib/features/home/data/datasources/fake_mood_datasource.dart` y `MoodRepositoryImpl` en `lib/features/home/data/repositories/mood_repository_impl.dart`
+- [X] T010 [P] Implementar pruebas unitarias para `MoodRepositoryImpl` en `test/unit/features/home/mood_repository_test.dart`
 
 **Checkpoint**: Entidades y capa de datos de ánimo listas y testeadas de forma desacoplada.
 
@@ -45,11 +45,11 @@
 **Independent Test**: La suite de pruebas de widgets valida que `HomeHeader` y `DatePill` renderizan los textos, iconos y avatares correctos con estilo Material 3 / Figma.
 
 ### Tests para User Story 1
-- [ ] T011 [P] [US1] Escribir pruebas de widget para `HomeHeader` y `DatePill` en `test/widget/features/home/home_header_test.dart`
+- [X] T011 [P] [US1] Escribir pruebas de widget para `HomeHeader` y `DatePill` en `test/widget/features/home/home_header_test.dart`
 
 ### Implementación de User Story 1
-- [ ] T012 [US1] Implementar widget `HomeHeader` (marca `mindUC`, subtítulo `Inicio`, campana de alertas y avatar circular) en `lib/features/home/presentation/widgets/home_header.dart`
-- [ ] T013 [US1] Implementar widget `DatePill` (píldora fondo menta `MindColors.autocuidado` con icono de calendario y fecha en español) en `lib/features/home/presentation/widgets/date_pill.dart`
+- [X] T012 [US1] Implementar widget `HomeHeader` (marca `mindUC`, subtítulo `Inicio`, campana de alertas y avatar circular) en `lib/features/home/presentation/widgets/home_header.dart`
+- [X] T013 [US1] Implementar widget `DatePill` (píldora fondo menta `MindColors.autocuidado` con icono de calendario y fecha en español) en `lib/features/home/presentation/widgets/date_pill.dart`
 
 **Checkpoint**: Cabecera y fecha verificables de forma independiente.
 
@@ -62,10 +62,10 @@
 **Independent Test**: Al pulsar cualquier tarjeta emocional en `MoodSelectorRow`, se resalta visualmente la opción activa y se dispara el guardado en el repositorio.
 
 ### Tests para User Story 2
-- [ ] T014 [P] [US2] Escribir pruebas unitarias para los casos de uso `GetTodayMoodUseCase` y `RecordMoodUseCase` en `test/unit/features/home/mood_usecases_test.dart`
-- [ ] T015 [US2] Implementar `GetTodayMoodUseCase` y `RecordMoodUseCase` en `lib/features/home/domain/usecases/record_mood_usecase.dart`
-- [ ] T016 [P] [US2] Escribir pruebas de widget para `MoodSelectorRow` en `test/widget/features/home/mood_selector_row_test.dart`
-- [ ] T017 [US2] Implementar componente `MoodSelectorRow` (fila horizontal de 5 tarjetas con paleta serena de Figma, emojis, bordes redondeados y micro-interacción activa) en `lib/features/home/presentation/widgets/mood_selector_row.dart`
+- [X] T014 [P] [US2] Escribir pruebas unitarias para los casos de uso `GetTodayMoodUseCase` y `RecordMoodUseCase` en `test/unit/features/home/mood_usecases_test.dart`
+- [X] T015 [US2] Implementar `GetTodayMoodUseCase` y `RecordMoodUseCase` en `lib/features/home/domain/usecases/record_mood_usecase.dart`
+- [X] T016 [P] [US2] Escribir pruebas de widget para `MoodSelectorRow` en `test/widget/features/home/mood_selector_row_test.dart`
+- [X] T017 [US2] Implementar componente `MoodSelectorRow` (fila horizontal de 5 tarjetas con paleta serena de Figma, emojis, bordes redondeados y micro-interacción activa) en `lib/features/home/presentation/widgets/mood_selector_row.dart`
 
 **Checkpoint**: Registro de ánimo interactivo 100% funcional y probado.
 
@@ -78,12 +78,12 @@
 **Independent Test**: Cada tarjeta de `QuickAccessGrid` renderiza sus iconos circulares blancos, subtítulos temáticos y dispara la navegación hacia la ruta de destino al pulsarse.
 
 ### Tests para User Story 3
-- [ ] T018 [P] [US3] Implementar descriptor de valor `QuickAccessItem` en `lib/features/home/domain/entities/quick_access_item.dart`
-- [ ] T019 [P] [US3] Escribir pruebas de widget para `QuickAccessGrid` en `test/widget/features/home/quick_access_grid_test.dart`
+- [X] T018 [P] [US3] Implementar descriptor de valor `QuickAccessItem` en `lib/features/home/domain/entities/quick_access_item.dart`
+- [X] T019 [P] [US3] Escribir pruebas de widget para `QuickAccessGrid` en `test/widget/features/home/quick_access_grid_test.dart`
 
 ### Implementación de User Story 3
-- [ ] T020 [US3] Implementar componente `QuickAccessGrid` (disposición 2x2 sin overflow, radios de 22dp, fondos pastel y flecha indicadora) en `lib/features/home/presentation/widgets/quick_access_grid.dart`
-- [ ] T021 [US3] Configurar rutas de destino y pantallas de destino provisionales serenas en `lib/core/router/route_names.dart` y `lib/core/router/app_router.dart`
+- [X] T020 [US3] Implementar componente `QuickAccessGrid` (disposición 2x2 sin overflow, radios de 22dp, fondos pastel y flecha indicadora) en `lib/features/home/presentation/widgets/quick_access_grid.dart`
+- [X] T021 [US3] Configurar rutas de destino y pantallas de destino provisionales serenas en `lib/core/router/route_names.dart` y `lib/core/router/app_router.dart`
 
 **Checkpoint**: Cuadrícula de navegación táctil completa y testeada.
 
@@ -96,12 +96,12 @@
 **Independent Test**: La suite de pruebas de widgets valida que `HomeScreen` renderiza la composición completa de Figma, conecta el controlador reactivo Riverpod y actualiza las métricas en tiempo real.
 
 ### Tests para User Story 4
-- [ ] T022 [P] [US4] Escribir pruebas unitarias de `HomeDashboardNotifier` en `test/unit/features/home/home_dashboard_controller_test.dart`
-- [ ] T023 [P] [US4] Escribir prueba de widget integral para `HomeScreen` en `test/widget/features/home/home_screen_test.dart`
+- [X] T022 [P] [US4] Escribir pruebas unitarias de `HomeDashboardNotifier` en `test/unit/features/home/home_dashboard_controller_test.dart`
+- [X] T023 [P] [US4] Escribir prueba de widget integral para `HomeScreen` en `test/widget/features/home/home_screen_test.dart`
 
 ### Implementación de User Story 4
-- [ ] T024 [US4] Implementar `HomeDashboardState` y `HomeDashboardNotifier` con providers Riverpod en `lib/features/home/presentation/controllers/home_dashboard_controller.dart`
-- [ ] T025 [US4] Integrar la pantalla definitiva `HomeScreen` en `lib/features/home/presentation/screens/home_screen.dart` orquestando cabecera, saludo, selector de ánimo y cuadrícula 2x2 con scroll sereno
+- [X] T024 [US4] Implementar `HomeDashboardState` y `HomeDashboardNotifier` con providers Riverpod en `lib/features/home/presentation/controllers/home_dashboard_controller.dart`
+- [X] T025 [US4] Integrar la pantalla definitiva `HomeScreen` en `lib/features/home/presentation/screens/home_screen.dart` orquestando cabecera, saludo, selector de ánimo y cuadrícula 2x2 con scroll sereno
 
 **Checkpoint**: Pantalla de Inicio 100% fiel a Figma y conectada con Riverpod.
 
@@ -111,8 +111,9 @@
 
 **Purpose**: Verificación de calidad, linteo estricto y ejecución de suite de pruebas completa.
 
-- [ ] T026 [P] Ejecutar `dart analyze` y resolver cualquier advertencia o violación de estilo
-- [ ] T027 Ejecutar suite completa `flutter test` asegurando 100% de éxito en todos los tests unitarios y de widgets
+- [X] T026 [P] Ejecutar `dart analyze` y resolver cualquier advertencia o violación de estilo
+- [X] T027 Ejecutar suite completa `flutter test` asegurando 100% de éxito en todos los tests unitarios y de widgets
+- [X] T028 Actualizar `specs/003-home-dashboard/quickstart.md` con los comandos y resultados verificados
 - [ ] T028 Actualizar `specs/003-home-dashboard/quickstart.md` con los comandos y resultados verificados
 
 ---
@@ -188,3 +189,4 @@ flowchart TD
 5. Agregar Cuadrícula 2x2 "Espacios para ti" y navegación (T018 - T021).
 6. Integrar pantalla completa `HomeScreen` con Riverpod (T022 - T025).
 7. Verificación final de calidad y linteo (T026 - T028).
+

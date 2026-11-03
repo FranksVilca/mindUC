@@ -9,11 +9,12 @@ abstract final class AppRoutes {
   static const String agenda = '/agenda';
   static const String profile = '/profile';
 
-  // Sub-routes & Modals
+  // Quick Access & Sub-routes
+  static const String community = '/community';
+  static const String progress = '/progress';
   static const String schedulerModal = '/scheduler-modal';
   static const String breathingSession = '/breathing-session';
   static const String pomodoroSession = '/pomodoro-session';
   static const String journalNew = '/journal/new';
   static const String forum = '/forum';
 }
-

@@ -318,3 +318,4 @@ class _WelcomeAuthScreenState extends ConsumerState<WelcomeAuthScreen> {
     );
   }
 }
+

@@ -9,6 +9,7 @@ import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/wellness/presentation/screens/wellness_screen.dart';
 import '../design_system/navigation/main_shell_screen.dart';
+import '../theme/mind_colors.dart';
 import 'route_names.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
@@ -59,6 +60,36 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.auth,
         builder: (context, state) => const WelcomeAuthScreen(),
+      ),
+
+      // Rutas de accesos rápidos
+      GoRoute(
+        path: AppRoutes.community,
+        builder: (context, state) => Scaffold(
+          backgroundColor: MindColors.background,
+          appBar: AppBar(
+            title: const Text('Comunidad UC'),
+            backgroundColor: MindColors.background,
+            elevation: 0,
+          ),
+          body: const Center(
+            child: Text('Espacio de Comunidad en preparación 🌿'),
+          ),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.progress,
+        builder: (context, state) => Scaffold(
+          backgroundColor: MindColors.background,
+          appBar: AppBar(
+            title: const Text('Mi Progreso'),
+            backgroundColor: MindColors.background,
+            elevation: 0,
+          ),
+          body: const Center(
+            child: Text('Panel de Progreso y Florecimiento en preparación 🌿'),
+          ),
+        ),
       ),
 
       // Shell persistente de 4 pestañas

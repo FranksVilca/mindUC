@@ -26,6 +26,11 @@ abstract final class MindColors {
   static const Color descanso = Color(0xFFE5F0F5);
   static const Color descansoAccent = Color(0xFF5B8A99);
 
+  // Paleta de tarjetas de ánimo y bienestar (Figma)
+  static const Color productividad = Color(0xFFEBE8F7);
+  static const Color accentCalm = Color(0xFFF4EFE6);
+  static const Color bienestarPill = Color(0xFFDCEAD9);
+
   // Textos y divisores serenos
   static const Color textPrimary = Color(0xFF222E28); // Gris carbón suave
   static const Color textSecondary = Color(0xFF5C6B64); // Gris neutro medio
@@ -37,4 +42,3 @@ abstract final class MindColors {
   static const Color warning = Color(0xFFE5A93C);
   static const Color error = Color(0xFFD66853);
 }
-

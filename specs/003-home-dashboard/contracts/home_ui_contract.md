@@ -80,3 +80,4 @@ abstract class HomeDashboardControllerContract {
 - **Inputs**:
   - `List<QuickAccessItem> items`: Lista de los 4 elementos descriptores.
   - `ValueChanged<QuickAccessItem> onItemTapped`: Callback de navegación.
+
