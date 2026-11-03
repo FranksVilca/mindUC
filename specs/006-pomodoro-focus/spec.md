@@ -142,3 +142,4 @@ Como estudiante comprometido con su concentración, quiero poder activar el "Mod
 - **Arquitectura de Temporizadores Probada**: El controlador de estado se inspirará en el patrón reactivo de temporizador por pulsos ya implementado exitosamente en `004-breathing-relaxation` (`BreathingController`), adaptado a intervalos Pomodoro y ciclo de 4 bloques.
 - **Simulación Acústica Consciente**: Para garantizar funcionamiento offline sin requerir descargas pesadas de audio de red en esta fase, la capa de presentación mantendrá el estado reactivo del reproductor y volumen, pudiendo conectarse a fuentes locales de audio ligero o sintetizado.
 - **Principio VII (Bloqueo diferido)**: El estudiante comprende y valora que el "Modo enfoque profundo" es un asistente de compromiso interior y distracción consciente, no una aplicación de control coercitivo que interfiera con el sistema operativo de su dispositivo.
+
