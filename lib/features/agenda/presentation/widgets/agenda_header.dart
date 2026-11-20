@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import '../../../../core/design_system/avatars/mind_user_avatar.dart';
+import '../../../../core/design_system/branding/mind_app_logo.dart';
+import '../../../../core/design_system/notifications/notification_tray_modal.dart';
 import '../../../../core/theme/mind_colors.dart';
 
 /// Cabecera de la pestaña "Mi Agenda consciente" acorde al diseño de Figma.
@@ -7,10 +10,12 @@ class AgendaHeader extends StatelessWidget {
     super.key,
     this.onNotification,
     this.onProfile,
+    this.avatarUrl,
   });
 
   final VoidCallback? onNotification;
   final VoidCallback? onProfile;
+  final String? avatarUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +24,14 @@ class AgendaHeader extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Espacio compensatorio a la izquierda
-          const SizedBox(width: 44),
+          // Logotipo oficial a la izquierda
+          const SizedBox(
+            width: 44,
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: MindAppLogo(size: 32),
+            ),
+          ),
 
           // Título centrado con marca
           const Column(
@@ -51,7 +62,7 @@ class AgendaHeader extends StatelessWidget {
               Stack(
                 children: [
                   IconButton(
-                    onPressed: onNotification ?? () {},
+                    onPressed: onNotification ?? () => NotificationTrayModal.show(context),
                     icon: const Icon(
                       Icons.notifications_outlined,
                       color: MindColors.textPrimary,
@@ -75,21 +86,10 @@ class AgendaHeader extends StatelessWidget {
                 ],
               ),
               const SizedBox(width: 4),
-              GestureDetector(
+              MindUserAvatar(
+                avatarId: avatarUrl,
+                size: 32,
                 onTap: onProfile,
-                child: Container(
-                  width: 32,
-                  height: 32,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFF3B5648),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.person_rounded,
-                    color: Colors.white,
-                    size: 18,
-                  ),
-                ),
               ),
             ],
           ),

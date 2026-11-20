@@ -13,9 +13,21 @@ class LocalProfileRepositoryImpl implements ProfileRepository {
       : _dataSource = dataSource ?? LocalProfileDataSource();
 
   @override
-  Future<Result<ProfileState, AppFailure>> getProfileState() async {
+  Future<Result<ProfileState, AppFailure>> getProfileState({
+    String? userId,
+    String? email,
+    String? displayName,
+    String? department,
+    String? avatarUrl,
+  }) async {
     try {
-      final state = await _dataSource.getProfileState();
+      final state = await _dataSource.getProfileState(
+        userId: userId,
+        email: email,
+        displayName: displayName,
+        department: department,
+        avatarUrl: avatarUrl,
+      );
       return Success(state);
     } catch (e) {
       return FailureResult(
@@ -26,9 +38,11 @@ class LocalProfileRepositoryImpl implements ProfileRepository {
 
   @override
   Future<Result<void, AppFailure>> updatePreferences(
-      WellnessPreferences preferences) async {
+    WellnessPreferences preferences, {
+    String? userId,
+  }) async {
     try {
-      await _dataSource.updatePreferences(preferences);
+      await _dataSource.updatePreferences(preferences, userId: userId);
       return const Success(null);
     } catch (e) {
       return FailureResult(
@@ -38,9 +52,33 @@ class LocalProfileRepositoryImpl implements ProfileRepository {
   }
 
   @override
-  Future<Result<void, AppFailure>> logout() async {
+  Future<Result<void, AppFailure>> updateUserProfile({
+    required String userId,
+    required String fullName,
+    required String career,
+    required String universityEmail,
+    String? avatarUrl,
+  }) async {
     try {
-      await _dataSource.logout();
+      await _dataSource.updateUserProfile(
+        userId: userId,
+        fullName: fullName,
+        career: career,
+        universityEmail: universityEmail,
+        avatarUrl: avatarUrl,
+      );
+      return const Success(null);
+    } catch (e) {
+      return FailureResult(
+        CacheFailure('Error al actualizar datos personales: $e'),
+      );
+    }
+  }
+
+  @override
+  Future<Result<void, AppFailure>> logout({String? userId}) async {
+    try {
+      await _dataSource.logout(userId: userId);
       return const Success(null);
     } catch (e) {
       return FailureResult(
@@ -49,4 +87,3 @@ class LocalProfileRepositoryImpl implements ProfileRepository {
     }
   }
 }
-

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/router/route_names.dart';
 import '../../../../core/theme/mind_colors.dart';
+import 'package:minduc/features/profile/presentation/controllers/profile_controller.dart';
 import '../controllers/journal_controller.dart';
 import '../widgets/emotional_pulse_selector.dart';
 import '../widgets/journal_entry_card.dart';
@@ -24,7 +26,9 @@ class JournalScreen extends ConsumerWidget {
         child: Column(
           children: [
             JournalHeader(
+              avatarUrl: ref.watch(profileControllerProvider.select((s) => s.user.avatarUrl)),
               onBack: () => context.pop(),
+              onProfile: () => context.go(AppRoutes.profile),
             ),
             Expanded(
               child: SingleChildScrollView(

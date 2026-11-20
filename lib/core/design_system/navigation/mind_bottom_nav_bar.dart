@@ -35,37 +35,45 @@ class MindBottomNavBar extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            _NavBarItem(
-              index: 0,
-              label: 'Inicio',
-              icon: Icons.home_outlined,
-              selectedIcon: Icons.home_rounded,
-              isSelected: currentIndex == 0,
-              onTap: () => onTap(0),
+            Expanded(
+              child: _NavBarItem(
+                index: 0,
+                label: 'Inicio',
+                icon: Icons.home_outlined,
+                selectedIcon: Icons.home_rounded,
+                isSelected: currentIndex == 0,
+                onTap: () => onTap(0),
+              ),
             ),
-            _NavBarItem(
-              index: 1,
-              label: 'Bienestar',
-              icon: Icons.spa_outlined,
-              selectedIcon: Icons.spa_rounded,
-              isSelected: currentIndex == 1,
-              onTap: () => onTap(1),
+            Expanded(
+              child: _NavBarItem(
+                index: 1,
+                label: 'Bienestar',
+                icon: Icons.spa_outlined,
+                selectedIcon: Icons.spa_rounded,
+                isSelected: currentIndex == 1,
+                onTap: () => onTap(1),
+              ),
             ),
-            _NavBarItem(
-              index: 2,
-              label: 'Agenda',
-              icon: Icons.calendar_month_outlined,
-              selectedIcon: Icons.calendar_month_rounded,
-              isSelected: currentIndex == 2,
-              onTap: () => onTap(2),
+            Expanded(
+              child: _NavBarItem(
+                index: 2,
+                label: 'Agenda',
+                icon: Icons.calendar_month_outlined,
+                selectedIcon: Icons.calendar_month_rounded,
+                isSelected: currentIndex == 2,
+                onTap: () => onTap(2),
+              ),
             ),
-            _NavBarItem(
-              index: 3,
-              label: 'Perfil',
-              icon: Icons.person_outline_rounded,
-              selectedIcon: Icons.person_rounded,
-              isSelected: currentIndex == 3,
-              onTap: () => onTap(3),
+            Expanded(
+              child: _NavBarItem(
+                index: 3,
+                label: 'Perfil',
+                icon: Icons.person_outline_rounded,
+                selectedIcon: Icons.person_rounded,
+                isSelected: currentIndex == 3,
+                onTap: () => onTap(3),
+              ),
             ),
           ],
         ),
@@ -115,6 +123,8 @@ class _NavBarItem extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: MindTypography.labelSmall.copyWith(
                 color: itemColor,
                 fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,

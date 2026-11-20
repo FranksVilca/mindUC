@@ -2,19 +2,22 @@ import '../../domain/entities/journal_entry.dart';
 import '../../domain/entities/journal_mood_pulse.dart';
 
 /// Fuente de datos local en el dispositivo del estudiante (Principio V).
-/// Almacena las huellas interiores de forma autónoma sin conexiones de red.
+/// Almacena las huellas interiores de forma autónoma, aisladas estrictamente por usuario.
 class LocalJournalDataSource {
-  LocalJournalDataSource({List<JournalEntry>? initialEntries}) {
+  static final Map<String, List<JournalEntry>> _userEntries = {};
+
+  LocalJournalDataSource({List<JournalEntry>? initialEntries, String defaultUserId = ''}) {
     if (initialEntries != null) {
-      _entries.addAll(initialEntries);
-    } else {
-      _entries.addAll(_mockInitialEntries);
+      _userEntries[defaultUserId] = List<JournalEntry>.from(initialEntries);
     }
   }
 
-  final List<JournalEntry> _entries = [];
+  static void clearEntries() {
+    _userEntries.clear();
+  }
 
-  static List<JournalEntry> get _mockInitialEntries {
+  /// Entradas iniciales simuladas para tests de diseño de interfaz.
+  static List<JournalEntry> get mockInitialEntries {
     final now = DateTime.now();
     return [
       JournalEntry(
@@ -46,25 +49,58 @@ class LocalJournalDataSource {
     ];
   }
 
-  /// Retorna una copia de las entradas ordenadas por fecha descendente.
-  Future<List<JournalEntry>> getEntries() async {
-    final sorted = List<JournalEntry>.from(_entries)
+  /// Retorna las entradas del usuario autenticado ordenadas por fecha descendente.
+  /// Un usuario nuevo siempre comienza con una lista vacía.
+  Future<List<JournalEntry>> getEntries([String userId = '']) async {
+    final list = _userEntries[userId];
+    if (list == null) return [];
+    final sorted = List<JournalEntry>.from(list)
       ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
     return sorted;
   }
 
-  /// Inserta una nueva entrada o actualiza la existente.
+  /// Inserta una nueva entrada o actualiza la existente para el usuario correspondiente.
   Future<void> saveEntry(JournalEntry entry) async {
-    final index = _entries.indexWhere((e) => e.id == entry.id);
+    final list = _userEntries.putIfAbsent(entry.userId, () => []);
+    final index = list.indexWhere((e) => e.id == entry.id);
     if (index >= 0) {
-      _entries[index] = entry;
+      list[index] = entry;
     } else {
-      _entries.insert(0, entry);
+      list.insert(0, entry);
     }
   }
 
-  /// Elimina la entrada con el id dado.
-  Future<void> deleteEntry(String id) async {
-    _entries.removeWhere((e) => e.id == id);
+  /// Guarda o actualiza un lote de entradas en memoria optimizando la búsqueda por ID
+  Future<void> saveEntries(List<JournalEntry> entries, [String userId = '']) async {
+    if (entries.isEmpty) return;
+    final effectiveUserId = userId.trim().isNotEmpty
+        ? userId.trim()
+        : (entries.first.userId.trim().isNotEmpty
+            ? entries.first.userId.trim()
+            : '');
+
+    final list = _userEntries.putIfAbsent(effectiveUserId, () => []);
+    final existingMap = {for (int i = 0; i < list.length; i++) list[i].id: i};
+    final toInsert = <JournalEntry>[];
+
+    for (final entry in entries) {
+      final idx = existingMap[entry.id];
+      if (idx != null) {
+        list[idx] = entry;
+      } else {
+        toInsert.add(entry);
+      }
+    }
+    if (toInsert.isNotEmpty) {
+      list.insertAll(0, toInsert);
+    }
+  }
+
+  /// Elimina la entrada con el id dado del usuario.
+  Future<void> deleteEntry(String id, [String userId = '']) async {
+    final list = _userEntries[userId];
+    if (list != null) {
+      list.removeWhere((e) => e.id == id);
+    }
   }
 }

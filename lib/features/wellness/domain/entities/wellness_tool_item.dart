@@ -46,13 +46,13 @@ class WellnessToolItem {
     ),
     WellnessToolItem(
       id: 'ai_assistant',
-      title: 'Asistente IA ✨',
-      subtitle: 'Acompañamiento y escucha compasiva.',
-      badgeText: '24/7',
-      icon: Icons.smart_toy_outlined,
+      title: 'Psicólogo IA ✨',
+      subtitle: 'Escucha compasiva y orientación 24/7.',
+      badgeText: 'Gratis 24/7',
+      icon: Icons.psychology_outlined,
       backgroundColor: MindColors.descanso,
-      targetRoute: '',
-      isDeferred: true, // Principio VI: Ética de IA diferida
+      targetRoute: AppRoutes.aiAssistant,
+      isDeferred: false,
     ),
     WellnessToolItem(
       id: 'pomodoro',

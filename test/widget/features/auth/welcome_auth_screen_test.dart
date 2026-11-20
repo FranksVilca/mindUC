@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:minduc/core/design_system/branding/mind_app_logo.dart';
 import 'package:minduc/core/theme/mind_theme.dart';
 import 'package:minduc/features/auth/presentation/screens/welcome_auth_screen.dart';
 
@@ -15,13 +16,12 @@ void main() {
   }
 
   group('WelcomeAuthScreen Widget Tests', () {
-    testWidgets('renders Figma elements: brand header, emblem, student badge, headline, form, button and tagline', (tester) async {
+    testWidgets('renders Figma elements: emblem, student badge, headline, form, button and tagline', (tester) async {
       await tester.pumpWidget(createWidgetUnderTest());
       await tester.pumpAndSettle();
 
-      // Top title
-      expect(find.text('MINDUC'), findsOneWidget);
-      expect(find.text('Bienvenida Y Autenticación'), findsOneWidget);
+      // Central emblem
+      expect(find.byType(MindAppLogo), findsOneWidget);
 
       // Badge
       expect(find.text('Espacio de Bienestar Estudiantil'), findsOneWidget);
@@ -66,6 +66,7 @@ void main() {
 
       final eyeIconFinder = find.byIcon(Icons.visibility_outlined);
       expect(eyeIconFinder, findsOneWidget);
+      await tester.ensureVisible(eyeIconFinder);
 
       await tester.tap(eyeIconFinder);
       await tester.pumpAndSettle();

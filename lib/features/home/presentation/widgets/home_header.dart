@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../../../core/design_system/avatars/mind_user_avatar.dart';
+import '../../../../core/design_system/branding/mind_app_logo.dart';
 import '../../../../core/theme/mind_colors.dart';
 import '../../../../core/theme/mind_typography.dart';
 
@@ -6,11 +8,13 @@ import '../../../../core/theme/mind_typography.dart';
 class HomeHeader extends StatelessWidget {
   final VoidCallback? onNotificationPressed;
   final VoidCallback? onAvatarPressed;
+  final String? avatarUrl;
 
   const HomeHeader({
     super.key,
     this.onNotificationPressed,
     this.onAvatarPressed,
+    this.avatarUrl,
   });
 
   @override
@@ -20,6 +24,12 @@ class HomeHeader extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: [
+          // Logotipo oficial a la izquierda
+          const Align(
+            alignment: Alignment.centerLeft,
+            child: MindAppLogo(size: 36),
+          ),
+
           // Marca centrada
           Column(
             mainAxisSize: MainAxisSize.min,
@@ -78,17 +88,10 @@ class HomeHeader extends StatelessWidget {
                 const SizedBox(width: 14),
 
                 // Avatar circular de usuario
-                GestureDetector(
+                MindUserAvatar(
+                  avatarId: avatarUrl,
+                  size: 34,
                   onTap: onAvatarPressed,
-                  child: const CircleAvatar(
-                    radius: 17,
-                    backgroundColor: MindColors.primaryDark,
-                    child: Icon(
-                      Icons.person,
-                      size: 20,
-                      color: Colors.white,
-                    ),
-                  ),
                 ),
               ],
             ),

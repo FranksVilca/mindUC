@@ -7,6 +7,7 @@ import '../../../auth/domain/entities/user_entity.dart';
 import '../../../auth/domain/repositories/auth_repository.dart';
 import '../../../auth/presentation/controllers/auth_controller.dart';
 import '../../data/datasources/fake_mood_datasource.dart';
+import '../../data/datasources/firestore_mood_datasource.dart';
 import '../../data/repositories/mood_repository_impl.dart';
 import '../../domain/entities/dashboard_summary.dart';
 import '../../domain/entities/mood_type.dart';
@@ -15,9 +16,12 @@ import '../../domain/repositories/mood_repository.dart';
 import '../../domain/usecases/record_mood_usecase.dart';
 import 'home_dashboard_state.dart';
 
-/// Proveedor del repositorio de estado de ánimo.
+/// Proveedor del repositorio de estado de ánimo con soporte Cloud Firestore y fallback local.
 final moodRepositoryProvider = Provider<MoodRepository>((ref) {
-  return MoodRepositoryImpl(fakeDataSource: FakeMoodDataSource());
+  return MoodRepositoryImpl(
+    firestoreDataSource: FirestoreMoodDataSource(),
+    fakeDataSource: FakeMoodDataSource(),
+  );
 });
 
 /// Proveedor del caso de uso de consulta de ánimo de hoy.
@@ -36,11 +40,13 @@ final recordMoodUseCaseProvider = Provider<RecordMoodUseCase>((ref) {
 final homeDashboardControllerProvider =
     StateNotifierProvider<HomeDashboardNotifier, HomeDashboardState>((ref) {
   final authRepo = ref.watch(authRepositoryProvider);
+  final currentUser = ref.watch(currentUserProvider);
   final getTodayMood = ref.watch(getTodayMoodUseCaseProvider);
   final recordMood = ref.watch(recordMoodUseCaseProvider);
 
   return HomeDashboardNotifier(
     authRepo: authRepo,
+    currentUser: currentUser,
     getTodayMoodUseCase: getTodayMood,
     recordMoodUseCase: recordMood,
   );
@@ -49,22 +55,25 @@ final homeDashboardControllerProvider =
 /// Controlador del Dashboard de inicio de mindUC.
 class HomeDashboardNotifier extends StateNotifier<HomeDashboardState> {
   final AuthRepository _authRepo;
+  final UserEntity? _currentUser;
   final GetTodayMoodUseCase _getTodayMoodUseCase;
   final RecordMoodUseCase _recordMoodUseCase;
 
   HomeDashboardNotifier({
     required AuthRepository authRepo,
+    UserEntity? currentUser,
     required GetTodayMoodUseCase getTodayMoodUseCase,
     required RecordMoodUseCase recordMoodUseCase,
   })  : _authRepo = authRepo,
+        _currentUser = currentUser,
         _getTodayMoodUseCase = getTodayMoodUseCase,
         _recordMoodUseCase = recordMoodUseCase,
         super(HomeDashboardState(
           summary: DashboardSummary(
-            greetingName: _resolveGreetingName(authRepo.currentUser),
+            greetingName: _resolveGreetingName(currentUser ?? authRepo.currentUser),
             formattedDate: SpanishDateFormatter.format(DateTime.now()),
-            pendingActivitiesCount: 4,
-            streakDays: 7,
+            pendingActivitiesCount: 0,
+            streakDays: 0,
           ),
           quickAccessItems: _defaultQuickAccessItems,
         )) {
@@ -83,15 +92,15 @@ class HomeDashboardNotifier extends StateNotifier<HomeDashboardState> {
     QuickAccessItem(
       id: 'relaxation',
       title: 'Relajación',
-      subtitle: 'Respira y libera tensión (10 min)',
+      subtitle: 'Pausas activas y estiramientos',
       icon: Icons.self_improvement_rounded,
       backgroundColor: MindColors.autocuidado,
-      targetRoute: AppRoutes.breathingSession,
+      targetRoute: AppRoutes.relaxation,
     ),
     QuickAccessItem(
       id: 'agenda',
       title: 'Agenda',
-      subtitle: '4 actividades pendientes hoy',
+      subtitle: 'Tus actividades del día',
       icon: Icons.calendar_month_rounded,
       backgroundColor: MindColors.productividad,
       targetRoute: AppRoutes.agenda,
@@ -107,7 +116,7 @@ class HomeDashboardNotifier extends StateNotifier<HomeDashboardState> {
     QuickAccessItem(
       id: 'progress',
       title: 'Mi progreso',
-      subtitle: 'Racha de 7 días continuos',
+      subtitle: 'Tu camino de serenidad',
       icon: Icons.show_chart_rounded,
       backgroundColor: MindColors.accentCalm,
       targetRoute: AppRoutes.progress,
@@ -115,7 +124,7 @@ class HomeDashboardNotifier extends StateNotifier<HomeDashboardState> {
   ];
 
   Future<void> loadDashboard() async {
-    final user = _authRepo.currentUser;
+    final user = _currentUser ?? _authRepo.currentUser;
     final now = DateTime.now();
     final dateString = SpanishDateFormatter.toIsoDateString(now);
 
@@ -150,7 +159,7 @@ class HomeDashboardNotifier extends StateNotifier<HomeDashboardState> {
   }
 
   Future<bool> selectMood(MoodType mood) async {
-    final user = _authRepo.currentUser;
+    final user = _currentUser ?? _authRepo.currentUser;
     final userId = user?.id ?? 'guest_user';
     final dateString = SpanishDateFormatter.toIsoDateString(DateTime.now());
 

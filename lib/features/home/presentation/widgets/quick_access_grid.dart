@@ -24,13 +24,18 @@ class QuickAccessGrid extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              'Espacios para ti',
-              style: MindTypography.titleMedium.copyWith(
-                fontWeight: FontWeight.w700,
-                color: MindColors.textPrimary,
+            Expanded(
+              child: Text(
+                'Espacios para ti',
+                style: MindTypography.titleMedium.copyWith(
+                  fontWeight: FontWeight.w700,
+                  color: MindColors.textPrimary,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
+            const SizedBox(width: 8),
             Text(
               'Explora tu bienestar',
               style: MindTypography.labelSmall.copyWith(
@@ -66,7 +71,7 @@ class QuickAccessGrid extends StatelessWidget {
     return GestureDetector(
       onTap: () => onItemTapped(item),
       child: Container(
-        height: 148,
+        constraints: const BoxConstraints(minHeight: 148),
         padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
           color: item.backgroundColor,

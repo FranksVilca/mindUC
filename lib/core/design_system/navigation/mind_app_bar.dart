@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import '../avatars/mind_user_avatar.dart';
+import '../branding/mind_app_logo.dart';
+import '../notifications/notification_tray_modal.dart';
 import '../../theme/mind_colors.dart';
 import '../../theme/mind_typography.dart';
 
@@ -9,6 +12,7 @@ class MindAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onProfileTap;
   final bool showBackButton;
   final VoidCallback? onBackTap;
+  final String? avatarUrl;
 
   const MindAppBar({
     super.key,
@@ -17,6 +21,7 @@ class MindAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.onProfileTap,
     this.showBackButton = false,
     this.onBackTap,
+    this.avatarUrl,
   });
 
   @override
@@ -32,32 +37,51 @@ class MindAppBar extends StatelessWidget implements PreferredSizeWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             if (showBackButton)
-              IconButton(
-                icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
-                color: MindColors.textPrimary,
-                onPressed: onBackTap ?? () => Navigator.of(context).maybePop(),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
+                    color: MindColors.textPrimary,
+                    onPressed: onBackTap ?? () => Navigator.of(context).maybePop(),
+                  ),
+                  const SizedBox(width: 4),
+                  const MindAppLogo(size: 26),
+                ],
               )
             else
-              const SizedBox(width: 40),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'mindUC',
-                  style: MindTypography.titleMedium.copyWith(
-                    fontWeight: FontWeight.w800,
-                    color: MindColors.primaryDark,
-                    letterSpacing: -0.3,
-                  ),
+              const SizedBox(
+                width: 40,
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: MindAppLogo(size: 32),
                 ),
-                Text(
-                  title,
-                  style: MindTypography.labelSmall.copyWith(
-                    color: MindColors.textSecondary,
-                    fontSize: 11,
+              ),
+            Flexible(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'mindUC',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: MindTypography.titleMedium.copyWith(
+                      fontWeight: FontWeight.w800,
+                      color: MindColors.primaryDark,
+                      letterSpacing: -0.3,
+                    ),
                   ),
-                ),
-              ],
+                  Text(
+                    title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: MindTypography.labelSmall.copyWith(
+                      color: MindColors.textSecondary,
+                      fontSize: 11,
+                    ),
+                  ),
+                ],
+              ),
             ),
             Row(
               mainAxisSize: MainAxisSize.min,
@@ -77,16 +101,13 @@ class MindAppBar extends StatelessWidget implements PreferredSizeWidget {
                       ),
                     ],
                   ),
-                  onPressed: onNotificationTap ?? () {},
+                  onPressed: onNotificationTap ?? () => NotificationTrayModal.show(context),
                 ),
                 const SizedBox(width: 4),
-                GestureDetector(
-                  onTap: onProfileTap ?? () {},
-                  child: const CircleAvatar(
-                    radius: 17,
-                    backgroundColor: MindColors.primaryDark,
-                    child: Icon(Icons.person, size: 20, color: Colors.white),
-                  ),
+                MindUserAvatar(
+                  avatarId: avatarUrl,
+                  size: 34,
+                  onTap: onProfileTap,
                 ),
               ],
             ),

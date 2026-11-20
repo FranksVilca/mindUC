@@ -1,25 +1,30 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/error/result.dart';
+import '../../../../core/firebase/firebase_initializer.dart';
 import '../../domain/entities/mood_entry.dart';
 import '../../domain/entities/mood_type.dart';
 import '../../domain/repositories/mood_repository.dart';
 import '../datasources/fake_mood_datasource.dart';
+import '../datasources/firestore_mood_datasource.dart';
 import '../models/mood_model.dart';
 
 /// Implementación del repositorio de estado de ánimo desacoplado con soporte
-/// para Firestore offline y FakeMoodDataSource en tests.
+/// para Cloud Firestore y fallback a FakeMoodDataSource en tests y modo local.
 class MoodRepositoryImpl implements MoodRepository {
   final FakeMoodDataSource? _fakeDataSource;
-  final FirebaseFirestore? _firestore;
+  final FirestoreMoodDataSource _firestoreDataSource;
 
   MoodRepositoryImpl({
     FakeMoodDataSource? fakeDataSource,
-    FirebaseFirestore? firestore,
+    FirestoreMoodDataSource? firestoreDataSource,
   })  : _fakeDataSource = fakeDataSource,
-        _firestore = firestore;
+        _firestoreDataSource =
+            firestoreDataSource ?? FirestoreMoodDataSource();
 
-  bool get _isFake => _fakeDataSource != null;
+  bool get _isFake => !FirebaseInitializer.isInitialized;
+
+  FakeMoodDataSource get _resolvedFake =>
+      _fakeDataSource ?? FakeMoodDataSource();
 
   @override
   Future<Result<MoodEntry?, AppFailure>> getTodayMood({
@@ -28,27 +33,28 @@ class MoodRepositoryImpl implements MoodRepository {
   }) async {
     try {
       if (userId.trim().isEmpty) {
-        return const FailureResult(ValidationFailure('userId cannot be empty', field: 'userId'));
+        return const FailureResult(
+          ValidationFailure('userId cannot be empty', field: 'userId'),
+        );
       }
 
-      if (_isFake) {
-        final model = await _fakeDataSource!.getMood(userId, dateString);
-        return Success(model?.toDomain());
+      if (!_isFake) {
+        try {
+          final entry = await _firestoreDataSource.getTodayMood(
+            userId: userId,
+            dateString: dateString,
+          );
+          if (entry != null) {
+            await _resolvedFake.saveMood(MoodModel.fromDomain(entry));
+            return Success(entry);
+          }
+        } catch (_) {
+          // Fallback a almacenamiento local si Firestore no está disponible
+        }
       }
 
-      final doc = await _firestore!
-          .collection('users')
-          .doc(userId)
-          .collection('mood_entries')
-          .doc(dateString)
-          .get();
-
-      if (!doc.exists || doc.data() == null) {
-        return const Success(null);
-      }
-
-      final model = MoodModel.fromMap(doc.data()!);
-      return Success(model.toDomain());
+      final model = await _resolvedFake.getMood(userId, dateString);
+      return Success(model?.toDomain());
     } catch (e) {
       return FailureResult(ServerFailure(e.toString()));
     }
@@ -62,10 +68,12 @@ class MoodRepositoryImpl implements MoodRepository {
   }) async {
     try {
       if (userId.trim().isEmpty) {
-        return const FailureResult(ValidationFailure('userId cannot be empty', field: 'userId'));
+        return const FailureResult(
+          ValidationFailure('userId cannot be empty', field: 'userId'),
+        );
       }
 
-      final model = MoodModel(
+      final localModel = MoodModel(
         id: '${userId}_$dateString',
         userId: userId,
         dateString: dateString,
@@ -73,19 +81,24 @@ class MoodRepositoryImpl implements MoodRepository {
         timestampMillis: DateTime.now().millisecondsSinceEpoch,
       );
 
-      if (_isFake) {
-        final saved = await _fakeDataSource!.saveMood(model);
-        return Success(saved.toDomain());
+      // Respaldo local in-memory inmediato
+      final savedLocal = await _resolvedFake.saveMood(localModel);
+
+      if (!_isFake) {
+        try {
+          final entry = await _firestoreDataSource.saveMood(
+            userId: userId,
+            dateString: dateString,
+            mood: mood,
+          );
+          return Success(entry);
+        } catch (_) {
+          // En caso de corte de red, el registro local es válido y exitoso
+          return Success(savedLocal.toDomain());
+        }
       }
 
-      await _firestore!
-          .collection('users')
-          .doc(userId)
-          .collection('mood_entries')
-          .doc(dateString)
-          .set(model.toMap(), SetOptions(merge: true));
-
-      return Success(model.toDomain());
+      return Success(savedLocal.toDomain());
     } catch (e) {
       return FailureResult(ServerFailure(e.toString()));
     }
@@ -96,21 +109,25 @@ class MoodRepositoryImpl implements MoodRepository {
     required String userId,
   }) async {
     try {
-      if (_isFake) {
-        final models = await _fakeDataSource!.getWeeklyMoods(userId);
-        return Success(models.map((m) => m.toDomain()).toList());
+      if (userId.trim().isEmpty) {
+        return const FailureResult(
+          ValidationFailure('userId cannot be empty', field: 'userId'),
+        );
       }
 
-      final snapshot = await _firestore!
-          .collection('users')
-          .doc(userId)
-          .collection('mood_entries')
-          .orderBy('timestampMillis', descending: true)
-          .limit(7)
-          .get();
+      if (!_isFake) {
+        try {
+          final entries = await _firestoreDataSource.getWeeklyMoods(userId: userId);
+          if (entries.isNotEmpty) {
+            return Success(entries);
+          }
+        } catch (_) {
+          // Fallback a almacenamiento local
+        }
+      }
 
-      final entries = snapshot.docs.map((doc) => MoodModel.fromMap(doc.data()).toDomain()).toList();
-      return Success(entries);
+      final models = await _resolvedFake.getWeeklyMoods(userId);
+      return Success(models.map((m) => m.toDomain()).toList());
     } catch (e) {
       return FailureResult(ServerFailure(e.toString()));
     }

@@ -8,6 +8,7 @@ class WellnessPreferencesCard extends StatelessWidget {
   final VoidCallback onSoundTap;
   final VoidCallback onTechniqueTap;
   final ValueChanged<bool> onRemindersChanged;
+  final VoidCallback? onReminderIntervalTap;
 
   const WellnessPreferencesCard({
     super.key,
@@ -15,6 +16,7 @@ class WellnessPreferencesCard extends StatelessWidget {
     required this.onSoundTap,
     required this.onTechniqueTap,
     required this.onRemindersChanged,
+    this.onReminderIntervalTap,
   });
 
   @override
@@ -114,7 +116,8 @@ class WellnessPreferencesCard extends StatelessWidget {
                 iconColor: const Color(0xFF2C5E47),
                 title: 'Recordatorios conscientes',
                 subtitle: preferences.reminderIntervalDescription,
-                onTap: () => onRemindersChanged(!preferences.consciousRemindersEnabled),
+                onTap: onReminderIntervalTap ??
+                    () => onRemindersChanged(!preferences.consciousRemindersEnabled),
                 trailing: Switch.adaptive(
                   key: const Key('conscious_reminders_switch'),
                   value: preferences.consciousRemindersEnabled,
@@ -182,6 +185,8 @@ class _PreferenceRow extends StatelessWidget {
                 children: [
                   Text(
                     title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       fontSize: 14.0,
                       fontWeight: FontWeight.w600,
@@ -191,6 +196,8 @@ class _PreferenceRow extends StatelessWidget {
                   const SizedBox(height: 2.0),
                   Text(
                     subtitle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       fontSize: 12.5,
                       fontWeight: FontWeight.w400,

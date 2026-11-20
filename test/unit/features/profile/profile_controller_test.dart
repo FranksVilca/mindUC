@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:minduc/features/auth/domain/entities/user_entity.dart';
 import 'package:minduc/features/profile/data/datasources/local_profile_datasource.dart';
 import 'package:minduc/features/profile/data/repositories/local_profile_repository_impl.dart';
 import 'package:minduc/features/profile/domain/entities/wellness_preferences.dart';
@@ -11,17 +12,22 @@ void main() {
     late ProfileNotifier notifier;
 
     setUp(() {
+      LocalProfileDataSource.clearProfiles();
       dataSource = LocalProfileDataSource();
       repository = LocalProfileRepositoryImpl(dataSource: dataSource);
       notifier = ProfileNotifier(repository: repository);
     });
 
-    test('initial state loads student profile according to Figma mockup', () async {
+    tearDown(() {
+      LocalProfileDataSource.clearProfiles();
+    });
+
+    test('initial state loads generic student profile when unauthenticated', () async {
       final state = notifier.state;
 
-      expect(state.user.fullName, equals('Camila Soto'));
-      expect(state.user.career, equals('Psicología'));
-      expect(state.user.universityEmail, equals('camila.soto@uc.cl'));
+      expect(state.user.fullName, equals('Estudiante UC'));
+      expect(state.user.career, equals('Pregrado UC'));
+      expect(state.user.universityEmail, equals('estudiante@uc.cl'));
       expect(state.user.isMindfulActive, isTrue);
 
       expect(state.preferences.defaultAmbientSound, equals('Lluvia suave en el bosque'));
@@ -30,6 +36,30 @@ void main() {
 
       expect(state.supportContact.title, equals('Línea de Apoyo Psicológico'));
       expect(state.supportContact.extensionNumber, equals('*4000'));
+    });
+
+    test('dynamic profile is generated from authenticated UserEntity without hardcoded data', () async {
+      final user = UserEntity(
+        id: 'usr_ana_valenzuela',
+        email: 'ana.valenzuela@uc.cl',
+        displayName: 'Ana Valenzuela',
+        department: 'Ingeniería Civil',
+        isEmailVerified: true,
+        isAnonymous: false,
+        createdAt: DateTime(2024, 1, 1),
+      );
+
+      final notifierWithUser = ProfileNotifier(
+        repository: repository,
+        currentUser: user,
+      );
+      await notifierWithUser.loadProfile();
+
+      final state = notifierWithUser.state;
+      expect(state.user.fullName, equals('Ana Valenzuela'));
+      expect(state.user.career, equals('Ingeniería Civil'));
+      expect(state.user.universityEmail, equals('ana.valenzuela@uc.cl'));
+      expect(state.user.id, equals('usr_ana_valenzuela'));
     });
 
     test('toggleConsciousReminders switches conscious reminder preference', () async {

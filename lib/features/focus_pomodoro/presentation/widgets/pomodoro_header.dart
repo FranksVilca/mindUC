@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/design_system/branding/mind_app_logo.dart';
 import '../../../../core/theme/mind_colors.dart';
 
 /// Barra superior de navegación para la pantalla de Concentración Pomodoro.
@@ -19,15 +20,22 @@ class PomodoroHeader extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          IconButton(
-            onPressed: onBack,
-            icon: const Icon(
-              Icons.arrow_back_ios_new_rounded,
-              size: 20,
-              color: MindColors.textPrimary,
-            ),
-            splashRadius: 22,
-            tooltip: 'Volver',
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                onPressed: onBack,
+                icon: const Icon(
+                  Icons.arrow_back_ios_new_rounded,
+                  size: 20,
+                  color: MindColors.textPrimary,
+                ),
+                splashRadius: 22,
+                tooltip: 'Volver',
+              ),
+              const SizedBox(width: 4),
+              const MindAppLogo(size: 28),
+            ],
           ),
           const Column(
             children: [

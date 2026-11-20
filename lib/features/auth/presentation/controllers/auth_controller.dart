@@ -1,4 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/firebase/firebase_config.dart';
+import '../../../../core/firebase/firebase_initializer.dart';
+import '../../data/datasources/auth_remote_datasource.dart';
 import '../../data/datasources/fake_auth_datasource.dart';
 import '../../data/repositories/auth_repository_impl.dart';
 import '../../domain/entities/user_entity.dart';
@@ -7,9 +10,15 @@ import '../../domain/usecases/sign_in_usecase.dart';
 import '../../domain/usecases/sign_up_usecase.dart';
 import 'auth_ui_state.dart';
 
-/// Proveedor del repositorio de autenticación.
+/// Proveedor del repositorio de autenticación con soporte para Firebase y fallback local.
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
-  return AuthRepositoryImpl(fakeDataSource: FakeAuthDataSource());
+  return AuthRepositoryImpl(
+    remoteDataSource:
+        (FirebaseInitializer.isInitialized && FirebaseConfig.hasCustomCredentials)
+            ? FirebaseAuthDataSource()
+            : null,
+    fakeDataSource: FakeAuthDataSource(),
+  );
 });
 
 /// Proveedor del caso de uso de inicio de sesión.
@@ -28,6 +37,13 @@ final signUpUseCaseProvider = Provider<SignUpUseCase>((ref) {
 final authStateChangesProvider = StreamProvider<UserEntity?>((ref) {
   final repo = ref.watch(authRepositoryProvider);
   return repo.authStateChanges();
+});
+
+/// Proveedor reactivo del usuario actualmente autenticado.
+/// Reacciona inmediatamente a cambios de sesión (login, logout, cambio de cuenta).
+final currentUserProvider = Provider<UserEntity?>((ref) {
+  final authAsync = ref.watch(authStateChangesProvider);
+  return authAsync.asData?.value ?? ref.watch(authRepositoryProvider).currentUser;
 });
 
 /// Notifier que gestiona el estado interactivo del formulario de autenticación.
@@ -72,6 +88,7 @@ class AuthUiNotifier extends StateNotifier<AuthUiState> {
     required String password,
     String? displayName,
     String? department,
+    String? photoUrl,
   }) async {
     state = state.copyWith(isLoading: true, clearError: true);
 
@@ -96,6 +113,7 @@ class AuthUiNotifier extends StateNotifier<AuthUiState> {
         password: password,
         displayName: displayName,
         department: department,
+        photoUrl: photoUrl,
       );
       return result.when(
         onSuccess: (_) {

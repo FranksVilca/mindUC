@@ -90,13 +90,17 @@ class _TabButton extends StatelessWidget {
               size: 18,
               color: isSelected ? MindColors.textPrimary : MindColors.textSecondary,
             ),
-            const SizedBox(width: 8),
-            Text(
-              label,
-              style: MindTypography.labelLarge.copyWith(
-                fontSize: 13.5,
-                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                color: isSelected ? MindColors.textPrimary : MindColors.textSecondary,
+            const SizedBox(width: 6),
+            Flexible(
+              child: Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: MindTypography.labelLarge.copyWith(
+                  fontSize: 13.5,
+                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                  color: isSelected ? MindColors.textPrimary : MindColors.textSecondary,
+                ),
               ),
             ),
           ],

@@ -13,12 +13,14 @@ class SignUpUseCase {
     required String password,
     String? displayName,
     String? department,
+    String? photoUrl,
   }) {
     return _repository.signUpWithEmailAndPassword(
       email: email,
       password: password,
       displayName: displayName,
       department: department,
+      photoUrl: photoUrl,
     );
   }
 }

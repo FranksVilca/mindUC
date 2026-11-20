@@ -27,7 +27,10 @@ class CommunityBannerCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Insignias superiores: ESPACIO SEGURO UC & Moderado con empatía
-          Row(
+          Wrap(
+            spacing: 8,
+            runSpacing: 4,
+            crossAxisAlignment: WrapCrossAlignment.center,
             children: [
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -45,7 +48,6 @@ class CommunityBannerCard extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(width: 8),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [

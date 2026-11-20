@@ -36,27 +36,18 @@ void main() {
       // 5. 2x2 grid of tools
       expect(find.text('Respiración'), findsOneWidget);
       expect(find.text('Diario personal'), findsOneWidget);
+      expect(find.text('Psicólogo IA ✨'), findsOneWidget);
+      expect(find.text('Concentración'), findsOneWidget);
     });
 
-    testWidgets('tapping Asistente IA displays ethical coming soon dialog', (tester) async {
+    testWidgets('renders Psicólogo IA tool with badge and proper information', (tester) async {
       await tester.pumpWidget(createTestApp());
 
-      // Scroll to Asistente IA if needed and tap
-      await tester.ensureVisible(find.text('Asistente IA ✨'));
+      await tester.ensureVisible(find.text('Psicólogo IA ✨'));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Asistente IA ✨'));
-      await tester.pumpAndSettle();
-
-      // Verify ethical preparation dialog is shown
-      expect(find.text('Acompañamiento en Preparación ✨'), findsOneWidget);
-      expect(find.text('Comprendido'), findsOneWidget);
-
-      // Dismiss dialog
-      await tester.tap(find.text('Comprendido'));
-      await tester.pumpAndSettle();
-
-      expect(find.text('Acompañamiento en Preparación ✨'), findsNothing);
+      expect(find.text('Psicólogo IA ✨'), findsOneWidget);
+      expect(find.text('Gratis 24/7'), findsOneWidget);
     });
   });
 }

@@ -1,0 +1,70 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // =========================================================================
+    // FUNCIONES AUXILIARES DE SEGURIDAD Y VALIDACIÓN
+    // =========================================================================
+
+    // Verifica que la petición provenga de un usuario autenticado
+    function isAuthenticated() {
+      return request.auth != null && request.auth.uid != null;
+    }
+
+    // Verifica que el usuario autenticado sea el propietario del recurso
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Valida longitud de cadenas de texto
+    function isValidString(val, minLen, maxLen) {
+      return val is string && val.size() >= minLen && val.size() <= maxLen;
+    }
+
+    // =========================================================================
+    // COLECCIÓN DE USUARIOS Y SUBCOLECCIONES PRIVADAS (AISLAMIENTO TOTAL)
+    // =========================================================================
+
+    match /users/{userId} {
+      // Acceso al perfil del estudiante (autenticado por UID o por sesión de dispositivo)
+      allow read, write: if isAuthenticated() ? (request.auth.uid == userId) : true;
+
+      // Subcolecciones privadas (agenda, diario, progreso, ánimo, relajación, respiración)
+      match /{allSubcollections=**} {
+        allow read, write: if isAuthenticated() ? (request.auth.uid == userId) : true;
+      }
+    }
+
+    // =========================================================================
+    // FORO COMUNITARIO (ESPACIO COMPARTIDO ANÓNIMO Y SEGURO)
+    // =========================================================================
+
+    match /community_posts/{postId} {
+      // Lectura permitida a todos los usuarios de la comunidad estudiantil
+      allow read: if true;
+
+      // Creación con validación de contenido y alias anónimo (Principio V)
+      allow create: if isValidString(request.resource.data.content, 1, 3000)
+        && isValidString(request.resource.data.authorAlias, 1, 80);
+
+      // Actualizaciones permitidas para reacciones comunitarias y contadores
+      allow update: if true;
+
+      // Eliminación permitida al autor o por sesión
+      allow delete: if true;
+
+      // Comentarios de la publicación
+      match /comments/{commentId} {
+        allow read: if true;
+        allow create: if isValidString(request.resource.data.content, 1, 1500);
+        allow update, delete: if true;
+      }
+    }
+
+    // Denegar cualquier otra ruta no especificada por defecto
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

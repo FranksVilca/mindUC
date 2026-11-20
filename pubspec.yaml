@@ -31,6 +31,13 @@ dependencies:
   # Local Cache & Security
   flutter_secure_storage: ^9.2.2
   shared_preferences: ^2.3.3
+  speech_to_text: ^7.5.0
+  permission_handler: ^13.0.2
+  audioplayers: ^6.8.1
+  installed_apps: ^2.2.1
+  flutter_local_notifications: ^23.0.2
+  timezone: ^0.11.2
+  google_generative_ai: ^0.4.7
 
 dev_dependencies:
   flutter_test:
@@ -42,3 +49,5 @@ flutter:
   uses-material-design: true
   assets:
     - assets/icons/
+    - assets/images/
+    - assets/audio/

@@ -13,6 +13,7 @@ class BreathingSessionState {
   final int currentCycle;
   final int totalCycles;
   final SessionStatus status;
+  final bool isSoundEnabled;
 
   const BreathingSessionState({
     required this.technique,
@@ -23,6 +24,7 @@ class BreathingSessionState {
     this.currentCycle = 1,
     required this.totalCycles,
     this.status = SessionStatus.idle,
+    this.isSoundEnabled = true,
   });
 
   bool get isFreeMode => targetTotalSeconds <= 0;
@@ -63,6 +65,7 @@ class BreathingSessionState {
     int? currentCycle,
     int? totalCycles,
     SessionStatus? status,
+    bool? isSoundEnabled,
   }) {
     return BreathingSessionState(
       technique: technique ?? this.technique,
@@ -73,6 +76,7 @@ class BreathingSessionState {
       currentCycle: currentCycle ?? this.currentCycle,
       totalCycles: totalCycles ?? this.totalCycles,
       status: status ?? this.status,
+      isSoundEnabled: isSoundEnabled ?? this.isSoundEnabled,
     );
   }
 }

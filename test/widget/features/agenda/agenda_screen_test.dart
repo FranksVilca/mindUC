@@ -1,19 +1,80 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:minduc/features/agenda/data/datasources/local_agenda_datasource.dart';
+import 'package:minduc/features/agenda/data/repositories/local_agenda_repository_impl.dart';
+import 'package:minduc/features/agenda/domain/entities/agenda_activity.dart';
+import 'package:minduc/features/agenda/presentation/controllers/agenda_controller.dart';
 import 'package:minduc/features/agenda/presentation/screens/agenda_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
+  setUp(() {
+    SharedPreferences.setMockInitialValues({});
+    LocalAgendaDataSource.clearActivities();
+  });
+
+  tearDown(() {
+    LocalAgendaDataSource.clearActivities();
+  });
+
+  Widget createScreen({List<AgendaActivity>? activities, DateTime? initialDate}) {
+    final ds = LocalAgendaDataSource(
+      initialActivities: activities ?? LocalAgendaDataSource.mockInitialActivities,
+    );
+    final repo = LocalAgendaRepositoryImpl(dataSource: ds);
+    return ProviderScope(
+      overrides: [
+        agendaRepositoryProvider.overrideWithValue(repo),
+        agendaControllerProvider.overrideWith(
+          (ref) => AgendaNotifier(
+            repository: repo,
+            initialDate: initialDate ?? DateTime(2024, 10, 24),
+          ),
+        ),
+      ],
+      child: const MaterialApp(
+        home: AgendaScreen(),
+      ),
+    );
+  }
+
   group('AgendaScreen Integration Widget Tests', () {
-    testWidgets('renders all agenda screen components according to Figma design',
+    testWidgets('new user starts with completely empty agenda and serene empty notice',
         (tester) async {
+      final emptyDs = LocalAgendaDataSource();
+      final emptyRepo = LocalAgendaRepositoryImpl(dataSource: emptyDs);
+
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
+        ProviderScope(
+          overrides: [
+            agendaRepositoryProvider.overrideWithValue(emptyRepo),
+            agendaControllerProvider.overrideWith(
+              (ref) => AgendaNotifier(
+                repository: emptyRepo,
+                userId: 'new_student_user',
+                initialDate: DateTime(2024, 10, 24),
+              ),
+            ),
+          ],
+          child: const MaterialApp(
             home: AgendaScreen(),
           ),
         ),
       );
+      await tester.pumpAndSettle();
+
+      expect(find.text('0 actividades · 0 completadas'), findsOneWidget);
+      expect(
+        find.textContaining('Día despejado para descansar o fluir'),
+        findsOneWidget,
+      );
+      expect(find.text('Meditación matutina y respiración'), findsNothing);
+    });
+
+    testWidgets('renders all agenda screen components according to Figma design',
+        (tester) async {
+      await tester.pumpWidget(createScreen());
       await tester.pumpAndSettle();
 
       // Cabecera
@@ -66,13 +127,7 @@ void main() {
 
     testWidgets('filters activities when category chip is selected',
         (tester) async {
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: AgendaScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(createScreen());
       await tester.pumpAndSettle();
 
       // Filtrar por Autocuidado
@@ -112,42 +167,27 @@ void main() {
 
     testWidgets('toggles activity completion and updates balance card',
         (tester) async {
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: AgendaScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(createScreen());
       await tester.pumpAndSettle();
 
       expect(find.text('4 actividades · 2 completadas'), findsOneWidget);
 
-      // Tocar el check de la primera actividad ("Meditación matutina y respiración", inicialmente completada)
-      final firstCheck = find.byIcon(Icons.check_rounded).first;
-      await tester.tap(firstCheck);
+      final firstToggle = find.byKey(const Key('activity_toggle_activity-1'));
+      await tester.tap(firstToggle);
       await tester.pumpAndSettle();
 
-      // Debe conmutar a 1 completada
       expect(find.text('4 actividades · 1 completadas'), findsOneWidget);
 
-      // Volver a conmutar
-      await tester.tap(find.text('Meditación matutina y respiración'));
+      // Volver a marcar tocando el selector circular de completado
+      await tester.tap(firstToggle);
       await tester.pumpAndSettle();
 
-      // Debe retornar a 2 completadas
       expect(find.text('4 actividades · 2 completadas'), findsOneWidget);
     });
 
     testWidgets('creates a new activity via modal and inserts into list',
         (tester) async {
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: AgendaScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(createScreen());
       await tester.pumpAndSettle();
 
       expect(find.text('4 actividades · 2 completadas'), findsOneWidget);
@@ -175,7 +215,6 @@ void main() {
       await tester.tap(find.text('Guardar actividad'));
       await tester.pumpAndSettle();
 
-      // Modal cerrado y actividad visible
       expect(find.text('Nueva actividad consciente'), findsNothing);
       expect(find.text('5 actividades · 2 completadas'), findsOneWidget);
       expect(find.text('Pausa de estiramiento consciente'), findsOneWidget);
@@ -183,13 +222,7 @@ void main() {
 
     testWidgets('switches day on weekly strip and displays empty state',
         (tester) async {
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: AgendaScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(createScreen());
       await tester.pumpAndSettle();
 
       // Pulsar en el día 25 (Viernes)
@@ -204,25 +237,20 @@ void main() {
       );
     });
 
-    testWidgets('tapping microphone button shows gentle voice assistance notice',
+    testWidgets('tapping microphone button opens intelligent voice assistant modal',
         (tester) async {
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: AgendaScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(createScreen());
       await tester.pumpAndSettle();
 
       // Pulsar icono de micrófono
       await tester.tap(find.byIcon(Icons.mic_none_rounded));
-      await tester.pump();
+      await tester.pumpAndSettle();
 
       expect(
-        find.text('Agendador consciente por voz en preparación 🌿'),
+        find.text('Comando de voz inteligente'),
         findsOneWidget,
       );
+      expect(find.text('Completar agenda'), findsOneWidget);
     });
   });
 }

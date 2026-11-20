@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/router/route_names.dart';
 import '../../../../core/theme/mind_colors.dart';
+import 'package:minduc/features/profile/presentation/controllers/profile_controller.dart';
 import '../../domain/entities/breathing_session_state.dart';
 import '../controllers/breathing_session_controller.dart';
 import '../widgets/breathing_circle_visualizer.dart';
@@ -69,6 +70,8 @@ class BreathingScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: MindColors.background,
       appBar: BreathingHeader(
+        avatarUrl: ref.watch(profileControllerProvider.select((s) => s.user.avatarUrl)),
+        onProfile: () => context.go(AppRoutes.profile),
         onBack: () {
           if (GoRouter.of(context).canPop()) {
             context.pop();
@@ -104,13 +107,22 @@ class BreathingScreen extends ConsumerWidget {
 
               const SizedBox(height: 32),
 
-              // 3. Visualizador circular biomecánico animado
-              BreathingCircleVisualizer(
-                phase: sessionState.phase,
-                secondsRemaining: sessionState.phaseSecondsRemaining,
-                phaseProgressFraction: sessionState.phaseProgressFraction,
-                isRunning: sessionState.isRunning,
-                size: 260,
+              // 3. Visualizador circular biomecánico animado responsivo
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final circleSize = constraints.maxWidth < 280
+                      ? (constraints.maxWidth * 0.8)
+                      : 260.0;
+                  return RepaintBoundary(
+                    child: BreathingCircleVisualizer(
+                      phase: sessionState.phase,
+                      secondsRemaining: sessionState.phaseSecondsRemaining,
+                      phaseProgressFraction: sessionState.phaseProgressFraction,
+                      isRunning: sessionState.isRunning,
+                      size: circleSize,
+                    ),
+                  );
+                },
               ),
 
               const SizedBox(height: 36),
@@ -123,7 +135,56 @@ class BreathingScreen extends ConsumerWidget {
                 onStop: () => controller.stopSession(),
               ),
 
-              const SizedBox(height: 28),
+              const SizedBox(height: 16),
+
+              // Control interactivo de Guía Sonora de Respiración
+              GestureDetector(
+                onTap: () => controller.toggleSound(),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: sessionState.isSoundEnabled
+                        ? MindColors.bienestarPill
+                        : Colors.black.withValues(alpha: 0.05),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: sessionState.isSoundEnabled
+                          ? MindColors.primary
+                          : Colors.grey.shade300,
+                      width: 1,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        sessionState.isSoundEnabled
+                            ? Icons.volume_up_rounded
+                            : Icons.volume_off_rounded,
+                        size: 18,
+                        color: sessionState.isSoundEnabled
+                            ? MindColors.primaryDark
+                            : MindColors.textSecondary,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        sessionState.isSoundEnabled
+                            ? 'Guía sonora activada'
+                            : 'Guía sonora en silencio',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: sessionState.isSoundEnabled
+                              ? MindColors.primaryDark
+                              : MindColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 20),
 
               // 5. Selector segmentado de duración (3 min, 5 min, 10 min, Libre)
               DurationPresetsPill(

@@ -1,20 +1,42 @@
+import 'package:flutter/foundation.dart';
 import '../../domain/entities/community_avatar.dart';
+import '../../domain/entities/community_comment.dart';
 import '../../domain/entities/community_mood_category.dart';
 import '../../domain/entities/community_post.dart';
 import '../../domain/entities/embedded_card_data.dart';
 
 /// Fuente de datos local en el dispositivo para la comunidad UC (Principio V).
-/// Almacena hilos y reacciones en memoria sin exponer identidades reales del estudiante.
+/// Almacena hilos, comentarios y reacciones con persistencia compartida en memoria
+/// sin exponer identidades reales del estudiante.
 class LocalCommunityDataSource {
+  static final List<CommunityPost> _sharedPosts = [];
+
   LocalCommunityDataSource({List<CommunityPost>? initialPosts}) {
-    if (initialPosts != null) {
-      _posts.addAll(initialPosts);
-    } else {
-      _posts.addAll(_mockInitialPosts);
+    if (_sharedPosts.isEmpty) {
+      if (initialPosts != null) {
+        _sharedPosts.addAll(initialPosts);
+      } else {
+        _sharedPosts.addAll(_mockInitialPosts);
+      }
+    } else if (initialPosts != null) {
+      for (final p in initialPosts) {
+        if (!_sharedPosts.any((sp) => sp.id == p.id)) {
+          _sharedPosts.add(p);
+        }
+      }
     }
   }
 
-  final List<CommunityPost> _posts = [];
+  /// Limpia la memoria compartida entre ejecuciones de pruebas unitarias
+  @visibleForTesting
+  static void resetForTesting() {
+    _sharedPosts.clear();
+  }
+
+  List<CommunityPost> get _posts => _sharedPosts;
+
+  /// Publicaciones iniciales semilla para arranque inmediato offline-first
+  static List<CommunityPost> get mockInitialPosts => _mockInitialPosts;
 
   static List<CommunityPost> get _mockInitialPosts {
     final now = DateTime.now();
@@ -39,7 +61,29 @@ class LocalCommunityDataSource {
         calmCount: 28,
         insightCount: 9,
         hugCount: 0,
-        commentCount: 14,
+        commentCount: 2,
+        comments: [
+          CommunityComment(
+            id: 'c-1-1',
+            postId: 'post-1',
+            authorId: 'usr_rodrigo',
+            authorName: 'Rodrigo Morales',
+            content: 'Mucho ánimo, todos pasamos por ese momento. ¡Toma una pausa!',
+            createdAt: now.subtract(const Duration(hours: 1, minutes: 20)),
+          ),
+          CommunityComment(
+            id: 'c-1-2',
+            postId: 'post-1',
+            authorId: 'usr_sofia',
+            authorName: 'Sofía Valenzuela',
+            content: 'Gracias por el recordatorio, realmente lo necesitaba hoy 🌿',
+            createdAt: now.subtract(const Duration(minutes: 45)),
+          ),
+        ],
+        emojiReactions: const {
+          '🤍': {'mock_1', 'mock_2'},
+          '🌿': {'mock_3'},
+        },
         createdAt: now.subtract(const Duration(hours: 2)),
       ),
       CommunityPost(
@@ -63,7 +107,17 @@ class LocalCommunityDataSource {
         calmCount: 41,
         insightCount: 0,
         hugCount: 0,
-        commentCount: 8,
+        commentCount: 1,
+        comments: [
+          CommunityComment(
+            id: 'c-2-1',
+            postId: 'post-2',
+            authorId: 'usr_matias',
+            authorName: 'Matías Silva',
+            content: 'La técnica 4-7-8 es de mis favoritas para antes de entrar a certámenes.',
+            createdAt: now.subtract(const Duration(hours: 2)),
+          ),
+        ],
         createdAt: now.subtract(const Duration(hours: 4)),
       ),
       CommunityPost(
@@ -87,7 +141,17 @@ class LocalCommunityDataSource {
         calmCount: 37,
         insightCount: 0,
         hugCount: 19,
-        commentCount: 22,
+        commentCount: 1,
+        comments: [
+          CommunityComment(
+            id: 'c-3-1',
+            postId: 'post-3',
+            authorId: 'usr_camila',
+            authorName: 'Camila Soto',
+            content: '¡Nos pasa a muchos! Estás exactamente donde mereces estar. Paso a paso 🌻',
+            createdAt: now.subtract(const Duration(hours: 3)),
+          ),
+        ],
         createdAt: now.subtract(const Duration(hours: 6)),
       ),
     ];
@@ -108,40 +172,129 @@ class LocalCommunityDataSource {
     }
   }
 
-  /// Conmuta la reacción del estudiante para una publicación
-  Future<void> toggleReaction(String postId, String reactionKey) async {
+  /// Sincroniza un lote de publicaciones en memoria optimizando la búsqueda por ID
+  Future<void> savePosts(List<CommunityPost> posts) async {
+    if (posts.isEmpty) return;
+    final existingMap = {for (int i = 0; i < _posts.length; i++) _posts[i].id: i};
+    final toInsert = <CommunityPost>[];
+
+    for (final post in posts) {
+      final idx = existingMap[post.id];
+      if (idx != null) {
+        _posts[idx] = post;
+      } else {
+        toInsert.add(post);
+      }
+    }
+    if (toInsert.isNotEmpty) {
+      _posts.insertAll(0, toInsert);
+    }
+  }
+
+  /// Agrega un comentario a una publicación específica
+  Future<void> addComment({
+    required String postId,
+    required CommunityComment comment,
+  }) async {
     final index = _posts.indexWhere((p) => p.id == postId);
     if (index >= 0) {
       final post = _posts[index];
-      final currentReactions = Set<String>.from(post.userReactions);
-      final hasReacted = currentReactions.contains(reactionKey);
+      final updatedComments = List<CommunityComment>.from(post.comments)..add(comment);
+      _posts[index] = post.copyWith(
+        comments: updatedComments,
+        commentCount: updatedComments.length,
+      );
+    }
+  }
+
+  /// Conmuta cualquier emoji para un usuario garantizando que no haya duplicados
+  Future<void> toggleEmojiReaction({
+    required String postId,
+    required String emoji,
+    required String userId,
+  }) async {
+    final index = _posts.indexWhere((p) => p.id == postId);
+    if (index >= 0) {
+      final post = _posts[index];
+      final currentMap = Map<String, Set<String>>.from(
+        post.emojiReactions.map((k, v) => MapEntry(k, Set<String>.from(v))),
+      );
+      final userSet = currentMap.putIfAbsent(emoji, () => <String>{});
+
+      final wasPresent = userSet.contains(userId);
+      if (wasPresent) {
+        userSet.remove(userId);
+        if (userSet.isEmpty) {
+          currentMap.remove(emoji);
+        }
+      } else {
+        userSet.add(userId);
+      }
 
       int support = post.supportCount;
       int calm = post.calmCount;
       int insight = post.insightCount;
       int hug = post.hugCount;
+      final currentReactions = Set<String>.from(post.userReactions);
 
-      if (hasReacted) {
-        currentReactions.remove(reactionKey);
-        if (reactionKey == 'support') support = (support - 1).clamp(0, 9999);
-        if (reactionKey == 'calm') calm = (calm - 1).clamp(0, 9999);
-        if (reactionKey == 'insight') insight = (insight - 1).clamp(0, 9999);
-        if (reactionKey == 'hug') hug = (hug - 1).clamp(0, 9999);
-      } else {
-        currentReactions.add(reactionKey);
-        if (reactionKey == 'support') support += 1;
-        if (reactionKey == 'calm') calm += 1;
-        if (reactionKey == 'insight') insight += 1;
-        if (reactionKey == 'hug') hug += 1;
+      if (emoji == '🤍' || emoji == '❤️') {
+        if (!wasPresent) {
+          currentReactions.add('support');
+          support += 1;
+        } else {
+          currentReactions.remove('support');
+          support = (support - 1).clamp(0, 9999);
+        }
+      } else if (emoji == '🌿') {
+        if (!wasPresent) {
+          currentReactions.add('calm');
+          calm += 1;
+        } else {
+          currentReactions.remove('calm');
+          calm = (calm - 1).clamp(0, 9999);
+        }
+      } else if (emoji == '💡') {
+        if (!wasPresent) {
+          currentReactions.add('insight');
+          insight += 1;
+        } else {
+          currentReactions.remove('insight');
+          insight = (insight - 1).clamp(0, 9999);
+        }
+      } else if (emoji == '🫂') {
+        if (!wasPresent) {
+          currentReactions.add('hug');
+          hug += 1;
+        } else {
+          currentReactions.remove('hug');
+          hug = (hug - 1).clamp(0, 9999);
+        }
       }
 
       _posts[index] = post.copyWith(
+        emojiReactions: currentMap,
+        userReactions: currentReactions,
         supportCount: support,
         calmCount: calm,
         insightCount: insight,
         hugCount: hug,
-        userReactions: currentReactions,
       );
     }
+  }
+
+  /// Conmuta la reacción estándar del estudiante para una publicación
+  Future<void> toggleReaction(String postId, String reactionKey, {String? userId}) async {
+    final emojiMap = {
+      'support': '🤍',
+      'calm': '🌿',
+      'insight': '💡',
+      'hug': '🫂',
+    };
+    final emoji = emojiMap[reactionKey] ?? reactionKey;
+    await toggleEmojiReaction(
+      postId: postId,
+      emoji: emoji,
+      userId: (userId != null && userId.isNotEmpty) ? userId : 'current_user_local',
+    );
   }
 }

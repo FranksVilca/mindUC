@@ -12,13 +12,17 @@ void main() {
     late JournalNotifier controller;
 
     setUp(() {
-      dataSource = LocalJournalDataSource();
+      LocalJournalDataSource.clearEntries();
+      dataSource = LocalJournalDataSource(
+        initialEntries: LocalJournalDataSource.mockInitialEntries,
+      );
       repository = LocalJournalRepositoryImpl(dataSource: dataSource);
       controller = JournalNotifier(repository: repository);
     });
 
     tearDown(() {
       controller.dispose();
+      LocalJournalDataSource.clearEntries();
     });
 
     test('Initial state loads the 3 mockup entries and sets default mood to enCalma',
@@ -32,6 +36,19 @@ void main() {
       expect(state.entries.first.title,
           'Aprender a soltar lo que no puedo controlar');
       expect(state.entries.first.moodPulse, JournalMoodPulse.enCalma);
+    });
+
+    test('new user begins with completely empty journal and zero entries', () async {
+      final emptyDataSource = LocalJournalDataSource();
+      final emptyRepo = LocalJournalRepositoryImpl(dataSource: emptyDataSource);
+      final emptyController = JournalNotifier(
+        repository: emptyRepo,
+        userId: 'brand_new_user_456',
+      );
+      await emptyController.loadEntries();
+      expect(emptyController.state.entryCount, 0);
+      expect(emptyController.state.hasEntries, isFalse);
+      expect(emptyController.state.entries, isEmpty);
     });
 
     test('selectMoodPulse updates active mood in state', () {
@@ -100,7 +117,6 @@ void main() {
       expect(shortEntry.readingTimeMinutes, 1);
       expect(shortEntry.readingTimeString, '1 min de lectura');
 
-      // 400 palabras -> ~3 min
       final longContent = List.filled(400, 'reflexión').join(' ');
       final longEntry = JournalEntry(
         id: '2',
@@ -130,4 +146,3 @@ void main() {
     });
   });
 }
-

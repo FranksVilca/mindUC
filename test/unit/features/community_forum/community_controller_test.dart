@@ -12,6 +12,7 @@ void main() {
   late CommunityNotifier notifier;
 
   setUp(() {
+    LocalCommunityDataSource.resetForTesting();
     dataSource = LocalCommunityDataSource();
     repository = LocalCommunityRepositoryImpl(dataSource: dataSource);
     notifier = CommunityNotifier(repository: repository);

@@ -49,6 +49,11 @@ void main() {
       );
       await tester.pumpAndSettle();
 
+      // Enter credentials
+      await tester.enterText(find.byType(TextField).at(0), 'camila.soto@uc.cl');
+      await tester.enterText(find.byType(TextField).at(1), 'secret123');
+      await tester.pump();
+
       // Tap on login button
       await tester.ensureVisible(find.text('Ingresar a mi espacio'));
       await tester.tap(find.text('Ingresar a mi espacio'));

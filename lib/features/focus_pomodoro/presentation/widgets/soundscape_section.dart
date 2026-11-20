@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/mind_colors.dart';
 import '../../domain/entities/soundscape_track.dart';
 
-/// Sección de ambiente sonoro con selector horizontal de pistas relajantes
-/// y control de volumen reactivo.
+/// Sección de ambiente sonoro con selector de pistas relajantes,
+/// botones de reproducir, pausar y detener, control de volumen reactivo
+/// e indicador visible del estado de reproducción.
 class SoundscapeSection extends StatelessWidget {
   const SoundscapeSection({
     super.key,
@@ -13,6 +14,9 @@ class SoundscapeSection extends StatelessWidget {
     required this.volume,
     required this.onTrackTapped,
     required this.onVolumeChanged,
+    this.onPlay,
+    this.onPause,
+    this.onStop,
   });
 
   final List<SoundscapeTrack> tracks;
@@ -21,47 +25,78 @@ class SoundscapeSection extends StatelessWidget {
   final double volume;
   final ValueChanged<String> onTrackTapped;
   final ValueChanged<double> onVolumeChanged;
+  final VoidCallback? onPlay;
+  final VoidCallback? onPause;
+  final VoidCallback? onStop;
 
   @override
   Widget build(BuildContext context) {
+    final activeTrack = tracks.firstWhere(
+      (t) => t.id == selectedTrackId,
+      orElse: () => tracks.isNotEmpty ? tracks.first : SoundscapeTrack.defaultTracks.first,
+    );
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Cabecera de la sección
+        // Cabecera de la sección con indicador visual de estado
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Row(
-              children: [
-                Icon(
-                  Icons.graphic_eq_rounded,
-                  size: 20,
-                  color: MindColors.textPrimary,
-                ),
-                SizedBox(width: 8),
-                Text(
-                  'Ambiente sonoro',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
+            const Expanded(
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.graphic_eq_rounded,
+                    size: 20,
                     color: MindColors.textPrimary,
                   ),
-                ),
-              ],
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Ambiente sonoro',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: MindColors.textPrimary,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
+            const SizedBox(width: 8),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               decoration: BoxDecoration(
-                color: Colors.grey.shade200,
+                color: isPlaying ? const Color(0xFFE2F0E7) : Colors.grey.shade200,
                 borderRadius: BorderRadius.circular(14),
               ),
-              child: Text(
-                'Audio relajante',
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.grey.shade700,
-                ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (isPlaying) ...[
+                    Container(
+                      width: 6,
+                      height: 6,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: MindColors.primaryDark,
+                      ),
+                    ),
+                    const SizedBox(width: 5),
+                  ],
+                  Text(
+                    'Audio relajante',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      color: isPlaying ? MindColors.primaryDark : Colors.grey.shade700,
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -92,7 +127,96 @@ class SoundscapeSection extends StatelessWidget {
         ),
         const SizedBox(height: 12),
 
-        // Control de volumen deslizante
+        // Botones de control: Reproducir, Pausar y Detener
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: Colors.grey.shade200),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.02),
+                blurRadius: 6,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // Etiqueta de la pista activa
+              Expanded(
+                child: Row(
+                  children: [
+                    Icon(
+                      isPlaying ? Icons.play_circle_filled_rounded : Icons.pause_circle_outline_rounded,
+                      size: 20,
+                      color: isPlaying ? MindColors.primary : MindColors.textSecondary,
+                    ),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Text(
+                        isPlaying
+                            ? '${activeTrack.title} (${activeTrack.subtitle})'
+                            : '${activeTrack.title} (En pausa)',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: isPlaying ? MindColors.primaryDark : MindColors.textSecondary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Botones de acción
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Botón Reproducir / Iniciar
+                  IconButton(
+                    tooltip: 'Reproducir',
+                    icon: Icon(
+                      Icons.play_arrow_rounded,
+                      size: 24,
+                      color: isPlaying ? Colors.grey.shade400 : MindColors.primary,
+                    ),
+                    onPressed: isPlaying ? null : (onPlay ?? () => onTrackTapped(activeTrack.id)),
+                  ),
+
+                  // Botón Pausar
+                  IconButton(
+                    tooltip: 'Pausar',
+                    icon: Icon(
+                      Icons.pause_rounded,
+                      size: 22,
+                      color: isPlaying ? const Color(0xFFE65100) : Colors.grey.shade400,
+                    ),
+                    onPressed: isPlaying ? (onPause ?? () => onTrackTapped(activeTrack.id)) : null,
+                  ),
+
+                  // Botón Detener
+                  IconButton(
+                    tooltip: 'Detener',
+                    icon: Icon(
+                      Icons.stop_rounded,
+                      size: 22,
+                      color: isPlaying ? Colors.red.shade600 : Colors.grey.shade400,
+                    ),
+                    onPressed: isPlaying ? onStop : null,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 10),
+
+        // Control de volumen deslizante con indicador de porcentaje
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
           decoration: BoxDecoration(
@@ -108,11 +232,17 @@ class SoundscapeSection extends StatelessWidget {
           ),
           child: Row(
             children: [
-              const Icon(
-                Icons.volume_down_rounded,
-                size: 20,
-                color: MindColors.textSecondary,
+              IconButton(
+                icon: Icon(
+                  volume <= 0.01 ? Icons.volume_off_rounded : Icons.volume_down_rounded,
+                  size: 20,
+                  color: MindColors.textSecondary,
+                ),
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+                onPressed: () => onVolumeChanged(volume > 0 ? 0.0 : 0.5),
               ),
+              const SizedBox(width: 8),
               Expanded(
                 child: SliderTheme(
                   data: SliderTheme.of(context).copyWith(
@@ -136,10 +266,25 @@ class SoundscapeSection extends StatelessWidget {
                   ),
                 ),
               ),
-              const Icon(
-                Icons.volume_up_rounded,
-                size: 20,
-                color: MindColors.textSecondary,
+              const SizedBox(width: 6),
+              Text(
+                '${(volume * 100).round()}%',
+                style: const TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  color: MindColors.textSecondary,
+                ),
+              ),
+              const SizedBox(width: 6),
+              IconButton(
+                icon: const Icon(
+                  Icons.volume_up_rounded,
+                  size: 20,
+                  color: MindColors.textSecondary,
+                ),
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+                onPressed: () => onVolumeChanged(1.0),
               ),
             ],
           ),
@@ -255,4 +400,3 @@ class _SoundscapeCard extends StatelessWidget {
     );
   }
 }
-

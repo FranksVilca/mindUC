@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../../../core/design_system/avatars/mind_user_avatar.dart';
+import '../../../../core/design_system/branding/mind_app_logo.dart';
 import '../../../../core/theme/mind_colors.dart';
 
 /// Cabecera serena de la pantalla de Gamificación Detallada acorde al diseño de Figma.
@@ -7,10 +9,12 @@ class ProgressHeader extends StatelessWidget implements PreferredSizeWidget {
     super.key,
     required this.onBack,
     this.onProfile,
+    this.avatarUrl,
   });
 
   final VoidCallback onBack;
   final VoidCallback? onProfile;
+  final String? avatarUrl;
 
   @override
   Size get preferredSize => const Size.fromHeight(60);
@@ -24,15 +28,23 @@ class ProgressHeader extends StatelessWidget implements PreferredSizeWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            IconButton(
-              onPressed: onBack,
-              icon: const Icon(
-                Icons.arrow_back_ios_new_rounded,
-                size: 20,
-                color: MindColors.textPrimary,
-              ),
-              splashRadius: 22,
-              tooltip: 'Volver',
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  key: const Key('progress_header_back_btn'),
+                  onPressed: onBack,
+                  icon: const Icon(
+                    Icons.arrow_back_ios_new_rounded,
+                    size: 20,
+                    color: MindColors.textPrimary,
+                  ),
+                  splashRadius: 22,
+                  tooltip: 'Volver',
+                ),
+                const SizedBox(width: 4),
+                const MindAppLogo(size: 28),
+              ],
             ),
             const Column(
               mainAxisSize: MainAxisSize.min,
@@ -59,19 +71,11 @@ class ProgressHeader extends StatelessWidget implements PreferredSizeWidget {
               ],
             ),
             GestureDetector(
+              key: const Key('progress_header_profile_btn'),
               onTap: onProfile,
-              child: Container(
-                width: 36,
-                height: 36,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Color(0xFF3F5E4D),
-                ),
-                child: const Icon(
-                  Icons.person_rounded,
-                  color: Colors.white,
-                  size: 20,
-                ),
+              child: MindUserAvatar(
+                avatarId: avatarUrl,
+                size: 36,
               ),
             ),
           ],

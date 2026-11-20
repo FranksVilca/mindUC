@@ -5,6 +5,7 @@ import 'journal_mood_pulse.dart';
 class JournalEntry {
   const JournalEntry({
     required this.id,
+    this.userId = '',
     required this.title,
     required this.content,
     required this.moodPulse,
@@ -13,6 +14,7 @@ class JournalEntry {
   });
 
   final String id;
+  final String userId;
   final String title;
   final String content;
   final JournalMoodPulse moodPulse;
@@ -70,6 +72,7 @@ class JournalEntry {
 
   JournalEntry copyWith({
     String? id,
+    String? userId,
     String? title,
     String? content,
     JournalMoodPulse? moodPulse,
@@ -78,6 +81,7 @@ class JournalEntry {
   }) {
     return JournalEntry(
       id: id ?? this.id,
+      userId: userId ?? this.userId,
       title: title ?? this.title,
       content: content ?? this.content,
       moodPulse: moodPulse ?? this.moodPulse,
@@ -92,6 +96,7 @@ class JournalEntry {
       other is JournalEntry &&
           runtimeType == other.runtimeType &&
           id == other.id &&
+          userId == other.userId &&
           title == other.title &&
           content == other.content &&
           moodPulse == other.moodPulse &&
@@ -101,6 +106,7 @@ class JournalEntry {
   @override
   int get hashCode => Object.hash(
         id,
+        userId,
         title,
         content,
         moodPulse,

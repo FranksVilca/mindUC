@@ -1,9 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:minduc/features/auth/data/datasources/fake_auth_datasource.dart';
+import 'package:minduc/features/auth/data/models/user_model.dart';
+import 'package:minduc/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:minduc/features/auth/domain/entities/user_entity.dart';
+import 'package:minduc/features/auth/presentation/controllers/auth_controller.dart';
+import 'package:minduc/features/profile/data/datasources/local_profile_datasource.dart';
 import 'package:minduc/features/profile/presentation/screens/profile_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
+  setUp(() {
+    SharedPreferences.setMockInitialValues({});
+    LocalProfileDataSource.clearProfiles();
+    FakeAuthDataSource.clearAccounts();
+  });
+
+  tearDown(() {
+    LocalProfileDataSource.clearProfiles();
+    FakeAuthDataSource.clearAccounts();
+  });
+
   void configureViewport(WidgetTester tester) {
     tester.view.physicalSize = const Size(800, 1600);
     tester.view.devicePixelRatio = 1.0;
@@ -13,9 +31,36 @@ void main() {
     });
   }
 
-  Widget createScreen() {
-    return const ProviderScope(
-      child: MaterialApp(
+  Widget createScreen({UserEntity? user}) {
+    final authUser = user ??
+        UserEntity(
+          id: 'camila_123',
+          email: 'camila.soto@uc.cl',
+          displayName: 'Camila Soto',
+          department: 'Psicología',
+          isEmailVerified: true,
+          isAnonymous: false,
+          createdAt: DateTime(2024, 1, 1),
+        );
+
+    final authRepo = AuthRepositoryImpl(
+      fakeDataSource: FakeAuthDataSource(
+        UserModel(
+          uid: authUser.id,
+          email: authUser.email,
+          displayName: authUser.displayName,
+          department: authUser.department,
+          emailVerified: authUser.isEmailVerified,
+          createdAtMillis: authUser.createdAt.millisecondsSinceEpoch,
+        ),
+      ),
+    );
+
+    return ProviderScope(
+      overrides: [
+        authRepositoryProvider.overrideWithValue(authRepo),
+      ],
+      child: const MaterialApp(
         home: ProfileScreen(),
       ),
     );
@@ -55,6 +100,27 @@ void main() {
 
       // 5. Logout button
       expect(find.text('Cerrar sesión en este dispositivo'), findsOneWidget);
+    });
+
+    testWidgets('renders distinct User B identity dynamically without hardcoded data', (tester) async {
+      configureViewport(tester);
+      final userB = UserEntity(
+        id: 'usr_rodrigo_456',
+        email: 'rodrigo.morales@uc.cl',
+        displayName: 'Rodrigo Morales',
+        department: 'Medicina',
+        isEmailVerified: true,
+        isAnonymous: false,
+        createdAt: DateTime(2024, 2, 1),
+      );
+
+      await tester.pumpWidget(createScreen(user: userB));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Rodrigo Morales'), findsOneWidget);
+      expect(find.text('Medicina'), findsOneWidget);
+      expect(find.text('rodrigo.morales@uc.cl'), findsOneWidget);
+      expect(find.text('Camila Soto'), findsNothing);
     });
 
     testWidgets('toggles conscious reminders switch and updates reactively', (tester) async {

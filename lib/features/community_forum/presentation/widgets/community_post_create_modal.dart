@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/mind_colors.dart';
 import '../../domain/entities/community_avatar.dart';
 import '../../domain/entities/community_mood_category.dart';
+import '../../domain/services/community_content_moderator.dart';
 
 class _AliasOption {
   final String alias;
@@ -137,19 +138,11 @@ class _CommunityPostCreateModalState extends State<CommunityPostCreateModal> {
   void _handlePublish() {
     final text = _textController.text.trim();
 
-    if (text.isEmpty) {
+    // Validación mediante el moderador de contenidos (Privacidad y Convivencia)
+    final moderation = CommunityContentModerator.validate(text);
+    if (!moderation.isValid) {
       setState(() {
-        _errorMessage = 'Por favor escribe tu reflexión antes de publicar.';
-      });
-      return;
-    }
-
-    // Validación estricta del Principio V: Privacidad por Diseño
-    final emailRegex = RegExp(r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}');
-    if (emailRegex.hasMatch(text) || text.contains('@uc.cl')) {
-      setState(() {
-        _errorMessage =
-            'Por tu privacidad, no incluyas correos ni datos personales en tu mensaje 🛡';
+        _errorMessage = moderation.message;
       });
       return;
     }
@@ -206,15 +199,20 @@ class _CommunityPostCreateModalState extends State<CommunityPostCreateModal> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'Compartir reflexión anónima',
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w700,
-                    color: MindColors.textPrimary,
-                    letterSpacing: -0.3,
+                const Expanded(
+                  child: Text(
+                    'Compartir reflexión anónima',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w700,
+                      color: MindColors.textPrimary,
+                      letterSpacing: -0.3,
+                    ),
                   ),
                 ),
+                const SizedBox(width: 8),
                 IconButton(
                   onPressed: () => Navigator.of(context).pop(),
                   icon: const Icon(
@@ -258,21 +256,29 @@ class _CommunityPostCreateModalState extends State<CommunityPostCreateModal> {
                       children: [
                         Row(
                           children: [
-                            Text(
-                              _currentAlias.alias,
-                              style: const TextStyle(
-                                fontSize: 13.5,
-                                fontWeight: FontWeight.w700,
-                                color: MindColors.textPrimary,
+                            Flexible(
+                              child: Text(
+                                _currentAlias.alias,
+                                style: const TextStyle(
+                                  fontSize: 13.5,
+                                  fontWeight: FontWeight.w700,
+                                  color: MindColors.textPrimary,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                             const SizedBox(width: 6),
-                            Text(
-                              '(${_currentAlias.role})',
-                              style: const TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w500,
-                                color: Color(0xFF5D8572),
+                            Flexible(
+                              child: Text(
+                                '(${_currentAlias.role})',
+                                style: const TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w500,
+                                  color: Color(0xFF5D8572),
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                           ],

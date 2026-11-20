@@ -3,13 +3,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/router/route_names.dart';
 import '../../../../core/theme/mind_colors.dart';
+import '../../../agenda/presentation/controllers/agenda_controller.dart';
 import '../../../auth/presentation/controllers/auth_controller.dart';
+import '../../../community_forum/presentation/controllers/community_controller.dart';
+import '../../../focus_pomodoro/presentation/controllers/app_blocker_controller.dart';
+import '../../../home/presentation/controllers/home_dashboard_controller.dart';
+import '../../../personal_journal/presentation/controllers/journal_controller.dart';
+import '../../../progress_gamification/presentation/controllers/progress_controller.dart';
 import '../../data/datasources/local_profile_datasource.dart';
 import '../controllers/profile_controller.dart';
+import '../../domain/entities/user_profile.dart';
 import '../widgets/institutional_support_card.dart';
 import '../widgets/logout_button.dart';
 import '../widgets/preference_selection_modal.dart';
 import '../widgets/profile_header.dart';
+import '../widgets/profile_settings_modal.dart';
 import '../widgets/student_identity_card.dart';
 import '../widgets/support_contact_modal.dart';
 import '../widgets/wellness_preferences_card.dart';
@@ -18,6 +26,43 @@ import '../widgets/wellness_preferences_card.dart';
 /// Implementada bajo Clean Architecture Feature-First y Riverpod StateNotifier.
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
+
+  void _openSettingsModal(
+    BuildContext context,
+    UserProfile user,
+    ProfileNotifier notifier,
+  ) {
+    ProfileSettingsModal.show(
+      context: context,
+      user: user,
+      onSave: (fullName, career, email, [avatarUrl]) async {
+        final success = await notifier.updateUserProfile(
+          fullName: fullName,
+          career: career,
+          universityEmail: email,
+          avatarUrl: avatarUrl,
+        );
+        if (context.mounted) {
+          if (success) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Perfil actualizado correctamente 🌿'),
+                backgroundColor: Color(0xFF2E6347),
+                duration: Duration(seconds: 2),
+              ),
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: const Text('Error al guardar los cambios del perfil.'),
+                backgroundColor: Colors.red.shade700,
+              ),
+            );
+          }
+        }
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -31,15 +76,11 @@ class ProfileScreen extends ConsumerWidget {
           children: [
             // Cabecera superior con logotipo e iconos de acción
             ProfileHeader(
-              onSettingsTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Configuración avanzada disponible próximamente.'),
-                    duration: Duration(seconds: 2),
-                  ),
-                );
-              },
-              onAccountTap: () {},
+              avatarUrl: profileState.user.avatarUrl,
+              onSettingsTap: () =>
+                  _openSettingsModal(context, profileState.user, notifier),
+              onAccountTap: () =>
+                  _openSettingsModal(context, profileState.user, notifier),
             ),
 
             // Contenido con scroll vertical suave
@@ -50,7 +91,11 @@ class ProfileScreen extends ConsumerWidget {
                 child: Column(
                   children: [
                     // 1. Tarjeta de Identidad del Estudiante
-                    StudentIdentityCard(user: profileState.user),
+                    StudentIdentityCard(
+                      user: profileState.user,
+                      onEdit: () =>
+                          _openSettingsModal(context, profileState.user, notifier),
+                    ),
                     const SizedBox(height: 24.0),
 
                     // 2. Preferencias de Bienestar
@@ -78,6 +123,16 @@ class ProfileScreen extends ConsumerWidget {
                       },
                       onRemindersChanged: (val) {
                         notifier.toggleConsciousReminders(val);
+                      },
+                      onReminderIntervalTap: () {
+                        PreferenceSelectionModal.show(
+                          context: context,
+                          title: 'Frecuencia de pausas conscientes',
+                          subtitle: 'Configura cada cuánto tiempo deseas recibir pausas de bienestar',
+                          options: LocalProfileDataSource.availableReminderIntervals,
+                          selectedOption: profileState.preferences.reminderIntervalDescription,
+                          onSelected: (interval) => notifier.selectReminderInterval(interval),
+                        );
                       },
                     ),
                     const SizedBox(height: 24.0),
@@ -174,6 +229,14 @@ class ProfileScreen extends ConsumerWidget {
     if (confirmed == true && context.mounted) {
       await ref.read(profileControllerProvider.notifier).logout();
       await ref.read(authRepositoryProvider).signOut();
+      ref.invalidate(currentUserProvider);
+      ref.invalidate(profileControllerProvider);
+      ref.invalidate(homeDashboardControllerProvider);
+      ref.invalidate(agendaControllerProvider);
+      ref.invalidate(journalControllerProvider);
+      ref.invalidate(progressControllerProvider);
+      ref.invalidate(appBlockerControllerProvider);
+      ref.invalidate(communityControllerProvider);
       if (context.mounted) {
         context.go(AppRoutes.auth);
       }

@@ -105,14 +105,19 @@ class _JournalEntryEditModalState extends State<JournalEntryEditModal> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  isEditing ? 'Editar reflexión' : 'Nueva entrada reflexiva',
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    color: MindColors.textPrimary,
+                Expanded(
+                  child: Text(
+                    isEditing ? 'Editar reflexión' : 'Nueva entrada reflexiva',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      color: MindColors.textPrimary,
+                    ),
                   ),
                 ),
+                const SizedBox(width: 8),
                 IconButton(
                   onPressed: () => Navigator.of(context).pop(),
                   icon: const Icon(Icons.close_rounded),

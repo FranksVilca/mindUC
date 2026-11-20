@@ -174,5 +174,51 @@ void main() {
         findsOneWidget,
       );
     });
+
+    testWidgets('prevents publishing if text contains banned profanity words',
+        (tester) async {
+      bool published = false;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Builder(
+              builder: (context) {
+                return ElevatedButton(
+                  onPressed: () {
+                    CommunityPostCreateModal.show(
+                      context,
+                      onPublish: (alias, role, avatar, faculty, content, tags, mood) {
+                        published = true;
+                      },
+                    );
+                  },
+                  child: const Text('Abrir'),
+                );
+              },
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Abrir'));
+      await tester.pumpAndSettle();
+
+      // Ingresar texto con palabra prohibida
+      await tester.enterText(
+        find.byType(TextField),
+        'Este examen es una mierda total y odio todo',
+      );
+      await tester.pump();
+
+      await tester.tap(find.text('Publicar en comunidad'));
+      await tester.pump();
+
+      expect(published, isFalse);
+      expect(
+        find.textContaining('Tu mensaje contiene palabras no permitidas ("mierda")'),
+        findsOneWidget,
+      );
+    });
   });
 }

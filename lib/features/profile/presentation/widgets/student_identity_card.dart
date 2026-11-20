@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import '../../../../core/design_system/avatars/mind_user_avatar.dart';
 import '../../../../core/theme/mind_colors.dart';
 import '../../domain/entities/user_profile.dart';
 
 /// Tarjeta de identidad del estudiante con avatar circular, presencia consciente y datos institucionales.
 class StudentIdentityCard extends StatelessWidget {
   final UserProfile user;
+  final VoidCallback? onEdit;
 
   const StudentIdentityCard({
     super.key,
     required this.user,
+    this.onEdit,
   });
 
   @override
@@ -33,26 +36,11 @@ class StudentIdentityCard extends StatelessWidget {
           // Avatar con indicador de presencia consciente
           Stack(
             children: [
-              Container(
-                width: 120.0,
-                height: 120.0,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: const Color(0xFFE8F1EC),
-                  border: Border.all(
-                    color: const Color(0xFFD3E4DA),
-                    width: 3.0,
-                  ),
-                ),
-                child: ClipOval(
-                  child: user.avatarUrl != null && user.avatarUrl!.isNotEmpty
-                      ? Image.network(
-                          user.avatarUrl!,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) => _buildAvatarFallback(),
-                        )
-                      : _buildAvatarFallback(),
-                ),
+              MindUserAvatar(
+                key: const Key('profile_avatar_image'),
+                avatarId: user.avatarUrl,
+                size: 120.0,
+                showBorder: true,
               ),
 
               // Indicador circular verde de presencia consciente
@@ -85,21 +73,49 @@ class StudentIdentityCard extends StatelessWidget {
           ),
           const SizedBox(height: 16.0),
 
-          // Nombre del estudiante
-          Text(
-            user.fullName,
-            style: const TextStyle(
-              fontSize: 22.0,
-              fontWeight: FontWeight.w700,
-              color: MindColors.textPrimary,
-              letterSpacing: -0.3,
-            ),
+          // Nombre del estudiante y botón de edición
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Flexible(
+                child: Text(
+                  user.fullName,
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 22.0,
+                    fontWeight: FontWeight.w700,
+                    color: MindColors.textPrimary,
+                    letterSpacing: -0.3,
+                  ),
+                ),
+              ),
+              if (onEdit != null) ...[
+                const SizedBox(width: 6.0),
+                IconButton(
+                  key: const Key('student_identity_edit_btn'),
+                  icon: const Icon(
+                    Icons.edit_outlined,
+                    size: 18,
+                    color: MindColors.primaryDark,
+                  ),
+                  onPressed: onEdit,
+                  tooltip: 'Editar perfil',
+                  constraints: const BoxConstraints(),
+                  padding: const EdgeInsets.all(4),
+                ),
+              ],
+            ],
           ),
           const SizedBox(height: 4.0),
 
           // Carrera
           Text(
             user.career,
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
             style: const TextStyle(
               fontSize: 14.5,
               fontWeight: FontWeight.w400,
@@ -111,6 +127,9 @@ class StudentIdentityCard extends StatelessWidget {
           // Correo institucional
           Text(
             user.universityEmail,
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: const TextStyle(
               fontSize: 13.0,
               fontWeight: FontWeight.w400,
@@ -118,16 +137,6 @@ class StudentIdentityCard extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildAvatarFallback() {
-    return const Center(
-      child: Icon(
-        Icons.person_rounded,
-        size: 64.0,
-        color: Color(0xFF385C4B),
       ),
     );
   }

@@ -12,7 +12,10 @@ void main() {
   late AgendaNotifier notifier;
 
   setUp(() {
-    dataSource = LocalAgendaDataSource();
+    LocalAgendaDataSource.clearActivities();
+    dataSource = LocalAgendaDataSource(
+      initialActivities: LocalAgendaDataSource.mockInitialActivities,
+    );
     repository = LocalAgendaRepositoryImpl(dataSource: dataSource);
     notifier = AgendaNotifier(
       repository: repository,
@@ -20,9 +23,12 @@ void main() {
     );
   });
 
+  tearDown(() {
+    LocalAgendaDataSource.clearActivities();
+  });
+
   group('AgendaNotifier Unit Tests', () {
     test('initial state loads Figma mock activities for 2024-10-24', () async {
-      // Allow initial load to complete
       await Future<void>.delayed(Duration.zero);
 
       final state = notifier.state;
@@ -33,6 +39,19 @@ void main() {
       expect(state.rhythmText, '4 actividades · 2 completadas');
       expect(state.filteredActivities.length, 4);
       expect(state.weekNumber, 43);
+    });
+
+    test('new user begins with completely empty agenda and zero activities', () async {
+      final emptyDataSource = LocalAgendaDataSource();
+      final emptyRepo = LocalAgendaRepositoryImpl(dataSource: emptyDataSource);
+      final emptyNotifier = AgendaNotifier(
+        repository: emptyRepo,
+        userId: 'brand_new_user_123',
+      );
+      await Future<void>.delayed(Duration.zero);
+      expect(emptyNotifier.state.allActivities, isEmpty);
+      expect(emptyNotifier.state.totalForDay, 0);
+      expect(emptyNotifier.state.completedForDay, 0);
     });
 
     test('selectFilter filters activities by category', () async {
@@ -62,68 +81,128 @@ void main() {
       expect(notifier.state.filteredActivities.length, 4);
     });
 
-    test('toggleActivityCompletion toggles completion and updates rhythm balance',
-        () async {
+    test('toggleActivityCompletion toggles completion and updates rhythm balance', () async {
       await Future<void>.delayed(Duration.zero);
 
       expect(notifier.state.completedForDay, 2);
 
-      // Alternar activity-3 (Caminata al aire libre, inicialmente incompleta)
-      await notifier.toggleActivityCompletion('activity-3');
+      // Desmarcar actividad 1 (inicialmente completada)
+      await notifier.toggleActivityCompletion('activity-1');
+      expect(notifier.state.completedForDay, 1);
+      expect(notifier.state.rhythmText, '4 actividades · 1 completadas');
 
-      expect(notifier.state.completedForDay, 3);
-      expect(notifier.state.rhythmText, '4 actividades · 3 completadas');
-      final updated = notifier.state.activitiesForSelectedDay
-          .firstWhere((a) => a.id == 'activity-3');
-      expect(updated.isCompleted, isTrue);
-
-      // Volver a alternar activity-3
+      // Marcar actividad 3 (inicialmente no completada)
       await notifier.toggleActivityCompletion('activity-3');
       expect(notifier.state.completedForDay, 2);
+
+      // Volver a marcar actividad 1
+      await notifier.toggleActivityCompletion('activity-1');
+      expect(notifier.state.completedForDay, 3);
     });
 
     test('createActivity adds a new activity and updates list', () async {
       await Future<void>.delayed(Duration.zero);
 
+      expect(notifier.state.allActivities.length, 4);
+
       await notifier.createActivity(
-        title: 'Té consciente de pausa',
-        subtitle: '5 min de silencio reparador.',
+        title: 'Estiramiento suave de espalda',
+        subtitle: '5 min para aflojar tensiones post estudio.',
         scheduledDateTime: DateTime(2024, 10, 24, 18, 0),
-        category: AgendaCategory.autocuidado,
+        category: AgendaCategory.saludMental,
       );
 
-      expect(notifier.state.totalForDay, 5);
-      expect(notifier.state.completedForDay, 2);
+      expect(notifier.state.allActivities.length, 5);
       expect(
-        notifier.state.activitiesForSelectedDay.any(
-          (a) => a.title == 'Té consciente de pausa',
+        notifier.state.allActivities.any(
+          (a) => a.title == 'Estiramiento suave de espalda',
         ),
         isTrue,
       );
+      expect(notifier.state.totalForDay, 5);
     });
 
-    test('selectDate updates selectedDate and returns activities for that day',
-        () async {
+    test('selectDate updates selectedDate and returns activities for that day', () async {
       await Future<void>.delayed(Duration.zero);
 
-      // Seleccionar un día sin actividades (25 de Octubre)
-      notifier.selectDate(DateTime(2024, 10, 25));
+      expect(notifier.state.totalForDay, 4);
 
+      // Cambiar al día siguiente (25 de octubre) donde no hay actividades
+      notifier.selectDate(DateTime(2024, 10, 25));
       expect(notifier.state.selectedDate, DateTime(2024, 10, 25));
       expect(notifier.state.totalForDay, 0);
-      expect(notifier.state.filteredActivities.isEmpty, isTrue);
+      expect(notifier.state.filteredActivities, isEmpty);
+
+      // Volver al 24
+      notifier.selectDate(DateTime(2024, 10, 24));
+      expect(notifier.state.totalForDay, 4);
+    });
+
+    test('updateActivity updates title, date, time and category of an existing activity', () async {
+      await Future<void>.delayed(Duration.zero);
+
+      expect(notifier.state.allActivities.length, 4);
+
+      // Editar la actividad 1
+      await notifier.updateActivity(
+        id: 'activity-1',
+        title: 'Meditación matutina avanzada',
+        subtitle: '15 min de respiración 4-4-4',
+        scheduledDateTime: DateTime(2024, 10, 24, 9, 30),
+        category: AgendaCategory.saludMental,
+      );
+
+      final updated = notifier.state.allActivities.firstWhere((a) => a.id == 'activity-1');
+      expect(updated.title, 'Meditación matutina avanzada');
+      expect(updated.subtitle, '15 min de respiración 4-4-4');
+      expect(updated.category, AgendaCategory.saludMental);
+      expect(updated.scheduledDateTime.hour, 9);
+      expect(updated.scheduledDateTime.minute, 30);
     });
 
     test('deleteActivity removes activity from list', () async {
       await Future<void>.delayed(Duration.zero);
 
-      await notifier.deleteActivity('activity-1');
+      expect(notifier.state.allActivities.length, 4);
 
-      expect(notifier.state.totalForDay, 3);
+      await notifier.deleteActivity('activity-4');
+      expect(notifier.state.allActivities.length, 3);
       expect(
-        notifier.state.activitiesForSelectedDay.any((a) => a.id == 'activity-1'),
+        notifier.state.allActivities.any((a) => a.id == 'activity-4'),
         isFalse,
       );
+    });
+
+    test('createActivity and updateActivity support multiple reminder alarms', () async {
+      await Future<void>.delayed(Duration.zero);
+
+      await notifier.createActivity(
+        title: 'Examen de Cálculo Integral',
+        subtitle: 'Revisión final de fórmulas',
+        scheduledDateTime: DateTime(2024, 10, 24, 10, 0),
+        category: AgendaCategory.estudioTrabajo,
+        reminderMinutesList: [1440, 120, 15, 0],
+      );
+
+      final created = notifier.state.allActivities
+          .firstWhere((a) => a.title == 'Examen de Cálculo Integral');
+      expect(created.reminderMinutesList, [1440, 120, 15, 0]);
+      expect(created.reminderMinutesBefore, 1440);
+
+      await notifier.updateActivity(
+        id: created.id,
+        title: 'Examen de Cálculo Integral - Reprogramado',
+        subtitle: 'Aula Magna',
+        scheduledDateTime: DateTime(2024, 10, 24, 11, 0),
+        category: AgendaCategory.estudioTrabajo,
+        reminderMinutesList: [30, 5],
+      );
+
+      final updated = notifier.state.allActivities
+          .firstWhere((a) => a.id == created.id);
+      expect(updated.title, 'Examen de Cálculo Integral - Reprogramado');
+      expect(updated.reminderMinutesList, [30, 5]);
+      expect(updated.reminderMinutesBefore, 30);
     });
   });
 
@@ -135,7 +214,7 @@ void main() {
         activities: [
           AgendaActivity(
             id: '1',
-            title: 'T1',
+            title: 'A1',
             subtitle: 'S1',
             scheduledDateTime: date,
             category: AgendaCategory.autocuidado,
@@ -144,7 +223,7 @@ void main() {
           ),
           AgendaActivity(
             id: '2',
-            title: 'T2',
+            title: 'A2',
             subtitle: 'S2',
             scheduledDateTime: date,
             category: AgendaCategory.estudioTrabajo,
@@ -184,4 +263,3 @@ void main() {
     });
   });
 }
-

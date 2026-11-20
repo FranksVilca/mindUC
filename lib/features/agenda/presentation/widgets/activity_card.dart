@@ -9,16 +9,18 @@ class ActivityCard extends StatelessWidget {
     required this.activity,
     required this.onToggleComplete,
     this.onTap,
+    this.onEdit,
   });
 
   final AgendaActivity activity;
   final VoidCallback onToggleComplete;
   final VoidCallback? onTap;
+  final VoidCallback? onEdit;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: onEdit ?? onTap,
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.all(16),
@@ -38,6 +40,7 @@ class ActivityCard extends StatelessWidget {
           children: [
             // Selector circular de completado
             GestureDetector(
+              key: Key('activity_toggle_${activity.id}'),
               onTap: onToggleComplete,
               behavior: HitTestBehavior.opaque,
               child: AnimatedContainer(
@@ -66,49 +69,74 @@ class ActivityCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Fila superior: Hora y Chip de Categoría
+                  // Fila superior: Hora, Chip de Categoría y Botón de Edición
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        activity.formattedTime,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          color: MindColors.textSecondary,
+                      Flexible(
+                        child: Text(
+                          activity.formattedTime,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: MindColors.textSecondary,
+                          ),
                         ),
                       ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 3,
-                        ),
-                        decoration: BoxDecoration(
-                          color: activity.category.backgroundColor,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Container(
-                              width: 5,
-                              height: 5,
-                              decoration: BoxDecoration(
-                                color: activity.category.accentColor,
-                                shape: BoxShape.circle,
-                              ),
+                      const SizedBox(width: 8),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 3,
                             ),
+                            decoration: BoxDecoration(
+                              color: activity.category.backgroundColor,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  width: 5,
+                                  height: 5,
+                                  decoration: BoxDecoration(
+                                    color: activity.category.accentColor,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  activity.category.chipLabel,
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w600,
+                                    color: activity.category.accentColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          if (onEdit != null) ...[
                             const SizedBox(width: 4),
-                            Text(
-                              activity.category.chipLabel,
-                              style: TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w600,
-                                color: activity.category.accentColor,
+                            InkWell(
+                              onTap: onEdit,
+                              borderRadius: BorderRadius.circular(12),
+                              child: const Padding(
+                                padding: EdgeInsets.all(4.0),
+                                child: Icon(
+                                  Icons.edit_outlined,
+                                  size: 15,
+                                  color: MindColors.textTertiary,
+                                ),
                               ),
                             ),
                           ],
-                        ),
+                        ],
                       ),
                     ],
                   ),
@@ -153,4 +181,3 @@ class ActivityCard extends StatelessWidget {
     );
   }
 }
-

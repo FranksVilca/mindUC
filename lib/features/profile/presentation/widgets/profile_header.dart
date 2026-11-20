@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../../../core/design_system/avatars/mind_user_avatar.dart';
+import '../../../../core/design_system/branding/mind_app_logo.dart';
 import '../../../../core/theme/mind_colors.dart';
 
 /// Cabecera superior serena para la pantalla de Perfil.
@@ -6,11 +8,13 @@ import '../../../../core/theme/mind_colors.dart';
 class ProfileHeader extends StatelessWidget {
   final VoidCallback? onSettingsTap;
   final VoidCallback? onAccountTap;
+  final String? avatarUrl;
 
   const ProfileHeader({
     super.key,
     this.onSettingsTap,
     this.onAccountTap,
+    this.avatarUrl,
   });
 
   @override
@@ -20,15 +24,22 @@ class ProfileHeader extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Logotipo mindUC
-          const Text(
-            'mindUC',
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.w700,
-              color: Color(0xFF2E6347),
-              letterSpacing: -0.5,
-            ),
+          // Logotipo oficial e identidad mindUC a la izquierda
+          const Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              MindAppLogo(size: 32),
+              SizedBox(width: 8),
+              Text(
+                'mindUC',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF2E6347),
+                  letterSpacing: -0.5,
+                ),
+              ),
+            ],
           ),
 
           // Título Perfil centrado
@@ -57,23 +68,30 @@ class ProfileHeader extends StatelessWidget {
                 tooltip: 'Configuración',
               ),
               const SizedBox(width: 14),
-              InkWell(
-                onTap: onAccountTap,
-                borderRadius: BorderRadius.circular(16),
-                child: Container(
-                  width: 32,
-                  height: 32,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFF385C4B),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.person_rounded,
-                    size: 20,
-                    color: Colors.white,
+              if (avatarUrl != null)
+                MindUserAvatar(
+                  avatarId: avatarUrl,
+                  size: 32,
+                  onTap: onAccountTap,
+                )
+              else
+                InkWell(
+                  onTap: onAccountTap,
+                  borderRadius: BorderRadius.circular(16),
+                  child: Container(
+                    width: 32,
+                    height: 32,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFF385C4B),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.person_rounded,
+                      size: 20,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
-              ),
             ],
           ),
         ],

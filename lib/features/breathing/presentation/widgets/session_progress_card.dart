@@ -51,24 +51,31 @@ class SessionProgressCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  const Icon(
-                    Icons.timer_outlined,
-                    size: 18,
-                    color: MindColors.primaryDark,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    isFreeMode ? 'Tiempo transcurrido' : 'Tiempo restante',
-                    style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w500,
-                      color: MindColors.textSecondary,
+              Expanded(
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.timer_outlined,
+                      size: 18,
+                      color: MindColors.primaryDark,
                     ),
-                  ),
-                ],
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        isFreeMode ? 'Tiempo transcurrido' : 'Tiempo restante',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                          color: MindColors.textSecondary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
+              const SizedBox(width: 8),
               Text(
                 timeDisplay,
                 style: const TextStyle(

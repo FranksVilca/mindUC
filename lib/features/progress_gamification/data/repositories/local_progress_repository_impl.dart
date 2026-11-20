@@ -10,13 +10,30 @@ class LocalProgressRepositoryImpl implements ProgressRepository {
       : _dataSource = dataSource ?? LocalProgressDataSource();
 
   @override
-  Future<ProgressSummaryState> getProgressSummary() {
-    return _dataSource.getProgressSummary();
+  Future<ProgressSummaryState> getProgressSummary([String userId = '']) {
+    return _dataSource.getProgressSummary(userId);
   }
 
   @override
-  Future<ProgressSummaryState> toggleIntentionProgress(String intentionId) {
-    return _dataSource.toggleIntentionProgress(intentionId);
+  Future<ProgressSummaryState> toggleIntentionProgress(
+    String intentionId, [
+    String userId = '',
+  ]) {
+    return _dataSource.toggleIntentionProgress(intentionId, userId);
+  }
+
+  @override
+  Future<void> incrementPomodoroSession([String userId = '']) {
+    return _dataSource.incrementPomodoroSession(userId);
+  }
+
+  @override
+  Future<void> recordBreathingMinutes(int minutes, [String userId = '']) {
+    return _dataSource.recordBreathingMinutes(minutes, userId);
+  }
+
+  @override
+  Future<void> updateJournalEntriesCount(int count, [String userId = '']) {
+    return _dataSource.updateJournalEntriesCount(count, userId);
   }
 }
-

@@ -62,12 +62,16 @@ class MindButton extends StatelessWidget {
                 Icon(icon, size: 20, color: fgColor),
                 const SizedBox(width: 8),
               ],
-              Text(
-                text,
-                style: MindTypography.labelLarge.copyWith(
-                  color: fgColor,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 15,
+              Flexible(
+                child: Text(
+                  text,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: MindTypography.labelLarge.copyWith(
+                    color: fgColor,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 15,
+                  ),
                 ),
               ),
             ],

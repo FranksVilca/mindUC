@@ -12,6 +12,27 @@ class WellnessPreferences {
     this.reminderIntervalDescription = 'Pausas cada 2 horas de estudio',
   });
 
+  Map<String, dynamic> toJson() => {
+        'defaultAmbientSound': defaultAmbientSound,
+        'favoriteBreathingTechnique': favoriteBreathingTechnique,
+        'consciousRemindersEnabled': consciousRemindersEnabled,
+        'reminderIntervalDescription': reminderIntervalDescription,
+      };
+
+  factory WellnessPreferences.fromJson(Map<String, dynamic> json) {
+    return WellnessPreferences(
+      defaultAmbientSound: json['defaultAmbientSound'] as String? ??
+          'Lluvia suave en el bosque',
+      favoriteBreathingTechnique:
+          json['favoriteBreathingTechnique'] as String? ?? 'Caja 4–4–4',
+      consciousRemindersEnabled:
+          json['consciousRemindersEnabled'] as bool? ?? true,
+      reminderIntervalDescription:
+          json['reminderIntervalDescription'] as String? ??
+              'Pausas cada 2 horas de estudio',
+    );
+  }
+
   WellnessPreferences copyWith({
     String? defaultAmbientSound,
     String? favoriteBreathingTechnique,

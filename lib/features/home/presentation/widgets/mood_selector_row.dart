@@ -25,13 +25,18 @@ class MoodSelectorRow extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              'Tu estado de ánimo',
-              style: MindTypography.titleMedium.copyWith(
-                fontWeight: FontWeight.w700,
-                color: MindColors.textPrimary,
+            Expanded(
+              child: Text(
+                'Tu estado de ánimo',
+                style: MindTypography.titleMedium.copyWith(
+                  fontWeight: FontWeight.w700,
+                  color: MindColors.textPrimary,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
+            const SizedBox(width: 8),
             Text(
               'Selecciona uno',
               style: MindTypography.labelSmall.copyWith(

@@ -1,19 +1,70 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:minduc/features/personal_journal/data/datasources/local_journal_datasource.dart';
+import 'package:minduc/features/personal_journal/data/repositories/local_journal_repository_impl.dart';
+import 'package:minduc/features/personal_journal/domain/entities/journal_entry.dart';
+import 'package:minduc/features/personal_journal/presentation/controllers/journal_controller.dart';
 import 'package:minduc/features/personal_journal/presentation/screens/journal_screen.dart';
 
 void main() {
+  setUp(() {
+    LocalJournalDataSource.clearEntries();
+  });
+
+  tearDown(() {
+    LocalJournalDataSource.clearEntries();
+  });
+
+  Widget createScreen({List<JournalEntry>? entries}) {
+    final ds = LocalJournalDataSource(
+      initialEntries: entries ?? LocalJournalDataSource.mockInitialEntries,
+    );
+    final repo = LocalJournalRepositoryImpl(dataSource: ds);
+    return ProviderScope(
+      overrides: [
+        journalRepositoryProvider.overrideWithValue(repo),
+        journalControllerProvider.overrideWith(
+          (ref) => JournalNotifier(repository: repo),
+        ),
+      ],
+      child: const MaterialApp(
+        home: JournalScreen(),
+      ),
+    );
+  }
+
   group('JournalScreen Integration Widget Tests', () {
-    testWidgets('renders all journal screen components according to Figma design',
+    testWidgets('new user starts with completely empty journal and pristine notice',
         (tester) async {
+      final emptyDs = LocalJournalDataSource();
+      final emptyRepo = LocalJournalRepositoryImpl(dataSource: emptyDs);
+
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
+        ProviderScope(
+          overrides: [
+            journalRepositoryProvider.overrideWithValue(emptyRepo),
+            journalControllerProvider.overrideWith(
+              (ref) => JournalNotifier(repository: emptyRepo, userId: 'new_user_xyz'),
+            ),
+          ],
+          child: const MaterialApp(
             home: JournalScreen(),
           ),
         ),
       );
+      await tester.pumpAndSettle();
+
+      expect(find.text('0 entradas'), findsOneWidget);
+      expect(
+        find.textContaining('Aún no tienes huellas registradas en tu dispositivo'),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('renders all journal screen components according to Figma design',
+        (tester) async {
+      await tester.pumpWidget(createScreen());
       await tester.pumpAndSettle();
 
       // Cabecera
@@ -53,13 +104,7 @@ void main() {
 
     testWidgets('allows selecting an emotional pulse state',
         (tester) async {
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: JournalScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(createScreen());
       await tester.pumpAndSettle();
 
       // Pulsar 'Reflexiva'
@@ -72,13 +117,7 @@ void main() {
 
     testWidgets('creates a new journal entry via modal and updates timeline',
         (tester) async {
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: JournalScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(createScreen());
       await tester.pumpAndSettle();
 
       // Abrir modal de nueva entrada
@@ -113,13 +152,7 @@ void main() {
     });
 
     testWidgets('deletes an entry and updates the counter', (tester) async {
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: JournalScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(createScreen());
       await tester.pumpAndSettle();
 
       expect(find.text('3 entradas'), findsOneWidget);

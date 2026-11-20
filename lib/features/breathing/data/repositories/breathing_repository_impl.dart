@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/error/result.dart';
+import '../../../../core/firebase/firebase_initializer.dart';
 import '../../domain/entities/breathing_session_log.dart';
 import '../../domain/repositories/breathing_repository.dart';
 import '../datasources/fake_breathing_datasource.dart';
@@ -8,16 +9,19 @@ import '../models/breathing_session_model.dart';
 
 /// Implementación del repositorio de respiración con soporte para Firestore y tests.
 class BreathingRepositoryImpl implements BreathingRepository {
-  final FakeBreathingDataSource? _fakeDataSource;
+  final FakeBreathingDataSource _fakeDataSource;
   final FirebaseFirestore? _firestore;
 
   BreathingRepositoryImpl({
     FakeBreathingDataSource? fakeDataSource,
     FirebaseFirestore? firestore,
-  })  : _fakeDataSource = fakeDataSource,
-        _firestore = firestore;
+  })  : _fakeDataSource = fakeDataSource ?? FakeBreathingDataSource(),
+        _firestore = firestore ??
+            (FirebaseInitializer.isInitialized
+                ? FirebaseFirestore.instance
+                : null);
 
-  bool get _isFake => _fakeDataSource != null;
+  bool get _hasFirestore => _firestore != null;
 
   @override
   Future<Result<BreathingSessionLog, AppFailure>> saveSession(
@@ -32,19 +36,23 @@ class BreathingRepositoryImpl implements BreathingRepository {
 
       final model = BreathingSessionModel.fromDomain(log);
 
-      if (_isFake) {
-        final saved = await _fakeDataSource!.saveSession(model);
-        return Success(saved.toDomain());
+      // Respaldo local in-memory
+      final savedLocal = await _fakeDataSource.saveSession(model);
+
+      if (_hasFirestore) {
+        try {
+          await _firestore!
+              .collection('users')
+              .doc(log.userId)
+              .collection('breathing_sessions')
+              .doc(log.id)
+              .set(model.toMap());
+        } catch (_) {
+          // Si hay corte de red, el registro local garantiza persistencia
+        }
       }
 
-      await _firestore!
-          .collection('users')
-          .doc(log.userId)
-          .collection('breathing_sessions')
-          .doc(log.id)
-          .set(model.toMap());
-
-      return Success(log);
+      return Success(savedLocal.toDomain());
     } catch (e) {
       return FailureResult(ServerFailure(e.toString()));
     }
@@ -61,24 +69,30 @@ class BreathingRepositoryImpl implements BreathingRepository {
         );
       }
 
-      if (_isFake) {
-        final models = await _fakeDataSource!.getUserSessions(userId);
-        return Success(models.map((m) => m.toDomain()).toList());
+      if (_hasFirestore) {
+        try {
+          final snapshot = await _firestore!
+              .collection('users')
+              .doc(userId)
+              .collection('breathing_sessions')
+              .orderBy('timestampMillis', descending: true)
+              .limit(20)
+              .get();
+
+          if (snapshot.docs.isNotEmpty) {
+            final logs = snapshot.docs
+                .map((doc) =>
+                    BreathingSessionModel.fromMap(doc.data()).toDomain())
+                .toList();
+            return Success(logs);
+          }
+        } catch (_) {
+          // Fallback a almacenamiento local
+        }
       }
 
-      final snapshot = await _firestore!
-          .collection('users')
-          .doc(userId)
-          .collection('breathing_sessions')
-          .orderBy('timestampMillis', descending: true)
-          .limit(20)
-          .get();
-
-      final logs = snapshot.docs
-          .map((doc) => BreathingSessionModel.fromMap(doc.data()).toDomain())
-          .toList();
-
-      return Success(logs);
+      final models = await _fakeDataSource.getUserSessions(userId);
+      return Success(models.map((m) => m.toDomain()).toList());
     } catch (e) {
       return FailureResult(ServerFailure(e.toString()));
     }

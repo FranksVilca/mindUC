@@ -2,8 +2,7 @@ import '../../domain/entities/journal_entry.dart';
 import '../../domain/repositories/journal_repository.dart';
 import '../datasources/local_journal_datasource.dart';
 
-/// Implementación concreta del repositorio de diario respaldado en almacenamiento local.
-/// Garantiza estricta adhesión al Principio V (cero transmisiones a servidores externos).
+/// Implementación del repositorio de Diario Personal que delega en el LocalDataSource.
 class LocalJournalRepositoryImpl implements JournalRepository {
   LocalJournalRepositoryImpl({LocalJournalDataSource? dataSource})
       : _dataSource = dataSource ?? LocalJournalDataSource();
@@ -11,12 +10,13 @@ class LocalJournalRepositoryImpl implements JournalRepository {
   final LocalJournalDataSource _dataSource;
 
   @override
-  Future<List<JournalEntry>> getEntries() => _dataSource.getEntries();
+  Future<List<JournalEntry>> getEntries([String userId = '']) =>
+      _dataSource.getEntries(userId);
 
   @override
   Future<void> saveEntry(JournalEntry entry) => _dataSource.saveEntry(entry);
 
   @override
-  Future<void> deleteEntry(String id) => _dataSource.deleteEntry(id);
+  Future<void> deleteEntry(String id, [String userId = '']) =>
+      _dataSource.deleteEntry(id, userId);
 }
-

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../core/router/route_names.dart';
 import '../../../../core/theme/mind_colors.dart';
+import 'package:minduc/features/profile/presentation/controllers/profile_controller.dart';
 import '../controllers/community_controller.dart';
 import '../widgets/community_banner_card.dart';
 import '../widgets/community_header.dart';
@@ -9,7 +12,7 @@ import '../widgets/community_post_create_modal.dart';
 import '../widgets/mood_filter_chips.dart';
 
 /// Pantalla principal de la Comunidad UC Consciente acorde a Figma (Principio V).
-/// Espacio seguro con filtros por sentir, reacciones empáticas y creación de reflexiones anónimas.
+/// Espacio seguro con filtros por sentir, reacciones empáticas con cualquier emoji y comentarios.
 class CommunityScreen extends ConsumerWidget {
   const CommunityScreen({super.key});
 
@@ -25,7 +28,15 @@ class CommunityScreen extends ConsumerWidget {
           children: [
             // Cabecera superior serena
             CommunityHeader(
-              onBack: () => Navigator.maybePop(context),
+              avatarUrl: ref.watch(profileControllerProvider.select((s) => s.user.avatarUrl)),
+              onBack: () {
+                if (context.canPop()) {
+                  context.pop();
+                } else {
+                  context.go(AppRoutes.home);
+                }
+              },
+              onProfile: () => context.go(AppRoutes.profile),
             ),
 
             // Contenido desplazable
@@ -172,10 +183,25 @@ class CommunityScreen extends ConsumerWidget {
                         (context, index) {
                           final post = state.filteredPosts[index];
                           return CommunityPostCard(
+                            key: ValueKey(post.id),
                             post: post,
                             onReactionTap: (reactionKey) {
                               notifier.toggleReaction(post.id, reactionKey);
                             },
+                            onEmojiReactionTap: (emoji) {
+                              notifier.toggleEmojiReaction(
+                                postId: post.id,
+                                emoji: emoji,
+                              );
+                            },
+                            onAddComment: (content) {
+                              notifier.addComment(
+                                postId: post.id,
+                                content: content,
+                              );
+                            },
+                            currentUserId: notifier.currentUserId,
+                            currentUserName: notifier.currentUserName,
                           );
                         },
                         childCount: state.filteredPosts.length,

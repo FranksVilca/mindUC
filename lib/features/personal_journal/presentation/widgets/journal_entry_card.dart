@@ -232,24 +232,31 @@ class JournalEntryCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Row(
-                children: [
-                  Icon(
-                    Icons.lock_outline_rounded,
-                    size: 13,
-                    color: MindColors.textSecondary,
-                  ),
-                  SizedBox(width: 4),
-                  Text(
-                    'Solo visible en este teléfono',
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w400,
+              const Expanded(
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.lock_outline_rounded,
+                      size: 13,
                       color: MindColors.textSecondary,
                     ),
-                  ),
-                ],
+                    SizedBox(width: 4),
+                    Expanded(
+                      child: Text(
+                        'Solo visible en este teléfono',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w400,
+                          color: MindColors.textSecondary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
+              const SizedBox(width: 8),
               Text(
                 entry.readingTimeString,
                 style: const TextStyle(

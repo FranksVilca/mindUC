@@ -17,4 +17,7 @@ abstract final class AppRoutes {
   static const String pomodoroSession = '/pomodoro-session';
   static const String journalNew = '/journal/new';
   static const String forum = '/forum';
+  static const String relaxation = '/relaxation';
+  static const String relaxationExercise = '/relaxation/exercise';
+  static const String aiAssistant = '/ai-assistant';
 }

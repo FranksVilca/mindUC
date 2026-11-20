@@ -122,47 +122,55 @@ class TechniqueSelectorRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        // 1. Selector desplegable de técnica
-        Material(
-          color: MindColors.autocuidado,
-          borderRadius: BorderRadius.circular(20),
-          child: InkWell(
+        // 1. Selector desplegable de técnica (flexible y con elipsis para evitar desbordamiento)
+        Flexible(
+          child: Material(
+            color: MindColors.autocuidado,
             borderRadius: BorderRadius.circular(20),
-            onTap: () => _showTechniquePicker(context),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(
-                    Icons.air,
-                    size: 16,
-                    color: MindColors.primaryDark,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    currentTechnique.name,
-                    style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(20),
+              onTap: () => _showTechniquePicker(context),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.air,
+                      size: 16,
                       color: MindColors.primaryDark,
                     ),
-                  ),
-                  const SizedBox(width: 4),
-                  const Icon(
-                    Icons.keyboard_arrow_down,
-                    size: 18,
-                    color: MindColors.primaryDark,
-                  ),
-                ],
+                    const SizedBox(width: 6),
+                    Flexible(
+                      child: Text(
+                        currentTechnique.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: MindColors.primaryDark,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    const Icon(
+                      Icons.keyboard_arrow_down,
+                      size: 18,
+                      color: MindColors.primaryDark,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
         ),
 
-        // 2. Píldora de contador de ciclos
+        const SizedBox(width: 8),
+
+        // 2. Píldora de contador de ciclos (compacta y protegida contra desbordes)
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           decoration: BoxDecoration(
             color: MindColors.surfaceSubtle,
             borderRadius: BorderRadius.circular(20),
@@ -173,6 +181,8 @@ class TechniqueSelectorRow extends StatelessWidget {
           ),
           child: Text(
             cycleText,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: const TextStyle(
               fontSize: 12.5,
               fontWeight: FontWeight.w600,

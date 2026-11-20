@@ -35,25 +35,46 @@ class AchievementsGarden extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFE2F0E7),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: const Color(0xFFCEE3D5),
-                    width: 0.8,
+              if (totalCount > 0)
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFE2F0E7),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: const Color(0xFFCEE3D5),
+                      width: 0.8,
+                    ),
+                  ),
+                  child: Text(
+                    '$bloomedCount de $totalCount',
+                    style: const TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFF2C4C3B),
+                    ),
+                  ),
+                )
+              else
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF7F5F0),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: MindColors.divider,
+                      width: 0.8,
+                    ),
+                  ),
+                  child: const Text(
+                    '0 logros',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      color: MindColors.textSecondary,
+                    ),
                   ),
                 ),
-                child: Text(
-                  '$bloomedCount de $totalCount',
-                  style: const TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF2C4C3B),
-                  ),
-                ),
-              ),
             ],
           ),
           const SizedBox(height: 3),
@@ -67,8 +88,33 @@ class AchievementsGarden extends StatelessWidget {
           ),
           const SizedBox(height: 12),
 
-          // Cuadrícula 2x2 de tarjetas de logros
-          if (achievements.length >= 4) ...[
+          // Contenido: estado en blanco o cuadrícula de logros
+          if (achievements.isEmpty)
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(color: MindColors.divider),
+              ),
+              child: const Column(
+                children: [
+                  Icon(Icons.eco_outlined, color: Color(0xFF90C2A8), size: 30),
+                  SizedBox(height: 8),
+                  Text(
+                    'Tu jardín comenzará a florecer conforme realices pausas conscientes, sesiones de enfoque y reflexiones en tu diario 🌿',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 12.5,
+                      color: MindColors.textSecondary,
+                      height: 1.4,
+                    ),
+                  ),
+                ],
+              ),
+            )
+          else if (achievements.length >= 4) ...[
             Row(
               children: [
                 Expanded(child: _buildAchievementCard(achievements[0])),
@@ -98,51 +144,64 @@ class AchievementsGarden extends StatelessWidget {
     Color iconColor;
     Color pillBg;
     Color pillTextColor;
-    IconData icon;
 
     switch (achievement.category) {
       case AchievementCategory.peace:
-        cardBg = const Color(0xFFEDF6F0);
-        iconColor = const Color(0xFF386B5A);
-        pillBg = const Color(0xFFD6EADA);
-        pillTextColor = const Color(0xFF2C4C3B);
-        icon = Icons.spa_rounded;
+        cardBg = const Color(0xFFEAF1ED);
+        iconColor = const Color(0xFF5D8572);
+        pillBg = achievement.isBloomed
+            ? const Color(0xFFD6EADA)
+            : const Color(0xFFF7F5F0);
+        pillTextColor = achievement.isBloomed
+            ? const Color(0xFF2C4C3B)
+            : MindColors.textSecondary;
         break;
+
       case AchievementCategory.mind:
-        cardBg = const Color(0xFFF2F0FA);
-        iconColor = const Color(0xFF6B5899);
-        pillBg = const Color(0xFFE5E0F4);
-        pillTextColor = const Color(0xFF534185);
-        icon = Icons.self_improvement_rounded;
+        cardBg = const Color(0xFFEBE8F7);
+        iconColor = const Color(0xFF7B72B8);
+        pillBg = achievement.isBloomed
+            ? const Color(0xFFDFDAF2)
+            : const Color(0xFFF7F5F0);
+        pillTextColor = achievement.isBloomed
+            ? const Color(0xFF4C4480)
+            : MindColors.textSecondary;
         break;
+
       case AchievementCategory.voice:
-        cardBg = const Color(0xFFFDF0ED);
+        cardBg = const Color(0xFFFCE7E1);
         iconColor = const Color(0xFFD67868);
-        pillBg = const Color(0xFFFCE1DB);
-        pillTextColor = const Color(0xFFB55747);
-        icon = Icons.menu_book_rounded;
+        pillBg = achievement.isBloomed
+            ? const Color(0xFFF7D5CD)
+            : const Color(0xFFF7F5F0);
+        pillTextColor = achievement.isBloomed
+            ? const Color(0xFF994436)
+            : MindColors.textSecondary;
         break;
+
       case AchievementCategory.focus:
-        cardBg = const Color(0xFFEEF3F0);
-        iconColor = const Color(0xFF5D756A);
-        pillBg = const Color(0xFFD9E5DF);
-        pillTextColor = const Color(0xFF3B5648);
-        icon = Icons.notifications_off_rounded;
+        cardBg = const Color(0xFFE5F0F5);
+        iconColor = const Color(0xFF5B8A99);
+        pillBg = achievement.isBloomed
+            ? const Color(0xFFCFE3EC)
+            : const Color(0xFFF7F5F0);
+        pillTextColor = achievement.isBloomed
+            ? const Color(0xFF2E5E6E)
+            : MindColors.textSecondary;
         break;
     }
+
+    final IconData icon = _getAchievementIcon(achievement.category);
 
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: cardBg,
+        color: MindColors.surface,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(
-          color: Colors.black.withAlpha(8),
-          width: 0.8,
-        ),
+        border: Border.all(color: MindColors.divider, width: 1),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withAlpha(4),
+            color: Colors.black.withAlpha(5),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -151,44 +210,60 @@ class AchievementsGarden extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Icono circular
-          Container(
-            width: 34,
-            height: 34,
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              icon,
-              size: 19,
-              color: iconColor,
-            ),
+          // Icono orgánico y estado florecido
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                width: 34,
+                height: 34,
+                decoration: BoxDecoration(
+                  color: cardBg,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  icon,
+                  size: 18,
+                  color: iconColor,
+                ),
+              ),
+              if (achievement.isBloomed)
+                const Icon(
+                  Icons.check_circle_rounded,
+                  size: 16,
+                  color: Color(0xFF5D8572),
+                ),
+            ],
           ),
           const SizedBox(height: 10),
 
           // Título del logro
           Text(
             achievement.title,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: const TextStyle(
-              fontSize: 14,
+              fontSize: 13.5,
               fontWeight: FontWeight.w700,
               color: MindColors.textPrimary,
               letterSpacing: -0.2,
             ),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 3),
 
           // Descripción compasiva
           Text(
             achievement.description,
             style: const TextStyle(
-              fontSize: 11.5,
-              height: 1.3,
+              fontSize: 11,
+              fontWeight: FontWeight.w400,
               color: MindColors.textSecondary,
+              height: 1.3,
             ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 10),
 
           // Estado: Pastilla "✓ Florecida" o Barra de progreso
           if (achievement.isBloomed)
@@ -222,7 +297,8 @@ class AchievementsGarden extends StatelessWidget {
                 valueColor: AlwaysStoppedAnimation<Color>(iconColor),
               ),
             ),
-            if (achievement.progressLabel != null) ...[
+            if (achievement.progressLabel != null &&
+                achievement.progressLabel!.isNotEmpty) ...[
               const SizedBox(height: 4),
               Text(
                 achievement.progressLabel!,
@@ -238,5 +314,17 @@ class AchievementsGarden extends StatelessWidget {
       ),
     );
   }
-}
 
+  IconData _getAchievementIcon(AchievementCategory category) {
+    switch (category) {
+      case AchievementCategory.peace:
+        return Icons.spa_rounded;
+      case AchievementCategory.mind:
+        return Icons.psychology_rounded;
+      case AchievementCategory.voice:
+        return Icons.menu_book_rounded;
+      case AchievementCategory.focus:
+        return Icons.center_focus_strong_rounded;
+    }
+  }
+}

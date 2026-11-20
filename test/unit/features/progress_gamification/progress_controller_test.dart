@@ -12,9 +12,16 @@ void main() {
     late ProgressNotifier notifier;
 
     setUp(() {
-      dataSource = LocalProgressDataSource();
+      LocalProgressDataSource.clearStates();
+      dataSource = LocalProgressDataSource(
+        initialState: LocalProgressDataSource.mockInitialState,
+      );
       repository = LocalProgressRepositoryImpl(dataSource: dataSource);
       notifier = ProgressNotifier(repository);
+    });
+
+    tearDown(() {
+      LocalProgressDataSource.clearStates();
     });
 
     test('initial state loads 7 days streak and Figma mock pause metrics', () {
@@ -42,6 +49,20 @@ void main() {
       // Intenciones de la semana
       expect(state.intentions.length, 3);
       expect(state.intentions.first.isCompleted, isTrue);
+    });
+
+    test('new user begins with 0 sessions and empty progress metrics', () {
+      final emptyDs = LocalProgressDataSource();
+      final emptyRepo = LocalProgressRepositoryImpl(dataSource: emptyDs);
+      final emptyNotifier = ProgressNotifier(emptyRepo, userId: 'brand_new_student_789');
+
+      final state = emptyNotifier.state;
+      expect(state.metrics.pomodoroSessions, 0);
+      expect(state.metrics.breathingMinutes, 0);
+      expect(state.metrics.journalEntriesCount, 0);
+      expect(state.metrics.balancePercentage, 0);
+      expect(state.streak.daysCount, 0);
+      expect(state.bloomedCount, 0);
     });
 
     test('toggleIntention updates units and completion status reactively', () async {
@@ -102,4 +123,3 @@ void main() {
     });
   });
 }
-

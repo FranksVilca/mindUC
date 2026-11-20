@@ -3,18 +3,18 @@ import 'pomodoro_interval_type.dart';
 /// Estado inmutable de la sesión de concentración Pomodoro.
 class PomodoroState {
   const PomodoroState({
-    this.sessionTitle = 'Sesión de la tarde',
-    this.currentCycle = 2,
+    this.sessionTitle = 'Sesión de concentración',
+    this.currentCycle = 1,
     this.totalCycles = 4,
     this.intervalType = PomodoroIntervalType.focus,
-    this.remainingSeconds = 1121, // 18 min 41 seg según mockup
+    this.remainingSeconds = 1500, // 25 min base (25:00)
     this.totalSeconds = 1500, // 25 min base
     this.isRunning = false,
-    this.currentObjective = 'Lectura Cap. 4 — Psicología Social',
+    this.currentObjective = 'Enfoque consciente',
     this.selectedSoundscapeId = 'rain',
-    this.isSoundscapePlaying = true,
+    this.isSoundscapePlaying = false,
     this.soundscapeVolume = 0.7,
-    this.isDeepFocusEnabled = true,
+    this.isDeepFocusEnabled = false,
   });
 
   final String sessionTitle;
@@ -118,4 +118,3 @@ class PomodoroState {
         isDeepFocusEnabled,
       );
 }
-

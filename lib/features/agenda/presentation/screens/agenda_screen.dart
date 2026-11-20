@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../core/design_system/notifications/notification_tray_modal.dart';
+import '../../../../core/router/route_names.dart';
+import '../../../../core/services/voice/speech_recognition_service.dart';
 import '../../../../core/theme/mind_colors.dart';
 import '../../../../core/utils/date_formatter.dart';
+import 'package:minduc/features/profile/presentation/controllers/profile_controller.dart';
 import '../controllers/agenda_controller.dart';
 import '../widgets/activity_card.dart';
 import '../widgets/activity_create_modal.dart';
 import '../widgets/agenda_header.dart';
 import '../widgets/category_filter_chips.dart';
 import '../widgets/rhythm_balance_card.dart';
+import '../widgets/voice_assistant_modal.dart';
 import '../widgets/weekly_day_strip.dart';
 
 /// Pantalla principal de "Mi Agenda consciente" (Pestaña 2 del Shell).
@@ -18,6 +24,7 @@ class AgendaScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(agendaControllerProvider);
     final notifier = ref.read(agendaControllerProvider.notifier);
+    final speechService = ref.watch(speechRecognitionServiceProvider);
 
     final weekdayName =
         SpanishDateFormatter.weekdays[state.selectedDate.weekday - 1];
@@ -37,44 +44,107 @@ class AgendaScreen extends ConsumerWidget {
             foregroundColor: const Color(0xFF3B5648),
             elevation: 3,
             shape: const CircleBorder(),
+            tooltip: 'Registrar actividad por voz',
             onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text(
-                    'Agendador consciente por voz en preparación 🌿',
-                  ),
-                  duration: Duration(seconds: 2),
-                  backgroundColor: MindColors.primaryDark,
-                ),
-              );
-            },
-            child: const Icon(Icons.mic_none_rounded, size: 24),
-          ),
-          const SizedBox(width: 12),
-
-          // Botón alargado: + Nueva
-          FloatingActionButton.extended(
-            heroTag: 'agenda_new_btn',
-            backgroundColor: const Color(0xFFBFE3D0), // Menta suave de Figma
-            foregroundColor: const Color(0xFF264132),
-            elevation: 3,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30),
-            ),
-            onPressed: () {
-              ActivityCreateModal.show(
+              VoiceAssistantModal.show(
                 context,
-                defaultDate: state.selectedDate,
-                onSave: (title, subtitle, scheduledDateTime, category) {
-                  notifier.createActivity(
-                    title: title,
-                    subtitle: subtitle,
-                    scheduledDateTime: scheduledDateTime,
-                    category: category,
-                  );
-                },
-              );
-            },
+                speechService: speechService,
+                referenceDate: state.selectedDate,
+                onActivityParsed: (parsed) {
+                    ActivityCreateModal.show(
+                      context,
+                      defaultDate: parsed.scheduledDate,
+                      initialTitle: parsed.title,
+                      initialSubtitle: parsed.subtitle,
+                      initialCategory: parsed.category,
+                      initialTime: parsed.scheduledTime,
+                      speechService: speechService,
+                      onSave: (title, subtitle, scheduledDateTime, category, reminderMinutesBefore, reminderMinutesList) async {
+                        try {
+                          await notifier.createActivity(
+                            title: title,
+                            subtitle: subtitle,
+                            scheduledDateTime: scheduledDateTime,
+                            category: category,
+                            reminderMinutesBefore: reminderMinutesBefore,
+                            reminderMinutesList: reminderMinutesList,
+                          );
+                          notifier.selectDate(scheduledDateTime);
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Actividad guardada correctamente 🌿'),
+                                backgroundColor: Color(0xFF2E6347),
+                                duration: Duration(seconds: 2),
+                              ),
+                            );
+                          }
+                        } catch (e) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Error al guardar: $e'),
+                                backgroundColor: Colors.red.shade700,
+                              ),
+                            );
+                          }
+                        }
+                      },
+                    );
+                  },
+                );
+              },
+              child: const Icon(Icons.mic_none_rounded, size: 24),
+            ),
+            const SizedBox(width: 12),
+
+            // Botón alargado: + Nueva
+            FloatingActionButton.extended(
+              heroTag: 'agenda_new_btn',
+              backgroundColor: const Color(0xFFBFE3D0), // Menta suave de Figma
+              foregroundColor: const Color(0xFF264132),
+              elevation: 3,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30),
+              ),
+              onPressed: () {
+                ActivityCreateModal.show(
+                  context,
+                  defaultDate: state.selectedDate,
+                  speechService: speechService,
+                  onSave: (title, subtitle, scheduledDateTime, category, reminderMinutesBefore, reminderMinutesList) async {
+                    try {
+                      await notifier.createActivity(
+                        title: title,
+                        subtitle: subtitle,
+                        scheduledDateTime: scheduledDateTime,
+                        category: category,
+                        reminderMinutesBefore: reminderMinutesBefore,
+                        reminderMinutesList: reminderMinutesList,
+                      );
+                      notifier.selectDate(scheduledDateTime);
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Actividad guardada correctamente 🌿'),
+                            backgroundColor: Color(0xFF2E6347),
+                            duration: Duration(seconds: 2),
+                          ),
+                        );
+                      }
+                    } catch (e) {
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Error al guardar: $e'),
+                            backgroundColor: Colors.red.shade700,
+                          ),
+                        );
+                      }
+                    }
+                  },
+                );
+              },
             icon: const Icon(Icons.add_rounded, size: 22),
             label: const Text(
               'Nueva',
@@ -91,7 +161,11 @@ class AgendaScreen extends ConsumerWidget {
         child: Column(
           children: [
             // Cabecera superior
-            const AgendaHeader(),
+            AgendaHeader(
+              avatarUrl: ref.watch(profileControllerProvider.select((s) => s.user.avatarUrl)),
+              onProfile: () => context.go(AppRoutes.profile),
+              onNotification: () => NotificationTrayModal.show(context),
+            ),
 
             // Cuerpo desplazable
             Expanded(
@@ -112,40 +186,130 @@ class AgendaScreen extends ConsumerWidget {
                         height: 1.15,
                       ),
                     ),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: 10),
 
-                    // Fila de contexto temporal y semana
+                    // Barra de navegación temporal entre semanas y fechas
                     Row(
                       children: [
-                        Text(
-                          dateHeader,
-                          style: const TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500,
-                            color: MindColors.textSecondary,
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                dateHeader,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: MindColors.textPrimary,
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                'Semana ${state.weekNumber}',
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  color: MindColors.textSecondary,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        const SizedBox(width: 8),
-                        Container(
-                          width: 4,
-                          height: 4,
-                          decoration: const BoxDecoration(
-                            color: MindColors.textTertiary,
-                            shape: BoxShape.circle,
+                        // Botón "Hoy"
+                        InkWell(
+                          key: const Key('agenda_today_button'),
+                          onTap: () => notifier.selectDate(DateTime.now()),
+                          borderRadius: BorderRadius.circular(14),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 5,
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFE5EFE9),
+                              borderRadius: BorderRadius.circular(14),
+                              border: Border.all(
+                                color: const Color(0xFFC3DEC8),
+                                width: 1,
+                              ),
+                            ),
+                            child: const Text(
+                              'Hoy',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w700,
+                                color: Color(0xFF2C4C3B),
+                              ),
+                            ),
                           ),
                         ),
-                        const SizedBox(width: 8),
-                        Text(
-                          'Semana ${state.weekNumber}',
-                          style: const TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500,
-                            color: MindColors.textSecondary,
-                          ),
+                        const SizedBox(width: 4),
+                        // Botón Retroceder semana
+                        IconButton(
+                          key: const Key('agenda_prev_week_button'),
+                          icon: const Icon(Icons.chevron_left_rounded, size: 22),
+                          color: MindColors.textPrimary,
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                          tooltip: 'Semana anterior',
+                          onPressed: () {
+                            notifier.selectDate(
+                              state.selectedDate.subtract(const Duration(days: 7)),
+                            );
+                          },
+                        ),
+                        // Botón Avanzar semana
+                        IconButton(
+                          key: const Key('agenda_next_week_button'),
+                          icon: const Icon(Icons.chevron_right_rounded, size: 22),
+                          color: MindColors.textPrimary,
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                          tooltip: 'Semana siguiente',
+                          onPressed: () {
+                            notifier.selectDate(
+                              state.selectedDate.add(const Duration(days: 7)),
+                            );
+                          },
+                        ),
+                        // Botón Calendario para seleccionar cualquier fecha
+                        IconButton(
+                          key: const Key('agenda_calendar_picker_button'),
+                          icon: const Icon(Icons.calendar_month_rounded, size: 20),
+                          color: MindColors.primaryDark,
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(minWidth: 34, minHeight: 34),
+                          tooltip: 'Seleccionar fecha en calendario',
+                          onPressed: () async {
+                            final picked = await showDatePicker(
+                              context: context,
+                              initialDate: state.selectedDate,
+                              firstDate: DateTime(2020),
+                              lastDate: DateTime(2035),
+                              builder: (context, child) {
+                                return Theme(
+                                  data: Theme.of(context).copyWith(
+                                    colorScheme: const ColorScheme.light(
+                                      primary: MindColors.primaryDark,
+                                      onPrimary: Colors.white,
+                                      surface: Colors.white,
+                                      onSurface: MindColors.textPrimary,
+                                    ),
+                                  ),
+                                  child: child!,
+                                );
+                              },
+                            );
+                            if (picked != null) {
+                              notifier.selectDate(picked);
+                            }
+                          },
                         ),
                       ],
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 16),
 
                     // Tira Semanal de 7 días
                     WeeklyDayStrip(
@@ -191,7 +355,7 @@ class AgendaScreen extends ConsumerWidget {
                         ),
                         child: const Text(
                           'Día despejado para descansar o fluir a tu propio ritmo 🌿\n'
-                          'Presiona "+ Nueva" para planificar un hábito o compromiso consciente.',
+                          'Presiona "+ Nueva" o usa el micrófono para planificar una actividad.',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 13,
@@ -209,12 +373,74 @@ class AgendaScreen extends ConsumerWidget {
                         itemBuilder: (context, index) {
                           final activity = state.filteredActivities[index];
                           return ActivityCard(
+                            key: ValueKey(activity.id),
                             activity: activity,
                             onToggleComplete: () {
                               notifier.toggleActivityCompletion(activity.id);
                             },
-                            onTap: () {
-                              notifier.toggleActivityCompletion(activity.id);
+                            onEdit: () {
+                              ActivityCreateModal.show(
+                                context,
+                                defaultDate: activity.scheduledDateTime,
+                                activityToEdit: activity,
+                                speechService: speechService,
+                                onSave: (_, __, ___, ____, _____, ______) {},
+                                onUpdate: (id, title, subtitle, scheduledDateTime, category, reminderMinutesBefore, reminderMinutesList) async {
+                                  try {
+                                    await notifier.updateActivity(
+                                      id: id,
+                                      title: title,
+                                      subtitle: subtitle,
+                                      scheduledDateTime: scheduledDateTime,
+                                      category: category,
+                                      reminderMinutesBefore: reminderMinutesBefore,
+                                      reminderMinutesList: reminderMinutesList,
+                                    );
+                                    notifier.selectDate(scheduledDateTime);
+                                    if (context.mounted) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                          content: Text('Actividad actualizada correctamente 🌿'),
+                                          backgroundColor: Color(0xFF2E6347),
+                                          duration: Duration(seconds: 2),
+                                        ),
+                                      );
+                                    }
+                                  } catch (e) {
+                                    if (context.mounted) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: Text('Error al actualizar: $e'),
+                                          backgroundColor: Colors.red.shade700,
+                                        ),
+                                      );
+                                    }
+                                  }
+                                },
+                                onDelete: (id) async {
+                                  try {
+                                    await notifier.deleteActivity(id);
+                                    if (context.mounted) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                          content: Text('Actividad eliminada 🌿'),
+                                          backgroundColor: Color(0xFF385C4B),
+                                          duration: Duration(seconds: 2),
+                                        ),
+                                      );
+                                    }
+                                  } catch (e) {
+                                    if (context.mounted) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: Text('Error al eliminar: $e'),
+                                          backgroundColor: Colors.red.shade700,
+                                        ),
+                                      );
+                                    }
+                                  }
+                                },
+                              );
                             },
                           );
                         },

@@ -60,6 +60,8 @@ class RhythmBalanceCard extends StatelessWidget {
               children: [
                 const Text(
                   'Ritmo en equilibrio',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w700,
@@ -69,6 +71,8 @@ class RhythmBalanceCard extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text(
                   '$totalActivities actividades · $completedActivities completadas',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w400,

@@ -7,6 +7,7 @@ import 'package:minduc/features/auth/data/repositories/auth_repository_impl.dart
 import 'package:minduc/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:minduc/features/breathing/data/datasources/fake_breathing_datasource.dart';
 import 'package:minduc/features/breathing/data/repositories/breathing_repository_impl.dart';
+import 'package:minduc/features/breathing/domain/services/breathing_audio_service.dart';
 import 'package:minduc/features/breathing/presentation/controllers/breathing_session_controller.dart';
 import 'package:minduc/features/breathing/presentation/screens/breathing_screen.dart';
 
@@ -16,6 +17,7 @@ void main() {
     late AuthRepositoryImpl authRepo;
     late FakeBreathingDataSource fakeBreathingDS;
     late BreathingRepositoryImpl breathingRepo;
+    late FakeBreathingAudioService fakeAudioService;
 
     setUp(() {
       fakeAuthDS = FakeAuthDataSource(
@@ -30,6 +32,7 @@ void main() {
       authRepo = AuthRepositoryImpl(fakeDataSource: fakeAuthDS);
       fakeBreathingDS = FakeBreathingDataSource();
       breathingRepo = BreathingRepositoryImpl(fakeDataSource: fakeBreathingDS);
+      fakeAudioService = FakeBreathingAudioService();
     });
 
     Widget createTestApp() {
@@ -37,6 +40,7 @@ void main() {
         overrides: [
           authRepositoryProvider.overrideWithValue(authRepo),
           breathingRepositoryProvider.overrideWithValue(breathingRepo),
+          breathingAudioServiceProvider.overrideWithValue(fakeAudioService),
         ],
         child: const MaterialApp(
           home: BreathingScreen(),

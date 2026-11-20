@@ -16,6 +16,26 @@ class UserProfile {
     this.isMindfulActive = true,
   });
 
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'fullName': fullName,
+        'career': career,
+        'universityEmail': universityEmail,
+        'avatarUrl': avatarUrl,
+        'isMindfulActive': isMindfulActive,
+      };
+
+  factory UserProfile.fromJson(Map<String, dynamic> json) {
+    return UserProfile(
+      id: json['id'] as String? ?? 'student_uc_001',
+      fullName: json['fullName'] as String? ?? 'Estudiante UC',
+      career: json['career'] as String? ?? 'Pregrado UC',
+      universityEmail: json['universityEmail'] as String? ?? 'estudiante@uc.cl',
+      avatarUrl: json['avatarUrl'] as String?,
+      isMindfulActive: json['isMindfulActive'] as bool? ?? true,
+    );
+  }
+
   UserProfile copyWith({
     String? id,
     String? fullName,

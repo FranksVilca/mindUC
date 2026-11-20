@@ -1,4 +1,5 @@
 import 'community_avatar.dart';
+import 'community_comment.dart';
 import 'community_mood_category.dart';
 import 'embedded_card_data.dart';
 
@@ -20,6 +21,8 @@ class CommunityPost {
   final int hugCount;
   final int commentCount;
   final Set<String> userReactions;
+  final List<CommunityComment> comments;
+  final Map<String, Set<String>> emojiReactions;
   final DateTime createdAt;
 
   const CommunityPost({
@@ -40,10 +43,26 @@ class CommunityPost {
     this.hugCount = 0,
     this.commentCount = 0,
     this.userReactions = const {},
+    this.comments = const [],
+    this.emojiReactions = const {},
     required this.createdAt,
   });
 
+  /// Indica si el usuario actual reaccionó con la clave estándar ('support', 'calm', 'insight', 'hug')
   bool hasReaction(String key) => userReactions.contains(key);
+
+  /// Indica si un usuario específico reaccionó con un emoji particular
+  bool hasUserEmojiReaction(String emoji, String userId) {
+    return emojiReactions[emoji]?.contains(userId) ?? false;
+  }
+
+  /// Retorna la cantidad de reacciones para un emoji específico
+  int getEmojiCount(String emoji) {
+    return emojiReactions[emoji]?.length ?? 0;
+  }
+
+  /// Conteo consolidado de comentarios
+  int get totalComments => comments.isNotEmpty ? comments.length : commentCount;
 
   CommunityPost copyWith({
     String? id,
@@ -62,6 +81,8 @@ class CommunityPost {
     int? hugCount,
     int? commentCount,
     Set<String>? userReactions,
+    List<CommunityComment>? comments,
+    Map<String, Set<String>>? emojiReactions,
     DateTime? createdAt,
   }) {
     return CommunityPost(
@@ -81,6 +102,8 @@ class CommunityPost {
       hugCount: hugCount ?? this.hugCount,
       commentCount: commentCount ?? this.commentCount,
       userReactions: userReactions ?? this.userReactions,
+      comments: comments ?? this.comments,
+      emojiReactions: emojiReactions ?? this.emojiReactions,
       createdAt: createdAt ?? this.createdAt,
     );
   }
@@ -104,6 +127,8 @@ class CommunityPost {
           insightCount == other.insightCount &&
           hugCount == other.hugCount &&
           commentCount == other.commentCount &&
+          comments.length == other.comments.length &&
+          emojiReactions.length == other.emojiReactions.length &&
           userReactions.length == other.userReactions.length &&
           createdAt == other.createdAt;
 
@@ -123,5 +148,7 @@ class CommunityPost {
       insightCount.hashCode ^
       hugCount.hashCode ^
       commentCount.hashCode ^
+      comments.length.hashCode ^
+      emojiReactions.length.hashCode ^
       createdAt.hashCode;
 }

@@ -7,12 +7,16 @@ import 'package:minduc/features/breathing/data/repositories/breathing_repository
 import 'package:minduc/features/breathing/domain/entities/breathing_phase.dart';
 import 'package:minduc/features/breathing/domain/entities/breathing_session_state.dart';
 import 'package:minduc/features/breathing/domain/entities/breathing_technique.dart';
+import 'package:minduc/features/breathing/domain/services/breathing_audio_service.dart';
 import 'package:minduc/features/breathing/presentation/controllers/breathing_session_controller.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   group('BreathingSessionNotifier Unit Tests', () {
     late BreathingRepositoryImpl breathingRepo;
     late AuthRepositoryImpl authRepo;
+    late FakeBreathingAudioService audioService;
     late BreathingSessionNotifier controller;
 
     setUp(() {
@@ -27,9 +31,11 @@ void main() {
         ),
       );
       authRepo = AuthRepositoryImpl(fakeDataSource: fakeAuthDataSource);
+      audioService = FakeBreathingAudioService();
       controller = BreathingSessionNotifier(
         breathingRepository: breathingRepo,
         authRepository: authRepo,
+        audioService: audioService,
       );
     });
 
@@ -156,6 +162,27 @@ void main() {
       expect(logs.isSuccess, isTrue);
       final list = logs.dataOrNull!;
       expect(list.first.durationSeconds, 15);
+    });
+    test('audioService plays guidance sound on play and on phase transition', () {
+      expect(audioService.playedPhases, isEmpty);
+
+      controller.playOrPause();
+      expect(audioService.playedPhases, [BreathingPhase.inhale]);
+
+      // Complete inhale (4 ticks)
+      controller.tick();
+      controller.tick();
+      controller.tick();
+      controller.tick();
+
+      expect(audioService.playedPhases, [
+        BreathingPhase.inhale,
+        BreathingPhase.hold,
+      ]);
+
+      controller.toggleSound();
+      expect(controller.state.isSoundEnabled, isFalse);
+      expect(audioService.isSoundEnabled, isFalse);
     });
   });
 }

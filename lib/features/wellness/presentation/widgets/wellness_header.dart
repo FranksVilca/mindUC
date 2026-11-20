@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import '../../../../core/design_system/avatars/mind_user_avatar.dart';
+import '../../../../core/design_system/branding/mind_app_logo.dart';
+import '../../../../core/design_system/notifications/notification_tray_modal.dart';
 import '../../../../core/theme/mind_colors.dart';
 
 /// Barra de navegación superior serena para el Hub de Bienestar según mockup de Figma:
@@ -6,11 +9,13 @@ import '../../../../core/theme/mind_colors.dart';
 class WellnessHeader extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onNotificationTap;
   final VoidCallback? onProfileTap;
+  final String? avatarUrl;
 
   const WellnessHeader({
     super.key,
     this.onNotificationTap,
     this.onProfileTap,
+    this.avatarUrl,
   });
 
   @override
@@ -25,8 +30,14 @@ class WellnessHeader extends StatelessWidget implements PreferredSizeWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Row(
           children: [
-            // Espacio simétrico a la izquierda para centrar el título
-            const SizedBox(width: 64),
+            // Logotipo oficial a la izquierda
+            const SizedBox(
+              width: 64,
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: MindAppLogo(size: 34),
+              ),
+            ),
 
             // 1. Título centrado y subtítulo sereno
             const Expanded(
@@ -67,7 +78,7 @@ class WellnessHeader extends StatelessWidget implements PreferredSizeWidget {
                         size: 24,
                         color: MindColors.textPrimary,
                       ),
-                      onPressed: onNotificationTap ?? () {},
+                      onPressed: onNotificationTap ?? () => NotificationTrayModal.show(context),
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
                     ),
@@ -86,18 +97,10 @@ class WellnessHeader extends StatelessWidget implements PreferredSizeWidget {
                   ],
                 ),
                 const SizedBox(width: 8),
-                InkWell(
-                  customBorder: const CircleBorder(),
-                  onTap: onProfileTap ?? () {},
-                  child: const CircleAvatar(
-                    radius: 17,
-                    backgroundColor: MindColors.primaryDark,
-                    child: Icon(
-                      Icons.person,
-                      size: 20,
-                      color: Colors.white,
-                    ),
-                  ),
+                MindUserAvatar(
+                  avatarId: avatarUrl,
+                  size: 34,
+                  onTap: onProfileTap,
                 ),
               ],
             ),

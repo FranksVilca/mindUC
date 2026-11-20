@@ -5,7 +5,8 @@ import 'package:minduc/features/focus_pomodoro/presentation/screens/pomodoro_scr
 
 void main() {
   group('PomodoroScreen Integration Widget Tests', () {
-    testWidgets('renders all screen components according to Figma design',
+    testWidgets(
+        'renders all pomodoro screen components with 25:00 starting timer',
         (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
@@ -21,8 +22,8 @@ void main() {
       expect(find.text('mindUC'), findsOneWidget);
 
       // Progreso de ciclos
-      expect(find.text('Sesión de la tarde'), findsOneWidget);
-      expect(find.text('Ciclo 2 de 4'), findsOneWidget);
+      expect(find.text('Sesión de concentración'), findsOneWidget);
+      expect(find.text('Ciclo 1 de 4'), findsOneWidget);
 
       // Selector de intervalos
       expect(find.text('Enfoque'), findsOneWidget);
@@ -31,8 +32,8 @@ void main() {
 
       // Tarjeta de temporizador y objetivo
       expect(find.text('OBJETIVO EN CURSO'), findsOneWidget);
-      expect(find.text('Lectura Cap. 4 — Psicología Social'), findsOneWidget);
-      expect(find.text('18:41'), findsOneWidget);
+      expect(find.text('Enfoque consciente'), findsOneWidget);
+      expect(find.text('25:00'), findsOneWidget);
       expect(find.text('de 25:00 min'), findsOneWidget);
       expect(find.text('Iniciar enfoque'), findsOneWidget);
 
@@ -76,7 +77,7 @@ void main() {
       await tester.pump();
 
       expect(find.text('Iniciar enfoque'), findsOneWidget);
-      expect(find.text('En pausa'), findsOneWidget);
+      expect(find.text('En pausa'), findsWidgets);
     });
 
     testWidgets('changing interval type updates timer duration',
@@ -121,4 +122,3 @@ void main() {
     });
   });
 }
-

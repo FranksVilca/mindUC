@@ -5,8 +5,13 @@ import 'package:minduc/features/auth/data/datasources/fake_auth_datasource.dart'
 import 'package:minduc/features/auth/data/models/user_model.dart';
 import 'package:minduc/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:minduc/features/auth/presentation/controllers/auth_controller.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
+  setUp(() {
+    SharedPreferences.setMockInitialValues({});
+  });
+
   testWidgets('AppRouter renders initial tab (Inicio) when authenticated and switches tabs preserving state', (tester) async {
     final fakeDataSource = FakeAuthDataSource(
       UserModel(

@@ -11,12 +11,13 @@ abstract interface class AuthRepository {
   /// Retorna el usuario autenticado actualmente en memoria o caché local.
   UserEntity? get currentUser;
 
-  /// Registra un estudiante con correo institucional o personal y contraseña.
+  /// Registra un estudiante con correo institucional o personal, contraseña y avatar opcional.
   Future<Result<UserEntity, AppFailure>> signUpWithEmailAndPassword({
     required String email,
     required String password,
     String? displayName,
     String? department,
+    String? photoUrl,
   });
 
   /// Inicia sesión con correo y contraseña.

@@ -43,7 +43,7 @@ void main() {
 
       const state = PomodoroState(
         currentObjective: 'Lectura Cap. 4 — Psicología Social',
-        remainingSeconds: 1121,
+        remainingSeconds: 1500,
         totalSeconds: 1500,
         isRunning: true,
       );
@@ -66,7 +66,7 @@ void main() {
 
       expect(find.text('OBJETIVO EN CURSO'), findsOneWidget);
       expect(find.text('Lectura Cap. 4 — Psicología Social'), findsOneWidget);
-      expect(find.text('18:41'), findsOneWidget);
+      expect(find.text('25:00'), findsOneWidget);
       expect(find.text('de 25:00 min'), findsOneWidget);
       expect(find.text('Bloque activo'), findsOneWidget);
       expect(find.text('Pausar enfoque'), findsOneWidget);
@@ -121,4 +121,3 @@ void main() {
     });
   });
 }
-

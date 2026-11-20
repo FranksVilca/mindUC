@@ -18,63 +18,66 @@ class BreathingControlsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        // 1. Botón circular de reinicio (izquierda)
-        _CircularControlButton(
-          icon: Icons.refresh,
-          tooltip: 'Reiniciar sesión',
-          onTap: onReset,
-        ),
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // 1. Botón circular de reinicio (izquierda)
+          _CircularControlButton(
+            icon: Icons.refresh,
+            tooltip: 'Reiniciar sesión',
+            onTap: onReset,
+          ),
 
-        const SizedBox(width: 16),
+          const SizedBox(width: 16),
 
-        // 2. Botón principal en cápsula (centro)
-        Material(
-          color: MindColors.primaryDark,
-          borderRadius: BorderRadius.circular(30),
-          elevation: 2,
-          shadowColor: MindColors.primaryDark.withValues(alpha: 0.3),
-          child: InkWell(
+          // 2. Botón principal en cápsula (centro)
+          Material(
+            color: MindColors.primaryDark,
             borderRadius: BorderRadius.circular(30),
-            onTap: onPlayPause,
-            child: Container(
-              height: 52,
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    isRunning ? Icons.pause : Icons.play_arrow,
-                    color: Colors.white,
-                    size: 24,
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    isRunning ? 'Pausar sesión' : 'Iniciar sesión',
-                    style: const TextStyle(
+            elevation: 2,
+            shadowColor: MindColors.primaryDark.withValues(alpha: 0.3),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(30),
+              onTap: onPlayPause,
+              child: Container(
+                height: 52,
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      isRunning ? Icons.pause : Icons.play_arrow,
                       color: Colors.white,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: -0.2,
+                      size: 24,
                     ),
-                  ),
-                ],
+                    const SizedBox(width: 10),
+                    Text(
+                      isRunning ? 'Pausar sesión' : 'Iniciar sesión',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: -0.2,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
 
-        const SizedBox(width: 16),
+          const SizedBox(width: 16),
 
-        // 3. Botón circular de parada (derecha)
-        _CircularControlButton(
-          icon: Icons.stop,
-          tooltip: 'Detener sesión',
-          onTap: onStop,
-        ),
-      ],
+          // 3. Botón circular de parada (derecha)
+          _CircularControlButton(
+            icon: Icons.stop,
+            tooltip: 'Detener sesión',
+            onTap: onStop,
+          ),
+        ],
+      ),
     );
   }
 }

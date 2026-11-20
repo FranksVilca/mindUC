@@ -25,13 +25,13 @@ void main() {
       // Verify all 4 tool titles exist
       expect(find.text('Respiración'), findsOneWidget);
       expect(find.text('Diario personal'), findsOneWidget);
-      expect(find.text('Asistente IA ✨'), findsOneWidget);
+      expect(find.text('Psicólogo IA ✨'), findsOneWidget);
       expect(find.text('Concentración'), findsOneWidget);
 
       // Verify badges
       expect(find.text('3 min'), findsOneWidget);
       expect(find.text('Privado'), findsOneWidget);
-      expect(find.text('24/7'), findsOneWidget);
+      expect(find.text('Gratis 24/7'), findsOneWidget);
       expect(find.text('25m'), findsOneWidget);
 
       // Tap on Respiración
@@ -40,10 +40,10 @@ void main() {
 
       expect(tappedTool?.id, 'breathing');
 
-      // Tap on Asistente IA after ensuring it is visible in scroll view
-      await tester.ensureVisible(find.text('Asistente IA ✨'));
+      // Tap on Psicólogo IA after ensuring it is visible in scroll view
+      await tester.ensureVisible(find.text('Psicólogo IA ✨'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Asistente IA ✨'));
+      await tester.tap(find.text('Psicólogo IA ✨'));
       await tester.pump();
 
       expect(tappedTool?.id, 'ai_assistant');

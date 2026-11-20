@@ -1,12 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:minduc/features/progress_gamification/data/datasources/local_progress_datasource.dart';
+import 'package:minduc/features/progress_gamification/data/repositories/local_progress_repository_impl.dart';
+import 'package:minduc/features/progress_gamification/domain/entities/progress_summary_state.dart';
+import 'package:minduc/features/progress_gamification/presentation/controllers/progress_controller.dart';
 import 'package:minduc/features/progress_gamification/presentation/screens/progress_screen.dart';
 
 void main() {
-  Widget createScreen() {
-    return const ProviderScope(
-      child: MaterialApp(
+  setUp(() {
+    LocalProgressDataSource.clearStates();
+  });
+
+  tearDown(() {
+    LocalProgressDataSource.clearStates();
+  });
+
+  Widget createScreen({ProgressSummaryState? initialState}) {
+    final ds = LocalProgressDataSource(
+      initialState: initialState ?? LocalProgressDataSource.mockInitialState,
+    );
+    final repo = LocalProgressRepositoryImpl(dataSource: ds);
+    return ProviderScope(
+      overrides: [
+        progressRepositoryProvider.overrideWithValue(repo),
+        progressControllerProvider.overrideWith(
+          (ref) => ProgressNotifier(repo),
+        ),
+      ],
+      child: const MaterialApp(
         home: ProgressScreen(),
       ),
     );
@@ -22,6 +44,31 @@ void main() {
   }
 
   group('ProgressScreen Full Integration Tests', () {
+    testWidgets('new user starts with 0 sessions and zero streaks', (tester) async {
+      configureViewport(tester);
+      final emptyDs = LocalProgressDataSource();
+      final emptyRepo = LocalProgressRepositoryImpl(dataSource: emptyDs);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            progressRepositoryProvider.overrideWithValue(emptyRepo),
+            progressControllerProvider.overrideWith(
+              (ref) => ProgressNotifier(emptyRepo, userId: 'fresh_student'),
+            ),
+          ],
+          child: const MaterialApp(
+            home: ProgressScreen(),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('0 días'), findsOneWidget);
+      expect(find.text('0 sesiones'), findsOneWidget);
+      expect(find.text('0 min'), findsOneWidget);
+    });
+
     testWidgets(
         'renders all components: header, badge, streak, pauses, garden, intentions and reminder',
         (tester) async {
@@ -117,4 +164,3 @@ void main() {
     });
   });
 }
-

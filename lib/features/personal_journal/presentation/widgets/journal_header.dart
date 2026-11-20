@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import '../../../../core/design_system/avatars/mind_user_avatar.dart';
+import '../../../../core/design_system/branding/mind_app_logo.dart';
+import '../../../../core/design_system/notifications/notification_tray_modal.dart';
 import '../../../../core/theme/mind_colors.dart';
 
 /// Cabecera oficial serena de "Mi Diario Personal" acorde al diseño de Figma.
@@ -8,11 +11,13 @@ class JournalHeader extends StatelessWidget {
     required this.onBack,
     this.onNotification,
     this.onProfile,
+    this.avatarUrl,
   });
 
   final VoidCallback onBack;
   final VoidCallback? onNotification;
   final VoidCallback? onProfile;
+  final String? avatarUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -21,15 +26,22 @@ class JournalHeader extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          IconButton(
-            onPressed: onBack,
-            icon: const Icon(
-              Icons.arrow_back_ios_new_rounded,
-              size: 20,
-              color: MindColors.textPrimary,
-            ),
-            splashRadius: 22,
-            tooltip: 'Volver',
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                onPressed: onBack,
+                icon: const Icon(
+                  Icons.arrow_back_ios_new_rounded,
+                  size: 20,
+                  color: MindColors.textPrimary,
+                ),
+                splashRadius: 22,
+                tooltip: 'Volver',
+              ),
+              const SizedBox(width: 4),
+              const MindAppLogo(size: 28),
+            ],
           ),
           const Column(
             children: [
@@ -59,7 +71,7 @@ class JournalHeader extends StatelessWidget {
               Stack(
                 children: [
                   IconButton(
-                    onPressed: onNotification ?? () {},
+                    onPressed: onNotification ?? () => NotificationTrayModal.show(context),
                     icon: const Icon(
                       Icons.notifications_none_rounded,
                       size: 24,
@@ -83,21 +95,10 @@ class JournalHeader extends StatelessWidget {
                 ],
               ),
               const SizedBox(width: 4),
-              GestureDetector(
+              MindUserAvatar(
+                avatarId: avatarUrl,
+                size: 34,
                 onTap: onProfile,
-                child: Container(
-                  width: 34,
-                  height: 34,
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Color(0xFF3F5E4D),
-                  ),
-                  child: const Icon(
-                    Icons.person_rounded,
-                    color: Colors.white,
-                    size: 20,
-                  ),
-                ),
               ),
             ],
           ),

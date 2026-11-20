@@ -22,15 +22,20 @@ class WeeklyPauseGrid extends StatelessWidget {
           const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Momentos de pausa',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  color: MindColors.textPrimary,
-                  letterSpacing: -0.2,
+              Expanded(
+                child: Text(
+                  'Momentos de pausa',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: MindColors.textPrimary,
+                    letterSpacing: -0.2,
+                  ),
                 ),
               ),
+              SizedBox(width: 8),
               Text(
                 'Esta semana',
                 style: TextStyle(

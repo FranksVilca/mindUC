@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/router/route_names.dart';
 import '../../../../core/theme/mind_colors.dart';
+import 'package:minduc/features/profile/presentation/controllers/profile_controller.dart';
 import '../controllers/wellness_controller.dart';
 import '../widgets/ai_assistant_dialog.dart';
 import '../widgets/sanctuary_badge.dart';
@@ -21,7 +23,10 @@ class WellnessScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: MindColors.background,
-      appBar: const WellnessHeader(),
+      appBar: WellnessHeader(
+        avatarUrl: ref.watch(profileControllerProvider.select((s) => s.user.avatarUrl)),
+        onProfileTap: () => context.go(AppRoutes.profile),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
@@ -81,7 +86,88 @@ class WellnessScreen extends ConsumerWidget {
                 },
               ),
 
+              const SizedBox(height: 18),
+
+              // 5. Banner de acceso al módulo de Relajación y Pausas Activas
+              const _RelaxationBanner(),
+
               const SizedBox(height: 24),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Banner estático optimizado como widget const inmutable.
+class _RelaxationBanner extends StatelessWidget {
+  const _RelaxationBanner();
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        key: const Key('wellness_relaxation_banner'),
+        borderRadius: BorderRadius.circular(20),
+        onTap: () => context.push(AppRoutes.relaxation),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Color(0xFFF2F7F4), Color(0xFFEAF3ED)],
+            ),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: MindColors.primary.withValues(alpha: 0.2),
+            ),
+          ),
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: MindColors.primary.withValues(alpha: 0.15),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.self_improvement_rounded,
+                  color: MindColors.primary,
+                  size: 26,
+                ),
+              ),
+              const SizedBox(width: 14),
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Relajación y Pausas Activas',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                        color: MindColors.textPrimary,
+                        letterSpacing: -0.2,
+                      ),
+                    ),
+                    SizedBox(height: 3),
+                    Text(
+                      'Estiramientos de cuello, espalda, mandíbula y vista.',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: MindColors.textSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(
+                Icons.arrow_forward_ios_rounded,
+                size: 14,
+                color: MindColors.primary,
+              ),
             ],
           ),
         ),

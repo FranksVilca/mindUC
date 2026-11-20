@@ -25,7 +25,7 @@ class PomodoroTimerCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
@@ -55,7 +55,7 @@ class PomodoroTimerCard extends StatelessWidget {
           ),
           const SizedBox(height: 24),
 
-          // Fila de controles de reproducción
+          // Fila de controles de reproducción responsiva
           _ControlsRow(
             isRunning: state.isRunning,
             onToggle: onToggleTimer,
@@ -157,12 +157,14 @@ class _CircularTimerVisualizer extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          CustomPaint(
-            size: const Size(220, 220),
-            painter: _PomodoroCirclePainter(
-              progress: progress,
-              activeColor: MindColors.primary.withValues(alpha: 0.85),
-              trackColor: Colors.grey.shade200,
+          RepaintBoundary(
+            child: CustomPaint(
+              size: const Size(220, 220),
+              painter: _PomodoroCirclePainter(
+                progress: progress,
+                activeColor: MindColors.primary.withValues(alpha: 0.85),
+                trackColor: Colors.grey.shade200,
+              ),
             ),
           ),
           Column(
@@ -198,18 +200,19 @@ class _CircularTimerVisualizer extends StatelessWidget {
               Text(
                 remainingTime,
                 style: const TextStyle(
-                  fontSize: 40,
+                  fontSize: 48,
                   fontWeight: FontWeight.w700,
-                  letterSpacing: -1.0,
+                  letterSpacing: -1.5,
                   color: MindColors.textPrimary,
+                  fontFeatures: [FontFeature.tabularFigures()],
                 ),
               ),
-              const SizedBox(height: 2),
+              const SizedBox(height: 4),
               Text(
                 totalTime,
                 style: const TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w400,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
                   color: MindColors.textSecondary,
                 ),
               ),
@@ -222,7 +225,7 @@ class _CircularTimerVisualizer extends StatelessWidget {
 }
 
 class _PomodoroCirclePainter extends CustomPainter {
-  _PomodoroCirclePainter({
+  const _PomodoroCirclePainter({
     required this.progress,
     required this.activeColor,
     required this.trackColor,
@@ -234,11 +237,11 @@ class _PomodoroCirclePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final center = Offset(size.width / 2, size.height / 2);
-    final radius = (size.width - 20) / 2;
     const strokeWidth = 12.0;
+    final center = Offset(size.width / 2, size.height / 2);
+    final radius = (size.width - strokeWidth) / 2;
 
-    // Track circular de fondo
+    // Pista de fondo completa (360°)
     final trackPaint = Paint()
       ..color = trackColor
       ..style = PaintingStyle.stroke
@@ -246,7 +249,7 @@ class _PomodoroCirclePainter extends CustomPainter {
 
     canvas.drawCircle(center, radius, trackPaint);
 
-    // Arco de progreso
+    // Arco de progreso activo
     final arcPaint = Paint()
       ..color = activeColor
       ..style = PaintingStyle.stroke
@@ -302,64 +305,67 @@ class _ControlsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        // Botón Reiniciar (↺)
-        _CircleIconButton(
-          icon: Icons.refresh_rounded,
-          onTap: onReset,
-          tooltip: 'Reiniciar intervalo',
-        ),
-        const SizedBox(width: 16),
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Botón Reiniciar (↺)
+          _CircleIconButton(
+            icon: Icons.refresh_rounded,
+            onTap: onReset,
+            tooltip: 'Reiniciar intervalo',
+          ),
+          const SizedBox(width: 12),
 
-        // Botón Central Píldora
-        GestureDetector(
-          onTap: onToggle,
-          behavior: HitTestBehavior.opaque,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-            decoration: BoxDecoration(
-              color: const Color(0xFFB5CFB7), // Tono salvia relajante del mockup
-              borderRadius: BorderRadius.circular(30),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.05),
-                  blurRadius: 8,
-                  offset: const Offset(0, 3),
-                ),
-              ],
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  isRunning ? Icons.pause_rounded : Icons.play_arrow_rounded,
-                  color: const Color(0xFF2C3E2D),
-                  size: 22,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  isRunning ? 'Pausar enfoque' : 'Iniciar enfoque',
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF2C3E2D),
+          // Botón Central Píldora
+          GestureDetector(
+            onTap: onToggle,
+            behavior: HitTestBehavior.opaque,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              decoration: BoxDecoration(
+                color: const Color(0xFFB5CFB7), // Tono salvia relajante del mockup
+                borderRadius: BorderRadius.circular(30),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.05),
+                    blurRadius: 8,
+                    offset: const Offset(0, 3),
                   ),
-                ),
-              ],
+                ],
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    isRunning ? Icons.pause_rounded : Icons.play_arrow_rounded,
+                    color: const Color(0xFF2C3E2D),
+                    size: 20,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    isRunning ? 'Pausar enfoque' : 'Iniciar enfoque',
+                    style: const TextStyle(
+                      fontSize: 14.5,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF2C3E2D),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-        const SizedBox(width: 16),
+          const SizedBox(width: 12),
 
-        // Botón Saltar (>|)
-        _CircleIconButton(
-          icon: Icons.skip_next_rounded,
-          onTap: onSkip,
-          tooltip: 'Saltar intervalo',
-        ),
-      ],
+          // Botón Saltar (>|)
+          _CircleIconButton(
+            icon: Icons.skip_next_rounded,
+            onTap: onSkip,
+            tooltip: 'Saltar intervalo',
+          ),
+        ],
+      ),
     );
   }
 }
@@ -378,15 +384,15 @@ class _CircleIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 48,
-      height: 48,
+      width: 44,
+      height: 44,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: Colors.grey.shade100,
       ),
       child: IconButton(
         onPressed: onTap,
-        icon: Icon(icon, color: MindColors.textSecondary, size: 22),
+        icon: Icon(icon, color: MindColors.textSecondary, size: 20),
         tooltip: tooltip,
       ),
     );

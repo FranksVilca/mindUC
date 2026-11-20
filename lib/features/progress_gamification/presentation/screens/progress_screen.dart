@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../core/router/route_names.dart';
 import '../../../../core/theme/mind_colors.dart';
+import 'package:minduc/features/profile/presentation/controllers/profile_controller.dart';
 import '../controllers/progress_controller.dart';
 import '../widgets/achievements_garden.dart';
 import '../widgets/active_streak_card.dart';
@@ -27,7 +30,15 @@ class ProgressScreen extends ConsumerWidget {
           children: [
             // Cabecera superior serena con retorno
             ProgressHeader(
-              onBack: () => Navigator.maybePop(context),
+              avatarUrl: ref.watch(profileControllerProvider.select((s) => s.user.avatarUrl)),
+              onBack: () {
+                if (context.canPop()) {
+                  context.pop();
+                } else {
+                  context.go(AppRoutes.home);
+                }
+              },
+              onProfile: () => context.go(AppRoutes.profile),
             ),
 
             // Contenido desplazable continuo

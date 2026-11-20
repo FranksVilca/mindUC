@@ -68,7 +68,7 @@ class _PasswordResetDialogState extends State<PasswordResetDialog> {
     return Dialog(
       backgroundColor: MindColors.surface,
       shape: const RoundedRectangleBorder(borderRadius: MindRadii.cardRadius),
-      child: Padding(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,

@@ -80,6 +80,8 @@ class InstitutionalSupportCard extends StatelessWidget {
                   children: [
                     Text(
                       contact.title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         fontSize: 14.0,
                         fontWeight: FontWeight.w700,
@@ -89,6 +91,8 @@ class InstitutionalSupportCard extends StatelessWidget {
                     const SizedBox(height: 2.0),
                     Text(
                       contact.description,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         fontSize: 12.5,
                         fontWeight: FontWeight.w400,

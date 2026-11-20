@@ -54,6 +54,34 @@ void main() {
 
       expect(find.text('Enfoque Consciente'), findsNothing);
     });
+
+    testWidgets('renders Seleccionar button and does not show old desplegable',
+        (tester) async {
+      bool selectTapped = false;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: DeepFocusCard(
+              isEnabled: true,
+              onToggle: (_) {},
+              onSelectApps: () => selectTapped = true,
+            ),
+          ),
+        ),
+      );
+
+      // No debe existir "Elegir apps"
+      expect(find.text('Elegir apps'), findsNothing);
+      expect(find.byKey(const Key('deep_focus_expand_button')), findsNothing);
+
+      // Debe existir el botón "Seleccionar"
+      expect(find.text('Seleccionar'), findsOneWidget);
+      await tester.tap(find.byKey(const Key('deep_focus_select_apps_button')));
+      await tester.pump();
+
+      expect(selectTapped, isTrue);
+    });
   });
 }
 
